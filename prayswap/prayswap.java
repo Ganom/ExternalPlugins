@@ -86,14 +86,12 @@ public class prayswap extends Plugin
 	@Inject
 	private TabUtils tabutils;
 	private ExecutorService executorService = Executors.newFixedThreadPool(1);
-	private Point clickPointProtPray;
-	private Rectangle boundsProtPray = new Rectangle(0, 0, 0, 0);
 	private boolean runProtPray;
 	private int scalingfactor;
 	private Flexo flexer;
 
 
-	private final HotkeyListener hotkeyListener1 = new HotkeyListener(() -> config.hotkeyMage())
+	private final HotkeyListener protmage = new HotkeyListener(() -> config.hotkeyMage())
 	{
 		@Override
 		public void hotkeyPressed()
@@ -101,7 +99,7 @@ public class prayswap extends Plugin
 			executeMagePray();
 		}
 	};
-	private final HotkeyListener hotkeyListener2 = new HotkeyListener(() -> config.hotkeyRange())
+	private final HotkeyListener protrange = new HotkeyListener(() -> config.hotkeyRange())
 	{
 		@Override
 		public void hotkeyPressed()
@@ -109,7 +107,7 @@ public class prayswap extends Plugin
 			executeRangedPray();
 		}
 	};
-	private final HotkeyListener hotkeyListener3 = new HotkeyListener(() -> config.hotkeyMelee())
+	private final HotkeyListener protmelee = new HotkeyListener(() -> config.hotkeyMelee())
 	{
 		@Override
 		public void hotkeyPressed()
@@ -118,7 +116,7 @@ public class prayswap extends Plugin
 		}
 	};
 
-	private final HotkeyListener hotkeyListener4 = new HotkeyListener(() -> config.hotkeyAugury())
+	private final HotkeyListener augury = new HotkeyListener(() -> config.hotkeyAugury())
 	{
 		@Override
 		public void hotkeyPressed()
@@ -126,7 +124,7 @@ public class prayswap extends Plugin
 			executeAugury();
 		}
 	};
-	private final HotkeyListener hotkeyListener5 = new HotkeyListener(() -> config.hotkeyRigour())
+	private final HotkeyListener rigour = new HotkeyListener(() -> config.hotkeyRigour())
 	{
 		@Override
 		public void hotkeyPressed()
@@ -134,7 +132,7 @@ public class prayswap extends Plugin
 			executeRigour();
 		}
 	};
-	private final HotkeyListener hotkeyListener6 = new HotkeyListener(() -> config.hotkeyPiety())
+	private final HotkeyListener piety = new HotkeyListener(() -> config.hotkeyPiety())
 	{
 		@Override
 		public void hotkeyPressed()
@@ -142,7 +140,7 @@ public class prayswap extends Plugin
 			executePiety();
 		}
 	};
-	private final HotkeyListener hotkeyListener7 = new HotkeyListener(() -> config.hotkeySmite())
+	private final HotkeyListener smite = new HotkeyListener(() -> config.hotkeySmite())
 	{
 		@Override
 		public void hotkeyPressed()
@@ -159,13 +157,13 @@ public class prayswap extends Plugin
 
 	protected void startUp()
 	{
-		keyManager.registerKeyListener(hotkeyListener1);
-		keyManager.registerKeyListener(hotkeyListener2);
-		keyManager.registerKeyListener(hotkeyListener3);
-		keyManager.registerKeyListener(hotkeyListener4);
-		keyManager.registerKeyListener(hotkeyListener5);
-		keyManager.registerKeyListener(hotkeyListener6);
-		keyManager.registerKeyListener(hotkeyListener7);
+		keyManager.registerKeyListener(protmage);
+		keyManager.registerKeyListener(protrange);
+		keyManager.registerKeyListener(protmelee);
+		keyManager.registerKeyListener(augury);
+		keyManager.registerKeyListener(rigour);
+		keyManager.registerKeyListener(piety);
+		keyManager.registerKeyListener(smite);
 		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
 		Flexo.client = client;
 		executorService.submit(() -> {
@@ -181,15 +179,15 @@ public class prayswap extends Plugin
 		});
 	}
 
-	protected void shutDown() throws Exception
+	protected void shutDown()
 	{
-		keyManager.unregisterKeyListener(hotkeyListener1);
-		keyManager.unregisterKeyListener(hotkeyListener2);
-		keyManager.unregisterKeyListener(hotkeyListener3);
-		keyManager.unregisterKeyListener(hotkeyListener4);
-		keyManager.unregisterKeyListener(hotkeyListener5);
-		keyManager.unregisterKeyListener(hotkeyListener6);
-		keyManager.unregisterKeyListener(hotkeyListener7);
+		keyManager.unregisterKeyListener(protmage);
+		keyManager.unregisterKeyListener(protrange);
+		keyManager.unregisterKeyListener(protmelee);
+		keyManager.unregisterKeyListener(augury);
+		keyManager.unregisterKeyListener(rigour);
+		keyManager.unregisterKeyListener(piety);
+		keyManager.unregisterKeyListener(smite);
 	}
 
 	private Point getClickPoint(Rectangle2D rect)
@@ -197,28 +195,18 @@ public class prayswap extends Plugin
 		if (client.isStretchedEnabled())
 		{
 			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + rand + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + rand + rect.getHeight() / 2);
-			double scale = 1 + ((double) scalingfactor / 100);
+			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
+			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
+			double scale = 1 + (scalingfactor / 100);
 			return new Point((int) (x * scale), (int) (y * scale));
 		}
 		else
 		{
 			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + rand + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + rand + rect.getHeight() / 2);
+			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
+			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
 			return new Point(x, y);
 		}
-	}
-
-	@Subscribe
-	public void onNpcSpawned(NpcSpawned npcSpawned)
-	{
-	}
-
-	@Subscribe
-	public void onNpcDespawned(NpcDespawned npcDespawned)
-	{
 	}
 
 	@Subscribe
@@ -227,7 +215,7 @@ public class prayswap extends Plugin
 		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
 		if (!client.isPrayerActive(Prayer.PROTECT_ITEM) && config.protectItem())
 		{
-			if (client.getBoostedSkillLevel(Skill.PRAYER) >= 2)
+			if (client.getBoostedSkillLevel(Skill.PRAYER) >= 1)
 			{
 				runProtPray = true;
 			}
@@ -259,7 +247,10 @@ public class prayswap extends Plugin
 			{
 				flexer.mouseMove(cp.getX(), cp.getY());
 				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				if (config.backToInv())
+				{
+					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				}
 			}
 		});
 	}
@@ -284,7 +275,10 @@ public class prayswap extends Plugin
 			{
 				flexer.mouseMove(cp.getX(), cp.getY());
 				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				if (config.backToInv())
+				{
+					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				}
 			}
 		});
 	}
@@ -317,7 +311,10 @@ public class prayswap extends Plugin
 			{
 				flexer.mouseMove(cp.getX(), cp.getY());
 				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				if (config.backToInv())
+				{
+					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				}
 			}
 		});
 	}
@@ -350,7 +347,10 @@ public class prayswap extends Plugin
 			{
 				flexer.mouseMove(cp.getX(), cp.getY());
 				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				if (config.backToInv())
+				{
+					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				}
 			}
 		});
 	}
@@ -383,7 +383,10 @@ public class prayswap extends Plugin
 			{
 				flexer.mouseMove(cp.getX(), cp.getY());
 				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				if (config.backToInv())
+				{
+					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				}
 			}
 		});
 	}
@@ -408,7 +411,10 @@ public class prayswap extends Plugin
 			{
 				flexer.mouseMove(cp.getX(), cp.getY());
 				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				if (config.backToInv())
+				{
+					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				}
 			}
 		});
 	}
@@ -433,7 +439,10 @@ public class prayswap extends Plugin
 			{
 				flexer.mouseMove(cp.getX(), cp.getY());
 				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				if (config.backToInv())
+				{
+					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				}
 			}
 		});
 	}
@@ -458,58 +467,11 @@ public class prayswap extends Plugin
 			{
 				flexer.mouseMove(cp.getX(), cp.getY());
 				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				if (config.backToInv())
+				{
+					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
+				}
 			}
 		});
-	}
-
-	private void leftClick(int x, int y)
-	{
-		if (client.isStretchedEnabled())
-		{
-			Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
-			double scale = 1 + ((double) scalingfactor / 100);
-
-			MouseEvent mousePressed =
-				new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * (double) scale), (int) (this.client.getMouseCanvasPosition().getY() * (double) scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mousePressed);
-			System.out.println("Mouse Pressed:" + this.client.getMouseCanvasPosition());
-			MouseEvent mouseReleased =
-				new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * (double) scale), (int) (this.client.getMouseCanvasPosition().getY() * (double) scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseReleased);
-			System.out.println("Mouse Released:" + this.client.getMouseCanvasPosition());
-			MouseEvent mouseClicked =
-				new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * (double) scale), (int) (this.client.getMouseCanvasPosition().getY() * (double) scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseClicked);
-			System.out.println("Mouse Clicked:" + this.client.getMouseCanvasPosition());
-		}
-		if (!client.isStretchedEnabled())
-		{
-			Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
-			MouseEvent mousePressed = new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mousePressed);
-			MouseEvent mouseReleased = new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseReleased);
-			MouseEvent mouseClicked = new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseClicked);
-		}
-	}
-
-	private void moveMouse(int x, int y)
-	{
-		MouseEvent mouseEntered = new MouseEvent(this.client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseEntered);
-		MouseEvent mouseExited = new MouseEvent(this.client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseExited);
-		MouseEvent mouseMoved = new MouseEvent(this.client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseMoved);
 	}
 }
