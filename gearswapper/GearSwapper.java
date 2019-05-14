@@ -214,16 +214,16 @@ public class GearSwapper extends Plugin
 		if (client.isStretchedEnabled())
 		{
 			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 2) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 2) + rect.getHeight() / 2);
+			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
+			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
 			double scale = 1 + (scalingfactor / 100);
 			return new Point((int) (x * scale), (int) (y * scale));
 		}
 		else
 		{
 			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 2) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 2) + rect.getHeight() / 2);
+			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
+			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
 			return new Point(x, y);
 		}
 	}
