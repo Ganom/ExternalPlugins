@@ -26,6 +26,7 @@ package net.runelite.client.plugins.tobcheats;
 
 import com.google.inject.Provides;
 import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,9 +35,11 @@ import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import lombok.AccessLevel;
 import lombok.Getter;
+import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
+import net.runelite.api.Player;
 import net.runelite.api.Point;
 import net.runelite.api.Prayer;
 import net.runelite.api.Projectile;
@@ -70,13 +73,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 public class ToBCheats extends Plugin
 {
 	@Getter(AccessLevel.PACKAGE)
-	private final List<Projectile> Sotetseg_MageProjectiles = new ArrayList<>();
-	@Getter(AccessLevel.PACKAGE)
-	private final List<Projectile> Sotetseg_RangeProjectiles = new ArrayList<>();
-	@Getter(AccessLevel.PACKAGE)
 	private NPC Maiden;
-	@Getter(AccessLevel.PACKAGE)
-	private NPC Sote;
 	@Getter(AccessLevel.PACKAGE)
 	private NPC Nylo;
 	private boolean lock1;
@@ -101,8 +98,8 @@ public class ToBCheats extends Plugin
 	@Inject
 	private ConfigManager externalConfig;
 	@Inject
-	private TabUtils tabutils;
-	private Flexo flexer;
+	private TabUtils tabUtils;
+	private Flexo flexo;
 	private ExecutorService executorService = Executors.newFixedThreadPool(1);
 	private double scalingfactor;
 	private boolean magepray;
@@ -118,14 +115,6 @@ public class ToBCheats extends Plugin
 		return configManager.getConfig(ToBCheatsConfig.class);
 	}
 
-/*	private List<WidgetItem> getEat()
-	{
-		String str = config.food();
-		int[] food = Arrays.stream(str.substring(1, str.length() - 1).split(","))
-			.map(String::trim).mapToInt(Integer::parseInt).toArray();
-		return getItems(food);
-	}*/
-
 	private List<WidgetItem> getMage()
 	{
 		int[] mage = Arrays.stream(config.mage().split(","))
@@ -137,13 +126,11 @@ public class ToBCheats extends Plugin
 	{
 		int[] range = Arrays.stream(config.range().split(","))
 			.map(String::trim).mapToInt(Integer::parseInt).toArray();
-		;
 		return getItems(range);
 	}
 
 	private List<WidgetItem> getMelee()
 	{
-		String str = config.melee();
 		int[] melee = Arrays.stream(config.melee().split(","))
 			.map(String::trim).mapToInt(Integer::parseInt).toArray();
 		return getItems(melee);
@@ -175,7 +162,6 @@ public class ToBCheats extends Plugin
 	protected void startUp()
 	{
 		overlayManager.add(overlay);
-		/*		keyManager.registerKeyListener(hotkeyListener);*/
 		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
 		Nylo = null;
 		Maiden = null;
@@ -191,10 +177,10 @@ public class ToBCheats extends Plugin
 		rangepray = false;
 		Flexo.client = client;
 		executorService.submit(() -> {
-			flexer = null;
+			flexo = null;
 			try
 			{
-				flexer = new Flexo();
+				flexo = new Flexo();
 			}
 			catch (Exception e)
 			{
@@ -207,7 +193,6 @@ public class ToBCheats extends Plugin
 	protected void shutDown()
 	{
 		overlayManager.remove(overlay);
-		/*		keyManager.unregisterKeyListener(hotkeyListener);*/
 		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
 		Nylo = null;
 		Maiden = null;
@@ -221,6 +206,7 @@ public class ToBCheats extends Plugin
 		nylolockRa = false;
 		magepray = false;
 		rangepray = false;
+		flexo = null;
 	}
 
 	@Subscribe
@@ -277,14 +263,10 @@ public class ToBCheats extends Plugin
 	public void onNpcDespawned(NpcDespawned npcDespawned)
 	{
 		NPC npc = npcDespawned.getNpc();
-		switch (npc.getId())
+		switch (npc.getId()) //Keeping switch in case i need npc checks later.
 		{
 			case NpcID.THE_MAIDEN_OF_SUGADINTI:
 				Maiden = null;
-				break;
-			case NpcID.SOTETSEG:
-			case NpcID.SOTETSEG_8388:
-				Active = false;
 				break;
 		}
 	}
@@ -293,15 +275,6 @@ public class ToBCheats extends Plugin
 	public void onProjectileMoved(ProjectileMoved event)
 	{
 		Projectile projectile = event.getProjectile();
-
-		if (projectile.getId() == 1606)
-		{
-			Sotetseg_MageProjectiles.add(projectile);
-		}
-		if (projectile.getId() == 1607)
-		{
-			Sotetseg_RangeProjectiles.add(projectile);
-		}
 		if (config.Verzik())
 		{
 			if (projectile.getId() == 1594)
@@ -328,85 +301,6 @@ public class ToBCheats extends Plugin
 		}
 	}
 
-/*	@Subscribe
-	public void onClientTick(ClientTick event)
-	{
-		if (config.sote())
-		{
-			for (Projectile projectile : Sotetseg_RangeProjectiles)
-			{
-				if (projectile.getInteracting() != null)
-				{
-					if (projectile.getInteracting() == client.getLocalPlayer())
-					{
-						if (projectile.getRemainingCycles() == 1)
-						{
-							if (tickeat)
-							{
-								executeEat();
-							}
-						}
-						if (projectile.getRemainingCycles() <= 20 && projectile.getRemainingCycles() >= 5)
-						{
-							if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES) && client.getBoostedSkillLevel(Skill.PRAYER) >= 1)
-							{
-								magepray = true;
-							}
-						}
-					}
-				}
-			}
-
-			for (Projectile projectile : Sotetseg_MageProjectiles)
-			{
-				if (projectile.getInteracting() != null)
-				{
-					if (projectile.getInteracting() == client.getLocalPlayer())
-					{
-						if (projectile.getRemainingCycles() == 1)
-						{
-							if (tickeat)
-							{
-								executeEat();
-							}
-						}
-						if (projectile.getRemainingCycles() <= 20 && projectile.getRemainingCycles() >= 5)
-						{
-							if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC) && client.getBoostedSkillLevel(Skill.PRAYER) >= 1)
-							{
-								magepray = true;
-							}
-						}
-					}
-				}
-			}
-
-			if (!getSotetseg_MageProjectiles().isEmpty())
-			{
-				for (Iterator<Projectile> it = Sotetseg_MageProjectiles.iterator(); it.hasNext(); )
-				{
-					Projectile projectile = it.next();
-					if (projectile.getRemainingCycles() < 1)
-					{
-						it.remove();
-					}
-				}
-			}
-
-			if (!getSotetseg_RangeProjectiles().isEmpty())
-			{
-				for (Iterator<Projectile> it = Sotetseg_RangeProjectiles.iterator(); it.hasNext(); )
-				{
-					Projectile projectile = it.next();
-					if (projectile.getRemainingCycles() < 1)
-					{
-						it.remove();
-					}
-				}
-			}
-		}
-	}*/
-
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
@@ -429,7 +323,6 @@ public class ToBCheats extends Plugin
 				boolean maidenswap50 = false;
 				boolean maidenswap30 = false;
 				int healthpercent = Maiden.getHealthRatio();
-				int timer = 0;
 				if (healthpercent > -1)
 				{
 					double truehealth = (healthpercent * 0.625);
@@ -495,6 +388,10 @@ public class ToBCheats extends Plugin
 					}
 					System.out.println("Attempting Range Swap");
 					executeRange();
+					if (config.autoAttack())
+					{
+						clickActor(getNylo());
+					}
 					nylolockRa = true;
 					nylolockMe = false;
 					nylolockMa = false;
@@ -511,6 +408,10 @@ public class ToBCheats extends Plugin
 					}
 					System.out.println("Attempting Mage Swap");
 					executeMage();
+					if (config.autoAttack())
+					{
+						clickActor(getNylo());
+					}
 					nylolockRa = false;
 					nylolockMe = false;
 					nylolockMa = true;
@@ -527,6 +428,10 @@ public class ToBCheats extends Plugin
 					}
 					System.out.println("Attempting Melee Swap");
 					executeMelee();
+					if (config.autoAttack())
+					{
+						clickActor(getNylo());
+					}
 					nylolockRa = false;
 					nylolockMe = true;
 					nylolockMa = false;
@@ -537,220 +442,106 @@ public class ToBCheats extends Plugin
 
 	private void executeBarrage()
 	{
-		//
+		Widget iceBarrage = client.getWidget(WidgetInfo.SPELL_ICE_BARRAGE);
+		if (client.getWidget(WidgetInfo.SPELL_ICE_BARRAGE).isHidden())
+		{
+			executorService.submit(() ->
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.MAGIC)));
+		}
+		clickSpell(iceBarrage);
+		executorService.submit(() ->
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executeAugury()
 	{
 		Widget prayerAugury = client.getWidget(WidgetInfo.PRAYER_AUGURY);
-		if (prayerAugury == null)
-		{
-			return;
-		}
 		if (client.getWidget(WidgetInfo.PRAYER_AUGURY).isHidden())
 		{
-			executorService.submit(() -> {
-				flexer.keyPress(tabutils.getTabHotkey(Tab.PRAYER));
-			});
+			executorService.submit(() ->
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
 		}
-		Rectangle bounds = FlexoMouse.getClickArea(prayerAugury.getBounds());
-		Point cp = getClickPoint(bounds);
-		executorService.submit(() -> {
-			if (bounds.getX() >= 1)
-			{
-				flexer.mouseMove(cp.getX(), cp.getY());
-				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
-			}
-		});
+		clickPrayer(prayerAugury);
+		executorService.submit(() ->
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executeRigour()
 	{
 		Widget prayerRigour = client.getWidget(WidgetInfo.PRAYER_RIGOUR);
-		if (prayerRigour == null)
-		{
-			return;
-		}
 		if (client.getWidget(WidgetInfo.PRAYER_RIGOUR).isHidden())
 		{
-			executorService.submit(() -> {
-				flexer.keyPress(tabutils.getTabHotkey(Tab.PRAYER));
-			});
+			executorService.submit(() ->
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
 		}
-		Rectangle bounds = FlexoMouse.getClickArea(prayerRigour.getBounds());
-		Point cp = getClickPoint(bounds);
-		executorService.submit(() -> {
-			if (bounds.getX() >= 1)
-			{
-				flexer.mouseMove(cp.getX(), cp.getY());
-				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
-			}
-		});
+		clickPrayer(prayerRigour);
+		executorService.submit(() ->
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executePiety()
 	{
 		Widget prayerPiety = client.getWidget(WidgetInfo.PRAYER_PIETY);
-		if (prayerPiety == null)
-		{
-			return;
-		}
 		if (client.getWidget(WidgetInfo.PRAYER_PIETY).isHidden())
 		{
-			executorService.submit(() -> {
-				flexer.keyPress(tabutils.getTabHotkey(Tab.PRAYER));
-			});
+			executorService.submit(() ->
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
 		}
-		Rectangle bounds = FlexoMouse.getClickArea(prayerPiety.getBounds());
-		Point cp = getClickPoint(bounds);
-		executorService.submit(() -> {
-			if (bounds.getX() >= 1)
-			{
-				flexer.mouseMove(cp.getX(), cp.getY());
-				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
-			}
-		});
+		clickPrayer(prayerPiety);
+		executorService.submit(() ->
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executeMagePray()
 	{
 		Widget prayerMage = client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
-		if (prayerMage == null)
-		{
-			return;
-		}
 		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC).isHidden())
 		{
-			executorService.submit(() -> {
-				flexer.keyPress(tabutils.getTabHotkey(Tab.PRAYER));
-			});
+			executorService.submit(() ->
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
 		}
-		Rectangle bounds = FlexoMouse.getClickArea(prayerMage.getBounds());
-		Point cp = getClickPoint(bounds);
-		executorService.submit(() -> {
-			if (bounds.getX() >= 1)
-			{
-				flexer.mouseMove(cp.getX(), cp.getY());
-				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
-			}
-		});
+		clickPrayer(prayerMage);
+		executorService.submit(() ->
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executeRangedPray()
 	{
 		Widget prayerRanged = client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
-		if (prayerRanged == null)
-		{
-			return;
-		}
 		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES).isHidden())
 		{
-			executorService.submit(() -> {
-				flexer.keyPress(tabutils.getTabHotkey(Tab.PRAYER));
-			});
+			executorService.submit(() ->
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
 		}
-		Rectangle bounds = FlexoMouse.getClickArea(prayerRanged.getBounds());
-		Point cp = getClickPoint(bounds);
-		executorService.submit(() -> {
-			if (bounds.getX() >= 1)
-			{
-				flexer.mouseMove(cp.getX(), cp.getY());
-				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
-			}
-		});
+		clickPrayer(prayerRanged);
+		executorService.submit(() ->
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executeMeleePray()
 	{
 		Widget prayerMelee = client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
-		if (prayerMelee == null)
-		{
-			return;
-		}
 		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
 		{
-			executorService.submit(() -> {
-				flexer.keyPress(tabutils.getTabHotkey(Tab.PRAYER));
-			});
+			executorService.submit(() ->
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
 		}
-		Rectangle bounds = FlexoMouse.getClickArea(prayerMelee.getBounds());
-		Point cp = getClickPoint(bounds);
-		executorService.submit(() -> {
-			if (bounds.getX() >= 1)
-			{
-				flexer.mouseMove(cp.getX(), cp.getY());
-				flexer.mousePressAndRelease(1);
-				flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
-			}
-		});
-	}
+		clickPrayer(prayerMelee);
+		executorService.submit(() ->
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 
-/*	private void executeEat()
-	{
-		executorService.submit(() -> {
-			Rectangle bounds = new Rectangle(0, 0, 0, 0);
-			Point cp = new Point(0, 0);
-			if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
-			{
-				Widget equipTab = client.getWidget(WidgetInfo.RESIZABLE_VIEWPORT_INVENTORY_TAB);
-				if (equipTab == null)
-				{
-					equipTab = client.getWidget(WidgetInfo.FIXED_VIEWPORT_INVENTORY_TAB);
-					if (equipTab == null)
-					{
-						return;
-					}
-				}
-				Rectangle boundsTab = equipTab.getBounds();
-				Point cptab = getClickPoint(boundsTab);
-				if (boundsTab.getX() >= 1)
-				{
-					flexer.mouseMove(cptab.getX(), cptab.getY());
-					flexer.mousePressAndRelease(1);
-				}
-			}
-			for (WidgetItem eat : getEat())
-			{
-				if (getEat().isEmpty())
-				{
-					break;
-				}
-				bounds = FlexoMouse.getClickArea(eat.getCanvasBounds());
-				cp = getClickPoint(bounds);
-			}
-			if (bounds.getX() >= 1)
-			{
-				flexer.mouseMove(cp.getX(), cp.getY());
-				flexer.mousePressAndRelease(1);
-			}
-		});
-	}*/
+	}
 
 	private void executeMelee()
 	{
 		executorService.submit(() -> {
-			for (WidgetItem melee : getMelee())
+			if (getMelee().isEmpty())
 			{
-				if (getMelee().isEmpty())
-				{
-					break;
-				}
-				if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
-				{
-					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
-				}
-				Rectangle bounds = FlexoMouse.getClickArea(melee.getCanvasBounds());
-				Point cp = getClickPoint(bounds);
-				if (bounds.getX() >= 1)
-				{
-					flexer.mouseMove(cp.getX(), cp.getY());
-					flexer.mousePressAndRelease(1);
-				}
+				return;
+			}
+			for (WidgetItem Melee : getMelee())
+			{
+				clickItem(Melee);
 			}
 		});
 	}
@@ -758,23 +549,13 @@ public class ToBCheats extends Plugin
 	private void executeRange()
 	{
 		executorService.submit(() -> {
-			for (WidgetItem range : getRange())
+			if (getRange().isEmpty())
 			{
-				if (getRange().isEmpty())
-				{
-					break;
-				}
-				if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
-				{
-					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
-				}
-				Rectangle bounds = FlexoMouse.getClickArea(range.getCanvasBounds());
-				Point cp = getClickPoint(bounds);
-				if (bounds.getX() >= 1)
-				{
-					flexer.mouseMove(cp.getX(), cp.getY());
-					flexer.mousePressAndRelease(1);
-				}
+				return;
+			}
+			for (WidgetItem Range : getRange())
+			{
+				clickItem(Range);
 			}
 		});
 	}
@@ -782,25 +563,297 @@ public class ToBCheats extends Plugin
 	private void executeMage()
 	{
 		executorService.submit(() -> {
+			if (getMage().isEmpty())
+			{
+				return;
+			}
 			for (WidgetItem mage : getMage())
 			{
-				if (getMage().isEmpty())
-				{
-					break;
-				}
-				if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
-				{
-					flexer.keyPress(tabutils.getTabHotkey(Tab.INVENTORY));
-				}
-				Rectangle bounds = FlexoMouse.getClickArea(mage.getCanvasBounds());
-				Point cp = getClickPoint(bounds);
-				if (bounds.getX() >= 1)
-				{
-					flexer.mouseMove(cp.getX(), cp.getY());
-					flexer.mousePressAndRelease(1);
-				}
+				clickItem(mage);
 			}
 		});
+	}
+
+	private void clickItem(WidgetItem item)
+	{
+		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+		{
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+		}
+		if (item != null)
+		{
+			Rectangle bounds = FlexoMouse.getClickArea(item.getCanvasBounds());
+			Point cp = getClickPoint(bounds);
+			if (bounds != null)
+			{
+				if (bounds.getX() >= 1)
+				{
+					executorService.submit(() -> {
+						if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+						{
+							return;
+						}
+						switch (config.actionType())
+						{
+							case FLEXO:
+								flexo.mouseMove(cp.getX(), cp.getY());
+								flexo.mousePressAndRelease(1);
+								break;
+							case MOUSEEVENTS:
+								leftClick(cp.getX(), cp.getY());
+								try
+								{
+									Thread.sleep(getMillis());
+								}
+								catch (InterruptedException e)
+								{
+									e.printStackTrace();
+								}
+								break;
+							case MENUACTIONS:
+								client.invokeMenuAction(item.getIndex(), 9764864, 34, item.getId(), "Wear", "Wear", cp.getX(), cp.getY());
+								try
+								{
+									Thread.sleep(getMillis());
+								}
+								catch (InterruptedException e)
+								{
+									e.printStackTrace();
+								}
+								break;
+						}
+					});
+				}
+			}
+		}
+	}
+
+	private void clickPrayer(Widget prayer)
+	{
+		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
+		{
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
+		}
+		if (prayer != null)
+		{
+			Rectangle bounds = FlexoMouse.getClickArea(prayer.getBounds());
+			Point cp = getClickPoint(bounds);
+			if (bounds != null)
+			{
+				if (bounds.getX() >= 1)
+				{
+					executorService.submit(() -> {
+						if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
+						{
+							return;
+						}
+						switch (config.actionType())
+						{
+							case FLEXO:
+								flexo.mouseMove(cp.getX(), cp.getY());
+								flexo.mousePressAndRelease(1);
+								break;
+							case MOUSEEVENTS:
+								leftClick(cp.getX(), cp.getY());
+								try
+								{
+									Thread.sleep(getMillis());
+								}
+								catch (InterruptedException e)
+								{
+									e.printStackTrace();
+								}
+								break;
+							case MENUACTIONS:
+								client.invokeMenuAction(-1, prayer.getId(), 57, 1, "Activate", prayer.getName(),
+									prayer.getCanvasLocation().getX(), prayer.getCanvasLocation().getY());
+								try
+								{
+									Thread.sleep(getMillis());
+								}
+								catch (InterruptedException e)
+								{
+									e.printStackTrace();
+								}
+								break;
+						}
+					});
+				}
+			}
+		}
+	}
+
+	private void clickSpell(Widget spell)
+	{
+		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
+		{
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
+		}
+		if (spell != null)
+		{
+			Rectangle bounds = FlexoMouse.getClickArea(spell.getBounds());
+			Point cp = getClickPoint(bounds);
+			if (bounds != null)
+			{
+				if (bounds.getX() >= 1)
+				{
+					executorService.submit(() -> {
+						if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
+						{
+							return;
+						}
+						switch (config.actionType())
+						{
+							case FLEXO:
+								flexo.mouseMove(cp.getX(), cp.getY());
+								flexo.mousePressAndRelease(1);
+								break;
+							case MOUSEEVENTS:
+								leftClick(cp.getX(), cp.getY());
+								try
+								{
+									Thread.sleep(getMillis());
+								}
+								catch (InterruptedException e)
+								{
+									e.printStackTrace();
+								}
+								break;
+							case MENUACTIONS:
+								client.invokeMenuAction(-1, spell.getId(), 25, 0, "Cast", spell.getName(),
+									spell.getCanvasLocation().getX(), spell.getCanvasLocation().getY());
+								try
+								{
+									Thread.sleep(getMillis());
+								}
+								catch (InterruptedException e)
+								{
+									e.printStackTrace();
+								}
+								break;
+						}
+					});
+				}
+			}
+		}
+	}
+
+	private void clickActor(Actor actor)
+	{
+		if (actor != null)
+		{
+			if (actor.getConvexHull() != null)
+			{
+				Rectangle bounds = FlexoMouse.getClickArea(actor.getConvexHull().getBounds());
+				Point cp = getClickPoint(bounds);
+				if (bounds != null)
+				{
+					if (bounds.getX() >= 1)
+					{
+						executorService.submit(() -> {
+							switch (config.actionType())
+							{
+								case FLEXO:
+									flexo.mouseMove(cp.getX(), cp.getY());
+									flexo.mousePressAndRelease(1);
+									break;
+								case MOUSEEVENTS:
+									leftClick(cp.getX(), cp.getY());
+									try
+									{
+										Thread.sleep(getMillis());
+									}
+									catch (InterruptedException e)
+									{
+										e.printStackTrace();
+									}
+									break;
+								case MENUACTIONS:
+									if (actor instanceof Player)
+									{
+										Player target = (Player) actor;
+										client.invokeMenuAction(0, 0, 45, target.getPlayerId(), "Attack", "<col=ffffff>" + target.getName() + "<col=ff00>  (level-" + target.getCombatLevel() + ")", 0, 0);
+										try
+										{
+											Thread.sleep(getMillis());
+										}
+										catch (InterruptedException e)
+										{
+											e.printStackTrace();
+										}
+									}
+									if (actor instanceof NPC)
+									{
+										NPC target = (NPC) actor;
+										client.invokeMenuAction(0, 0, 10, target.getId(), "Attack", "<col=ffffff>" + target.getName() + "<col=ff00>  (level-" + target.getCombatLevel() + ")", 0, 0);
+										try
+										{
+											Thread.sleep(getMillis());
+										}
+										catch (InterruptedException e)
+										{
+											e.printStackTrace();
+										}
+									}
+									break;
+							}
+						});
+					}
+				}
+			}
+		}
+	}
+
+	private long getMillis()
+	{
+		return (long) (Math.random() * config.randLow() + config.randHigh());
+	}
+
+	private void leftClick(int x, int y)
+	{
+		if (client.isStretchedEnabled())
+		{
+			Point p = this.client.getMouseCanvasPosition();
+			if (p.getX() != x || p.getY() != y)
+			{
+				this.moveMouse(x, y);
+			}
+			double scale = 1 + (scalingfactor / 100);
+
+			MouseEvent mousePressed =
+				new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
+			this.client.getCanvas().dispatchEvent(mousePressed);
+			MouseEvent mouseReleased =
+				new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
+			this.client.getCanvas().dispatchEvent(mouseReleased);
+			MouseEvent mouseClicked =
+				new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
+			this.client.getCanvas().dispatchEvent(mouseClicked);
+		}
+		if (!client.isStretchedEnabled())
+		{
+			Point p = this.client.getMouseCanvasPosition();
+			if (p.getX() != x || p.getY() != y)
+			{
+				this.moveMouse(x, y);
+			}
+			MouseEvent mousePressed = new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
+			this.client.getCanvas().dispatchEvent(mousePressed);
+			MouseEvent mouseReleased = new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
+			this.client.getCanvas().dispatchEvent(mouseReleased);
+			MouseEvent mouseClicked = new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
+			this.client.getCanvas().dispatchEvent(mouseClicked);
+		}
+	}
+
+	private void moveMouse(int x, int y)
+	{
+		MouseEvent mouseEntered = new MouseEvent(this.client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
+		this.client.getCanvas().dispatchEvent(mouseEntered);
+		MouseEvent mouseExited = new MouseEvent(this.client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
+		this.client.getCanvas().dispatchEvent(mouseExited);
+		MouseEvent mouseMoved = new MouseEvent(this.client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
+		this.client.getCanvas().dispatchEvent(mouseMoved);
 	}
 
 	private Point getClickPoint(Rectangle rect)

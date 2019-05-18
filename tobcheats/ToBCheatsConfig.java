@@ -34,6 +34,28 @@ public interface ToBCheatsConfig extends Config
 {
 	@ConfigItem(
 		position = 0,
+		keyName = "actionType",
+		name = "Action Type",
+		description = "Flexo is smooth mouse, MouseEvents is ghost mouse, MenuAction is no mouse, just invokes. BANNABLE"
+	)
+	default ActionType actionType()
+	{
+		return ActionType.FLEXO;
+	}
+
+	@ConfigItem(
+		position = 1,
+		keyName = "autoAttack",
+		name = "Auto Attack",
+		description = "Auto Attack after swaps."
+	)
+	default boolean autoAttack()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		position = 2,
 		keyName = "maidenSwapper",
 		name = "Maiden Swapper",
 		description = "Swaps on nylo spawns"
@@ -44,7 +66,7 @@ public interface ToBCheatsConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 0,
+		position = 3,
 		keyName = "nyloSwapper",
 		name = "Nylo Swapper",
 		description = "Swaps Pray/Items for you"
@@ -54,30 +76,8 @@ public interface ToBCheatsConfig extends Config
 		return true;
 	}
 
-/*	@ConfigItem(
-		position = 1,
-		keyName = "sote",
-		name = "Sote Helper",
-		description = "Swaps Prays/Allows Tick Eat"
-	)
-	default boolean sote()
-	{
-		return true;
-	}*/
-
-/*	@ConfigItem(
-		position = 2,
-		keyName = "soteTickEat",
-		name = "Sote Tick Eat",
-		description = "Toggle Tick Eat"
-	)
-	default Keybind hotkeyUtil()
-	{
-		return Keybind.NOT_SET;
-	}*/
-
 	@ConfigItem(
-		position = 3,
+		position = 4,
 		keyName = "Verzik",
 		name = "Verzik Helper",
 		description = "Swaps Prays on Verzik"
@@ -87,16 +87,27 @@ public interface ToBCheatsConfig extends Config
 		return true;
 	}
 
-/*	@ConfigItem(
-		position = 4,
-		keyName = "food",
-		name = "Sote Tick Eat Food",
-		description = "Tick Eats for you"
+	@ConfigItem(
+		keyName = "randLow",
+		name = "Minimum Delay",
+		description = "For MouseEvents/MenuActions only.",
+		position = 39
 	)
-	default String food()
+	default int randLow()
 	{
-		return "[6685,6687,6689,6691]";
-	}*/
+		return 70;
+	}
+
+	@ConfigItem(
+		keyName = "randLower",
+		name = "Maximum Delay",
+		description = "For MouseEvents/MenuActions only.",
+		position = 40
+	)
+	default int randHigh()
+	{
+		return 80;
+	}
 
 	@ConfigItem(
 		position = 41,
