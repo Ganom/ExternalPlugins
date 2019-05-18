@@ -131,7 +131,6 @@ public class ToBCheats extends Plugin
 
 	private List<WidgetItem> getMelee()
 	{
-		String str = config.melee();
 		int[] melee = Arrays.stream(config.melee().split(","))
 			.map(String::trim).mapToInt(Integer::parseInt).toArray();
 		return getItems(melee);
