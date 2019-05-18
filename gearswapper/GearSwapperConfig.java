@@ -10,13 +10,14 @@ import net.runelite.client.config.Keybind;
 public interface GearSwapperConfig extends Config
 {
 	@ConfigItem(
-		keyName = "flexoMode",
-		name = "Enable Flexo",
-		description = "Flexo is smooth mouse, default is mouse events"
+		position = 0,
+		keyName = "actionType",
+		name = "Action Type",
+		description = "Flexo is smooth mouse, MouseEvents is ghost mouse, MenuAction is no mouse, just invokes. BANNABLE"
 	)
-	default boolean flexoMode()
+	default ActionType actionType()
 	{
-		return false;
+		return ActionType.FLEXO;
 	}
 
 	@ConfigItem(
