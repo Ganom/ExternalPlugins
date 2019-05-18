@@ -326,7 +326,7 @@ public class GearSwapper extends Plugin
 							}
 							break;
 						case MENUACTIONS:
-							client.invokeMenuAction(item.getIndex(), 9764864, 34, item.getId(),"Wear","Wear", cp.getX(),cp.getY());
+							client.invokeMenuAction(item.getIndex(), 9764864, 34, item.getId(), "Wear", "Wear", item.getCanvasLocation().getX(), item.getCanvasLocation().getY());
 							break;
 					}
 				});
