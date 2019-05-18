@@ -304,22 +304,30 @@ public class GearSwapper extends Plugin
 			if (bounds.getX() >= 1)
 			{
 				executorService.submit(() -> {
-					if (config.flexoMode())
+					if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
 					{
-						flexo.mouseMove(cp.getX(), cp.getY());
-						flexo.mousePressAndRelease(1);
+						return;
 					}
-					else
+					switch (config.actionType())
 					{
-						leftClick(cp.getX(), cp.getY());
-						try
-						{
-							Thread.sleep(getMillis());
-						}
-						catch (InterruptedException e)
-						{
-							e.printStackTrace();
-						}
+						case FLEXO:
+							flexo.mouseMove(cp.getX(), cp.getY());
+							flexo.mousePressAndRelease(1);
+							break;
+						case MOUSEEVENTS:
+							leftClick(cp.getX(), cp.getY());
+							try
+							{
+								Thread.sleep(getMillis());
+							}
+							catch (InterruptedException e)
+							{
+								e.printStackTrace();
+							}
+							break;
+						case MENUACTIONS:
+							client.invokeMenuAction(item.getIndex(), 9764864, 34, item.getId(),"Wear","Wear", cp.getX(),cp.getY());
+							break;
 					}
 				});
 			}
