@@ -43,6 +43,7 @@ import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.flexo.Flexo;
+import net.runelite.client.flexo.FlexoMouse;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -139,6 +140,7 @@ public class GearSwapper extends Plugin
 
 	protected void shutDown()
 	{
+		flexo = null;
 		keyManager.unregisterKeyListener(mage);
 		keyManager.unregisterKeyListener(range);
 		keyManager.unregisterKeyListener(melee);
@@ -180,8 +182,7 @@ public class GearSwapper extends Plugin
 
 	private List<WidgetItem> getUtil()
 	{
-		String gear = config.util();
-		int[] gearIds = Arrays.stream(gear.split(","))
+		int[] gearIds = Arrays.stream(config.util().split(","))
 			.map(String::trim).mapToInt(Integer::parseInt).toArray();
 		return getItems(gearIds);
 	}
@@ -237,101 +238,13 @@ public class GearSwapper extends Plugin
 	private void executeMelee()
 	{
 		executorService.submit(() -> {
-			for (WidgetItem melee : getMelee())
+			if (getMelee().isEmpty())
 			{
-				if (getMelee().isEmpty())
-				{
-					break;
-				}
-				if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
-				{
-					flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-					try
-					{
-						Thread.sleep(20);
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-				}
-				if (melee.getCanvasBounds().getY() <= 0)
-				{
-					break;
-				}
-				if (!getMelee().isEmpty())
-				{
-					Rectangle boundsMelee = melee.getCanvasBounds();
-					Point clickPointMelee = getClickPoint(boundsMelee);
-					if (!config.flexoMode())
-					{
-						leftClick(clickPointMelee.getX(), clickPointMelee.getY());
-						try
-						{
-							Thread.sleep(getMillis());
-						}
-						catch (InterruptedException e)
-						{
-							e.printStackTrace();
-						}
-					}
-					else
-					{
-						flexo.mouseMove(clickPointMelee.getX(), clickPointMelee.getY());
-						flexo.mousePressAndRelease(1);
-					}
-				}
+				return;
 			}
-		});
-	}
-
-	private void executeUtil()
-	{
-		executorService.submit(() -> {
-			for (WidgetItem util : getUtil())
+			for (WidgetItem Melee : getMelee())
 			{
-				if (getUtil().isEmpty())
-				{
-					break;
-				}
-				if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
-				{
-					flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-					try
-					{
-						Thread.sleep(20);
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-				}
-				if (util.getCanvasBounds().getY() <= 0)
-				{
-					break;
-				}
-				if (!getUtil().isEmpty())
-				{
-					Rectangle boundsUtil = util.getCanvasBounds();
-					Point clickPointUtil = getClickPoint(boundsUtil);
-					if (!config.flexoMode())
-					{
-						leftClick(clickPointUtil.getX(), clickPointUtil.getY());
-						try
-						{
-							Thread.sleep(getMillis());
-						}
-						catch (InterruptedException e)
-						{
-							e.printStackTrace();
-						}
-					}
-					else
-					{
-						flexo.mouseMove(clickPointUtil.getX(), clickPointUtil.getY());
-						flexo.mousePressAndRelease(1);
-					}
-				}
+				clickItem(Melee);
 			}
 		});
 	}
@@ -339,50 +252,13 @@ public class GearSwapper extends Plugin
 	private void executeRange()
 	{
 		executorService.submit(() -> {
+			if (getRange().isEmpty())
+			{
+				return;
+			}
 			for (WidgetItem Range : getRange())
 			{
-				if (getRange().isEmpty())
-				{
-					break;
-				}
-				if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
-				{
-					flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-					try
-					{
-						Thread.sleep(20);
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-				}
-				if (Range.getCanvasBounds().getY() <= 0)
-				{
-					break;
-				}
-				if (!getRange().isEmpty())
-				{
-					Rectangle boundsRange = Range.getCanvasBounds();
-					Point clickPointRange = getClickPoint(boundsRange);
-					if (!config.flexoMode())
-					{
-						leftClick(clickPointRange.getX(), clickPointRange.getY());
-						try
-						{
-							Thread.sleep(getMillis());
-						}
-						catch (InterruptedException e)
-						{
-							e.printStackTrace();
-						}
-					}
-					else
-					{
-						flexo.mouseMove(clickPointRange.getX(), clickPointRange.getY());
-						flexo.mousePressAndRelease(1);
-					}
-				}
+				clickItem(Range);
 			}
 		});
 	}
@@ -390,35 +266,52 @@ public class GearSwapper extends Plugin
 	private void executeMage()
 	{
 		executorService.submit(() -> {
+			if (getMage().isEmpty())
+			{
+				return;
+			}
 			for (WidgetItem Mage : getMage())
 			{
-				if (getMage().isEmpty())
-				{
-					break;
-				}
-				if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
-				{
-					flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-					try
+				clickItem(Mage);
+			}
+		});
+	}
+
+	private void executeUtil()
+	{
+		executorService.submit(() -> {
+			if (getUtil().isEmpty())
+			{
+				return;
+			}
+			for (WidgetItem Util : getUtil())
+			{
+				clickItem(Util);
+			}
+		});
+	}
+
+	private void clickItem(WidgetItem item)
+	{
+		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+		{
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+		}
+		if (item != null)
+		{
+			Rectangle bounds = FlexoMouse.getClickArea(item.getCanvasBounds());
+			Point cp = getClickPoint(bounds);
+			if (bounds.getX() >= 1)
+			{
+				executorService.submit(() -> {
+					if (config.flexoMode())
 					{
-						Thread.sleep(20);
+						flexo.mouseMove(cp.getX(), cp.getY());
+						flexo.mousePressAndRelease(1);
 					}
-					catch (InterruptedException e)
+					else
 					{
-						e.printStackTrace();
-					}
-				}
-				if (Mage.getCanvasBounds().getY() <= 0)
-				{
-					break;
-				}
-				if (!getMage().isEmpty())
-				{
-					Rectangle boundsMage = Mage.getCanvasBounds();
-					Point clickPointMage = getClickPoint(boundsMage);
-					if (!config.flexoMode())
-					{
-						leftClick(clickPointMage.getX(), clickPointMage.getY());
+						leftClick(cp.getX(), cp.getY());
 						try
 						{
 							Thread.sleep(getMillis());
@@ -428,14 +321,9 @@ public class GearSwapper extends Plugin
 							e.printStackTrace();
 						}
 					}
-					else
-					{
-						flexo.mouseMove(clickPointMage.getX(), clickPointMage.getY());
-						flexo.mousePressAndRelease(1);
-					}
-				}
+				});
 			}
-		});
+		}
 	}
 
 	private long getMillis()
