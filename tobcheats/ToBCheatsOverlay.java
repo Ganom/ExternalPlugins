@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
+import net.runelite.client.ui.overlay.components.ComponentOrientation;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.PanelComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
@@ -48,7 +49,7 @@ public class ToBCheatsOverlay extends Overlay
 		this.client = client;
 		this.config = config;
 		setPosition(OverlayPosition.BOTTOM_RIGHT);
-		panelComponent.setOrientation(PanelComponent.Orientation.VERTICAL);
+		panelComponent.setOrientation(ComponentOrientation.VERTICAL);
 	}
 
 	@Override
