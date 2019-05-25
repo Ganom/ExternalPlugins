@@ -442,7 +442,7 @@ public class ToBCheats extends Plugin
 
 	private void executeBarrage()
 	{
-		Widget iceBarrage = client.getWidget(WidgetInfo.SPELL_ICE_BARRAGE);
+/*		Widget iceBarrage = client.getWidget(WidgetInfo.SPELL_ICE_BARRAGE);
 		if (client.getWidget(WidgetInfo.SPELL_ICE_BARRAGE).isHidden())
 		{
 			executorService.submit(() ->
@@ -450,86 +450,43 @@ public class ToBCheats extends Plugin
 		}
 		clickSpell(iceBarrage);
 		executorService.submit(() ->
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));*/
 	}
 
 	private void executeAugury()
 	{
 		Widget prayerAugury = client.getWidget(WidgetInfo.PRAYER_AUGURY);
-		if (client.getWidget(WidgetInfo.PRAYER_AUGURY).isHidden())
-		{
-			executorService.submit(() ->
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
-		}
 		clickPrayer(prayerAugury);
-		executorService.submit(() ->
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executeRigour()
 	{
 		Widget prayerRigour = client.getWidget(WidgetInfo.PRAYER_RIGOUR);
-		if (client.getWidget(WidgetInfo.PRAYER_RIGOUR).isHidden())
-		{
-			executorService.submit(() ->
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
-		}
 		clickPrayer(prayerRigour);
-		executorService.submit(() ->
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executePiety()
 	{
 		Widget prayerPiety = client.getWidget(WidgetInfo.PRAYER_PIETY);
-		if (client.getWidget(WidgetInfo.PRAYER_PIETY).isHidden())
-		{
-			executorService.submit(() ->
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
-		}
 		clickPrayer(prayerPiety);
-		executorService.submit(() ->
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executeMagePray()
 	{
 		Widget prayerMage = client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
-		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC).isHidden())
-		{
-			executorService.submit(() ->
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
-		}
 		clickPrayer(prayerMage);
-		executorService.submit(() ->
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executeRangedPray()
 	{
 		Widget prayerRanged = client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
-		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES).isHidden())
-		{
-			executorService.submit(() ->
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
-		}
 		clickPrayer(prayerRanged);
-		executorService.submit(() ->
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
 	}
 
 	private void executeMeleePray()
 	{
 		Widget prayerMelee = client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
-		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
-		{
-			executorService.submit(() ->
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER)));
-		}
 		clickPrayer(prayerMelee);
-		executorService.submit(() ->
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));
-
 	}
 
 	private void executeMelee()
@@ -582,48 +539,46 @@ public class ToBCheats extends Plugin
 		}
 		if (item != null)
 		{
-			Rectangle bounds = FlexoMouse.getClickArea(item.getCanvasBounds());
+			Rectangle bounds = item.getCanvasBounds();
 			Point cp = getClickPoint(bounds);
-			if (bounds != null)
+			System.out.println("Click Point Generated");
+			if (cp.getX() >= 1)
 			{
-				if (bounds.getX() >= 1)
-				{
-					executorService.submit(() -> {
-						if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
-						{
-							return;
-						}
-						switch (config.actionType())
-						{
-							case FLEXO:
-								flexo.mouseMove(cp.getX(), cp.getY());
-								flexo.mousePressAndRelease(1);
-								break;
-							case MOUSEEVENTS:
-								leftClick(cp.getX(), cp.getY());
-								try
-								{
-									Thread.sleep(getMillis());
-								}
-								catch (InterruptedException e)
-								{
-									e.printStackTrace();
-								}
-								break;
-							case MENUACTIONS:
-								client.invokeMenuAction(item.getIndex(), 9764864, 34, item.getId(), "Wear", "Wear", cp.getX(), cp.getY());
-								try
-								{
-									Thread.sleep(getMillis());
-								}
-								catch (InterruptedException e)
-								{
-									e.printStackTrace();
-								}
-								break;
-						}
-					});
-				}
+				executorService.submit(() -> {
+					if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+					{
+						return;
+					}
+					switch (config.actionType())
+					{
+						case FLEXO:
+							flexo.mouseMove(cp.getX(), cp.getY());
+							flexo.mousePressAndRelease(1);
+							break;
+						case MOUSEEVENTS:
+							leftClick(cp.getX(), cp.getY());
+							try
+							{
+								Thread.sleep(getMillis());
+							}
+							catch (InterruptedException e)
+							{
+								e.printStackTrace();
+							}
+							break;
+						case MENUACTIONS:
+							client.invokeMenuAction(item.getIndex(), 9764864, 34, item.getId(), "", "", item.getCanvasLocation().getX(), item.getCanvasLocation().getY());
+							try
+							{
+								Thread.sleep(getMillis());
+							}
+							catch (InterruptedException e)
+							{
+								e.printStackTrace();
+							}
+							break;
+					}
+				});
 			}
 		}
 	}
@@ -636,49 +591,49 @@ public class ToBCheats extends Plugin
 		}
 		if (prayer != null)
 		{
-			Rectangle bounds = FlexoMouse.getClickArea(prayer.getBounds());
+			Rectangle bounds = prayer.getBounds();
 			Point cp = getClickPoint(bounds);
-			if (bounds != null)
+			if (cp.getX() >= 1)
 			{
-				if (bounds.getX() >= 1)
-				{
-					executorService.submit(() -> {
-						if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
-						{
-							return;
-						}
-						switch (config.actionType())
-						{
-							case FLEXO:
-								flexo.mouseMove(cp.getX(), cp.getY());
-								flexo.mousePressAndRelease(1);
-								break;
-							case MOUSEEVENTS:
-								leftClick(cp.getX(), cp.getY());
-								try
-								{
-									Thread.sleep(getMillis());
-								}
-								catch (InterruptedException e)
-								{
-									e.printStackTrace();
-								}
-								break;
-							case MENUACTIONS:
-								client.invokeMenuAction(-1, prayer.getId(), 57, 1, "Activate", prayer.getName(),
-									prayer.getCanvasLocation().getX(), prayer.getCanvasLocation().getY());
-								try
-								{
-									Thread.sleep(getMillis());
-								}
-								catch (InterruptedException e)
-								{
-									e.printStackTrace();
-								}
-								break;
-						}
-					});
-				}
+				executorService.submit(() -> {
+					if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
+					{
+						return;
+					}
+					switch (config.actionType())
+					{
+						case FLEXO:
+							flexo.mouseMove(cp.getX(), cp.getY());
+							flexo.mousePressAndRelease(1);
+							flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+							break;
+						case MOUSEEVENTS:
+							leftClick(cp.getX(), cp.getY());
+							try
+							{
+								Thread.sleep(getMillis());
+							}
+							catch (InterruptedException e)
+							{
+								e.printStackTrace();
+							}
+							flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+							break;
+						case MENUACTIONS:
+							client.invokeMenuAction(-1, prayer.getId(), 57, 1, "Activate", prayer.getName(),
+								prayer.getCanvasLocation().getX(), prayer.getCanvasLocation().getY());
+							try
+							{
+								Thread.sleep(getMillis());
+							}
+							catch (InterruptedException e)
+							{
+								e.printStackTrace();
+							}
+							flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+							break;
+					}
+				});
 			}
 		}
 	}
@@ -691,17 +646,61 @@ public class ToBCheats extends Plugin
 		}
 		if (spell != null)
 		{
-			Rectangle bounds = FlexoMouse.getClickArea(spell.getBounds());
+			Rectangle bounds = spell.getBounds();
 			Point cp = getClickPoint(bounds);
-			if (bounds != null)
+			if (cp.getX() >= 1)
 			{
-				if (bounds.getX() >= 1)
+				executorService.submit(() -> {
+					if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
+					{
+						return;
+					}
+					switch (config.actionType())
+					{
+						case FLEXO:
+							flexo.mouseMove(cp.getX(), cp.getY());
+							flexo.mousePressAndRelease(1);
+							break;
+						case MOUSEEVENTS:
+							leftClick(cp.getX(), cp.getY());
+							try
+							{
+								Thread.sleep(getMillis());
+							}
+							catch (InterruptedException e)
+							{
+								e.printStackTrace();
+							}
+							break;
+						case MENUACTIONS:
+							client.invokeMenuAction(-1, spell.getId(), 25, 0, "Cast", spell.getName(),
+								spell.getCanvasLocation().getX(), spell.getCanvasLocation().getY());
+							try
+							{
+								Thread.sleep(getMillis());
+							}
+							catch (InterruptedException e)
+							{
+								e.printStackTrace();
+							}
+							break;
+					}
+				});
+			}
+		}
+	}
+
+	private void clickActor(Actor actor)
+	{
+		if (actor != null)
+		{
+			if (actor.getConvexHull() != null)
+			{
+				Rectangle bounds = actor.getConvexHull().getBounds();
+				Point cp = getClickPoint(bounds);
+				if (cp.getX() >= 1)
 				{
 					executorService.submit(() -> {
-						if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
-						{
-							return;
-						}
 						switch (config.actionType())
 						{
 							case FLEXO:
@@ -720,45 +719,10 @@ public class ToBCheats extends Plugin
 								}
 								break;
 							case MENUACTIONS:
-								client.invokeMenuAction(-1, spell.getId(), 25, 0, "Cast", spell.getName(),
-									spell.getCanvasLocation().getX(), spell.getCanvasLocation().getY());
-								try
+								if (actor instanceof Player)
 								{
-									Thread.sleep(getMillis());
-								}
-								catch (InterruptedException e)
-								{
-									e.printStackTrace();
-								}
-								break;
-						}
-					});
-				}
-			}
-		}
-	}
-
-	private void clickActor(Actor actor)
-	{
-		if (actor != null)
-		{
-			if (actor.getConvexHull() != null)
-			{
-				Rectangle bounds = FlexoMouse.getClickArea(actor.getConvexHull().getBounds());
-				Point cp = getClickPoint(bounds);
-				if (bounds != null)
-				{
-					if (bounds.getX() >= 1)
-					{
-						executorService.submit(() -> {
-							switch (config.actionType())
-							{
-								case FLEXO:
-									flexo.mouseMove(cp.getX(), cp.getY());
-									flexo.mousePressAndRelease(1);
-									break;
-								case MOUSEEVENTS:
-									leftClick(cp.getX(), cp.getY());
+									Player target = (Player) actor;
+									client.invokeMenuAction(0, 0, 45, target.getPlayerId(), "Attack", "<col=ffffff>" + target.getName() + "<col=ff00>  (level-" + target.getCombatLevel() + ")", 0, 0);
 									try
 									{
 										Thread.sleep(getMillis());
@@ -767,38 +731,23 @@ public class ToBCheats extends Plugin
 									{
 										e.printStackTrace();
 									}
-									break;
-								case MENUACTIONS:
-									if (actor instanceof Player)
+								}
+								if (actor instanceof NPC)
+								{
+									NPC target = (NPC) actor;
+									client.invokeMenuAction(0, 0, 10, target.getId(), "Attack", "<col=ffffff>" + target.getName() + "<col=ff00>  (level-" + target.getCombatLevel() + ")", 0, 0);
+									try
 									{
-										Player target = (Player) actor;
-										client.invokeMenuAction(0, 0, 45, target.getPlayerId(), "Attack", "<col=ffffff>" + target.getName() + "<col=ff00>  (level-" + target.getCombatLevel() + ")", 0, 0);
-										try
-										{
-											Thread.sleep(getMillis());
-										}
-										catch (InterruptedException e)
-										{
-											e.printStackTrace();
-										}
+										Thread.sleep(getMillis());
 									}
-									if (actor instanceof NPC)
+									catch (InterruptedException e)
 									{
-										NPC target = (NPC) actor;
-										client.invokeMenuAction(0, 0, 10, target.getId(), "Attack", "<col=ffffff>" + target.getName() + "<col=ff00>  (level-" + target.getCombatLevel() + ")", 0, 0);
-										try
-										{
-											Thread.sleep(getMillis());
-										}
-										catch (InterruptedException e)
-										{
-											e.printStackTrace();
-										}
+										e.printStackTrace();
 									}
-									break;
-							}
-						});
-					}
+								}
+								break;
+						}
+					});
 				}
 			}
 		}
