@@ -68,12 +68,12 @@ public interface PraySwapConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "backToInv",
-		name = "Back To Inventory",
-		description = "Return back to inventory after swaps are finished.",
-		position = 0
+		keyName = "backToInventory",
+		name = "Swap back to Inventory",
+		description = "After finishing a sequence, it will swap back to inventory if enabled.",
+		position = 5
 	)
-	default boolean backToInv()
+	default boolean backToInventory()
 	{
 		return true;
 	}
