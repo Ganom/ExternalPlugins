@@ -433,7 +433,7 @@ public class ToBCheats extends Plugin
 					executeItem(getRange());
 					if (config.autoAttack())
 					{
-						clickActor(getNylo());
+						executeActor(getNylo());
 					}
 					nylolockRa = true;
 					nylolockMe = false;
@@ -453,7 +453,7 @@ public class ToBCheats extends Plugin
 					executeItem(getMage());
 					if (config.autoAttack())
 					{
-						clickActor(getNylo());
+						executeActor(getNylo());
 					}
 					nylolockRa = false;
 					nylolockMe = false;
@@ -473,7 +473,7 @@ public class ToBCheats extends Plugin
 					executeItem(getMelee());
 					if (config.autoAttack())
 					{
-						clickActor(getNylo());
+						executeActor(getNylo());
 					}
 					nylolockRa = false;
 					nylolockMe = true;
@@ -507,6 +507,11 @@ public class ToBCheats extends Plugin
 				clickItem(items);
 			}
 		});
+	}
+
+	private void executeActor(Actor actor)
+	{
+		executorService.submit(() -> clickActor(actor));
 	}
 
 	private void clickItem(WidgetItem item)
