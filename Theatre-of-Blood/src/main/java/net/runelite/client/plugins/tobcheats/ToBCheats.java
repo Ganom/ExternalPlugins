@@ -245,30 +245,33 @@ public class ToBCheats extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage event)
 	{
-		if (event.getType() == ChatMessageType.PUBLICCHAT)
+		if (config.testing())
 		{
-			if (event.getMessage().toLowerCase().contains("1"))
+			if (event.getType() == ChatMessageType.PUBLICCHAT)
 			{
-				executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
-				executePrayer(WidgetInfo.PRAYER_AUGURY);
-				executeItem(getMage());
-			}
-			if (event.getMessage().toLowerCase().contains("2"))
-			{
-				executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
-				executePrayer(WidgetInfo.PRAYER_RIGOUR);
-				executeItem(getRange());
-			}
-			if (event.getMessage().toLowerCase().contains("3"))
-			{
-				executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
-				executePrayer(WidgetInfo.PRAYER_PIETY);
-				executeItem(getMelee());
-			}
-			if (event.getMessage().toLowerCase().contains("4"))
-			{
-				executeItem(getMage());
-				executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
+				if (event.getMessage().toLowerCase().contains("1"))
+				{
+					executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
+					executePrayer(WidgetInfo.PRAYER_AUGURY);
+					executeItem(getMage());
+				}
+				if (event.getMessage().toLowerCase().contains("2"))
+				{
+					executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
+					executePrayer(WidgetInfo.PRAYER_RIGOUR);
+					executeItem(getRange());
+				}
+				if (event.getMessage().toLowerCase().contains("3"))
+				{
+					executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
+					executePrayer(WidgetInfo.PRAYER_PIETY);
+					executeItem(getMelee());
+				}
+				if (event.getMessage().toLowerCase().contains("4"))
+				{
+					executeItem(getMage());
+					executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
+				}
 			}
 		}
 	}
@@ -495,7 +498,7 @@ public class ToBCheats extends Plugin
 	private void executeItem(List<WidgetItem> list)
 	{
 		executorService.submit(() -> {
-			if (getMelee().isEmpty())
+			if (list.isEmpty())
 			{
 				return;
 			}
