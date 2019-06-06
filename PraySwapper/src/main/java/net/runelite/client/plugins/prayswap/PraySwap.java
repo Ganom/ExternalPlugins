@@ -207,6 +207,10 @@ public class PraySwap extends Plugin implements KeyListener
 		if (prayer != null)
 		{
 			handleSwitch(prayer.getBounds());
+			if (config.backToInventory())
+			{
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+			}
 		}
 	}
 
