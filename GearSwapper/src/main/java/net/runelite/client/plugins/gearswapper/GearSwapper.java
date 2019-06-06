@@ -245,7 +245,7 @@ public class GearSwapper extends Plugin
 	private void executeItem(List<WidgetItem> list)
 	{
 		executorService.submit(() -> {
-			if (getMelee().isEmpty())
+			if (list.isEmpty())
 			{
 				return;
 			}
