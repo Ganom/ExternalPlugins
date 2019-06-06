@@ -100,6 +100,17 @@ public interface ToBCheatsConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "testing",
+		name = "Test Features",
+		description = "Press 1 for mage swap, 2 for range, 3 for melee, 4 for ice barrage.",
+		position = 6
+	)
+	default boolean testing()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "randLow",
 		name = "Minimum Delay",
 		description = "For MouseEvents only.",
