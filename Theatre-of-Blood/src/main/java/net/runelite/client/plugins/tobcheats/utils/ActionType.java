@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.gearswapper;
+package net.runelite.client.plugins.tobcheats.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,5 +14,8 @@ public enum ActionType
 	private String name;
 
 	@Override
-	public String toString() {return getName();}
+	public String toString()
+	{
+		return getName();
+	}
 }

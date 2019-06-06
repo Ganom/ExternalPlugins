@@ -27,6 +27,7 @@ package net.runelite.client.plugins.tobcheats;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.plugins.tobcheats.utils.ActionType;
 
 @ConfigGroup("tobcheats")
 
@@ -88,9 +89,20 @@ public interface ToBCheatsConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "backToInventory",
+		name = "Swap back to Inventory",
+		description = "After finishing a sequence, it will swap back to inventory if enabled.",
+		position = 5
+	)
+	default boolean backToInventory()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "randLow",
 		name = "Minimum Delay",
-		description = "For MouseEvents/MenuActions only.",
+		description = "For MouseEvents only.",
 		position = 39
 	)
 	default int randLow()
@@ -101,7 +113,7 @@ public interface ToBCheatsConfig extends Config
 	@ConfigItem(
 		keyName = "randLower",
 		name = "Maximum Delay",
-		description = "For MouseEvents/MenuActions only.",
+		description = "For MouseEvents only.",
 		position = 40
 	)
 	default int randHigh()
@@ -117,7 +129,7 @@ public interface ToBCheatsConfig extends Config
 	)
 	default String mage()
 	{
-		return "[11663,22323,21795,12002]";
+		return "11663,22323,21795,12002";
 	}
 
 	@ConfigItem(
@@ -128,7 +140,7 @@ public interface ToBCheatsConfig extends Config
 	)
 	default String range()
 	{
-		return "[11664,12926,22109,19547]";
+		return "11664,12926,22109,19547";
 	}
 
 	@ConfigItem(
@@ -139,6 +151,6 @@ public interface ToBCheatsConfig extends Config
 	)
 	default String melee()
 	{
-		return "[11665,12006,6570,19553,12954]";
+		return "11665,12006,6570,19553,12954";
 	}
 }

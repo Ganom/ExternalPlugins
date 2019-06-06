@@ -27,12 +27,23 @@ package net.runelite.client.plugins.prayswap;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
-
-import java.awt.*;
 import net.runelite.client.config.Keybind;
+import net.runelite.client.plugins.prayswap.utils.ActionType;
 
-@ConfigGroup("prayswap")
-public interface prayswapconfig extends Config {
+@ConfigGroup("PraySwap")
+public interface PraySwapConfig extends Config
+{
+
+	@ConfigItem(
+		position = 0,
+		keyName = "actionType",
+		name = "Action Type",
+		description = "Flexo is smooth mouse, MouseEvents is ghost mouse, MenuAction is no mouse, just invokes. BANNABLE"
+	)
+	default ActionType actionType()
+	{
+		return ActionType.FLEXO;
+	}
 
 	@ConfigItem(
 		keyName = "protectItem",
@@ -142,6 +153,28 @@ public interface prayswapconfig extends Config {
 	default Keybind hotkeySmite()
 	{
 		return Keybind.NOT_SET;
+	}
+
+	@ConfigItem(
+		keyName = "randLow",
+		name = "Minimum Delay",
+		description = "For MouseEvents/MenuActions only.",
+		position = 39
+	)
+	default int randLow()
+	{
+		return 70;
+	}
+
+	@ConfigItem(
+		keyName = "randLower",
+		name = "Maximum Delay",
+		description = "For MouseEvents/MenuActions only.",
+		position = 40
+	)
+	default int randHigh()
+	{
+		return 80;
 	}
 
 }

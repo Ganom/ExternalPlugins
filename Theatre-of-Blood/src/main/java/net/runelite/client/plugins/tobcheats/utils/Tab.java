@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.tobcheats;
+package net.runelite.client.plugins.tobcheats.utils;
 
 public enum Tab
 {
