@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.tobcheats;
+package net.runelite.client.plugins.prayswap.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

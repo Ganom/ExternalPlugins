@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.gearswapper;
+package net.runelite.client.plugins.prayswap.utils;
 
 public enum Tab
 {

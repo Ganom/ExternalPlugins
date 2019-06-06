@@ -35,14 +35,16 @@ import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
-import net.runelite.api.Player;
 import net.runelite.api.Point;
 import net.runelite.api.Prayer;
 import net.runelite.api.Projectile;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.NpcDespawned;
@@ -54,12 +56,14 @@ import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.flexo.Flexo;
-import net.runelite.client.flexo.FlexoMouse;
+import net.runelite.client.game.ItemManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
+import net.runelite.client.plugins.tobcheats.utils.Tab;
+import net.runelite.client.plugins.tobcheats.utils.TabUtils;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
@@ -70,44 +74,62 @@ import net.runelite.client.ui.overlay.OverlayManager;
 	type = PluginType.EXTERNAL
 )
 
+@Slf4j
 public class ToBCheats extends Plugin
 {
 	@Getter(AccessLevel.PACKAGE)
 	private NPC Maiden;
+
 	@Getter(AccessLevel.PACKAGE)
 	private NPC Nylo;
-	private boolean lock1;
-	private boolean lock2;
-	private boolean lock3;
+
 	@Getter(AccessLevel.PACKAGE)
 	private boolean tickeat;
+
 	@Getter(AccessLevel.PACKAGE)
 	private boolean Active;
+
 	@Getter
 	private Widget widget;
+
 	@Inject
 	private Client client;
+
 	@Inject
 	private ToBCheatsConfig config;
+
 	@Inject
 	private OverlayManager overlayManager;
+
 	@Inject
 	private ToBCheatsOverlay overlay;
+
 	@Inject
 	private KeyManager keyManager;
+
 	@Inject
 	private ConfigManager externalConfig;
+
 	@Inject
 	private TabUtils tabUtils;
+
+	@Inject
+	private ItemManager itemManager;
+
 	private Flexo flexo;
+
 	private ExecutorService executorService = Executors.newFixedThreadPool(1);
+
 	private double scalingfactor;
+
 	private boolean magepray;
 	private boolean rangepray;
 	private boolean nylolockRa;
 	private boolean nylolockMe;
 	private boolean nylolockMa;
-	private int ticks;
+	private boolean lock1;
+	private boolean lock2;
+	private boolean lock3;
 
 	@Provides
 	ToBCheatsConfig getConfig(ConfigManager configManager)
@@ -163,18 +185,6 @@ public class ToBCheats extends Plugin
 	{
 		overlayManager.add(overlay);
 		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
-		Nylo = null;
-		Maiden = null;
-		tickeat = false;
-		Active = false;
-		lock1 = false;
-		lock2 = false;
-		lock3 = false;
-		nylolockMa = false;
-		nylolockMe = false;
-		nylolockRa = false;
-		magepray = false;
-		rangepray = false;
 		Flexo.client = client;
 		executorService.submit(() -> {
 			flexo = null;
@@ -193,7 +203,6 @@ public class ToBCheats extends Plugin
 	protected void shutDown()
 	{
 		overlayManager.remove(overlay);
-		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
 		Nylo = null;
 		Maiden = null;
 		tickeat = false;
@@ -230,6 +239,37 @@ public class ToBCheats extends Plugin
 				nylolockRa = false;
 				Flexo.client = client;
 				break;
+		}
+	}
+
+	@Subscribe
+	public void onChatMessage(ChatMessage event)
+	{
+		if (event.getType() == ChatMessageType.PUBLICCHAT)
+		{
+			if (event.getMessage().toLowerCase().contains("1"))
+			{
+				executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
+				executePrayer(WidgetInfo.PRAYER_AUGURY);
+				executeItem(getMage());
+			}
+			if (event.getMessage().toLowerCase().contains("2"))
+			{
+				executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
+				executePrayer(WidgetInfo.PRAYER_RIGOUR);
+				executeItem(getRange());
+			}
+			if (event.getMessage().toLowerCase().contains("3"))
+			{
+				executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
+				executePrayer(WidgetInfo.PRAYER_PIETY);
+				executeItem(getMelee());
+			}
+			if (event.getMessage().toLowerCase().contains("4"))
+			{
+				executeItem(getMage());
+				executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
+			}
 		}
 	}
 
@@ -307,12 +347,12 @@ public class ToBCheats extends Plugin
 		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
 		if (magepray)
 		{
-			executeMagePray();
+			executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
 			magepray = false;
 		}
 		if (rangepray)
 		{
-			executeRangedPray();
+			executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
 			rangepray = false;
 		}
 		if (config.maidenSwapper())
@@ -343,30 +383,30 @@ public class ToBCheats extends Plugin
 				{
 					if (!client.isPrayerActive(Prayer.AUGURY))
 					{
-						executeAugury();
+						executePrayer(WidgetInfo.PRAYER_AUGURY);
 					}
-					executeMage();
-					executeBarrage();
+					executeItem(getMage());
+					executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
 					lock1 = true;
 				}
 				if (maidenswap50 && !lock2)
 				{
 					if (!client.isPrayerActive(Prayer.AUGURY))
 					{
-						executeAugury();
+						executePrayer(WidgetInfo.PRAYER_AUGURY);
 					}
-					executeMage();
-					executeBarrage();
+					executeItem(getMage());
+					executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
 					lock2 = true;
 				}
 				if (maidenswap30 && !lock3)
 				{
 					if (!client.isPrayerActive(Prayer.AUGURY))
 					{
-						executeAugury();
+						executePrayer(WidgetInfo.PRAYER_AUGURY);
 					}
-					executeMage();
-					executeBarrage();
+					executeItem(getMage());
+					executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
 					lock3 = true;
 				}
 			}
@@ -380,14 +420,14 @@ public class ToBCheats extends Plugin
 				{
 					if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
 					{
-						executeRangedPray();
+						executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
 					}
 					if (!client.isPrayerActive(Prayer.RIGOUR))
 					{
-						executeRigour();
+						executePrayer(WidgetInfo.PRAYER_RIGOUR);
 					}
-					System.out.println("Attempting Range Swap");
-					executeRange();
+					log.info("Attempting Range Swap");
+					executeItem(getRange());
 					if (config.autoAttack())
 					{
 						clickActor(getNylo());
@@ -400,14 +440,14 @@ public class ToBCheats extends Plugin
 				{
 					if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
 					{
-						executeMagePray();
+						executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
 					}
 					if (!client.isPrayerActive(Prayer.AUGURY))
 					{
-						executeAugury();
+						executePrayer(WidgetInfo.PRAYER_AUGURY);
 					}
-					System.out.println("Attempting Mage Swap");
-					executeMage();
+					log.info("Attempting Mage Swap");
+					executeItem(getMage());
 					if (config.autoAttack())
 					{
 						clickActor(getNylo());
@@ -420,14 +460,14 @@ public class ToBCheats extends Plugin
 				{
 					if (!client.isPrayerActive(Prayer.PROTECT_FROM_MELEE))
 					{
-						executeMeleePray();
+						executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
 					}
 					if (!client.isPrayerActive(Prayer.PIETY))
 					{
-						executePiety();
+						executePrayer(WidgetInfo.PRAYER_PIETY);
 					}
-					System.out.println("Attempting Melee Swap");
-					executeMelee();
+					log.info("Attempting Melee Swap");
+					executeItem(getMelee());
 					if (config.autoAttack())
 					{
 						clickActor(getNylo());
@@ -440,93 +480,28 @@ public class ToBCheats extends Plugin
 		}
 	}
 
-	private void executeBarrage()
+	private void executePrayer(WidgetInfo prayer)
 	{
-/*		Widget iceBarrage = client.getWidget(WidgetInfo.SPELL_ICE_BARRAGE);
-		if (client.getWidget(WidgetInfo.SPELL_ICE_BARRAGE).isHidden())
-		{
-			executorService.submit(() ->
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.MAGIC)));
-		}
-		clickSpell(iceBarrage);
-		executorService.submit(() ->
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY)));*/
+		Widget pray = client.getWidget(prayer);
+		executorService.submit(() -> clickPrayer(pray));
 	}
 
-	private void executeAugury()
+	private void executeSpell(WidgetInfo spell)
 	{
-		Widget prayerAugury = client.getWidget(WidgetInfo.PRAYER_AUGURY);
-		clickPrayer(prayerAugury);
+		Widget cast = client.getWidget(spell);
+		executorService.submit(() -> clickSpell(cast));
 	}
 
-	private void executeRigour()
-	{
-		Widget prayerRigour = client.getWidget(WidgetInfo.PRAYER_RIGOUR);
-		clickPrayer(prayerRigour);
-	}
-
-	private void executePiety()
-	{
-		Widget prayerPiety = client.getWidget(WidgetInfo.PRAYER_PIETY);
-		clickPrayer(prayerPiety);
-	}
-
-	private void executeMagePray()
-	{
-		Widget prayerMage = client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
-		clickPrayer(prayerMage);
-	}
-
-	private void executeRangedPray()
-	{
-		Widget prayerRanged = client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
-		clickPrayer(prayerRanged);
-	}
-
-	private void executeMeleePray()
-	{
-		Widget prayerMelee = client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
-		clickPrayer(prayerMelee);
-	}
-
-	private void executeMelee()
+	private void executeItem(List<WidgetItem> list)
 	{
 		executorService.submit(() -> {
 			if (getMelee().isEmpty())
 			{
 				return;
 			}
-			for (WidgetItem Melee : getMelee())
+			for (WidgetItem items : list)
 			{
-				clickItem(Melee);
-			}
-		});
-	}
-
-	private void executeRange()
-	{
-		executorService.submit(() -> {
-			if (getRange().isEmpty())
-			{
-				return;
-			}
-			for (WidgetItem Range : getRange())
-			{
-				clickItem(Range);
-			}
-		});
-	}
-
-	private void executeMage()
-	{
-		executorService.submit(() -> {
-			if (getMage().isEmpty())
-			{
-				return;
-			}
-			for (WidgetItem mage : getMage())
-			{
-				clickItem(mage);
+				clickItem(items);
 			}
 		});
 	}
@@ -539,47 +514,8 @@ public class ToBCheats extends Plugin
 		}
 		if (item != null)
 		{
-			Rectangle bounds = item.getCanvasBounds();
-			Point cp = getClickPoint(bounds);
-			System.out.println("Click Point Generated");
-			if (cp.getX() >= 1)
-			{
-				executorService.submit(() -> {
-					if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
-					{
-						return;
-					}
-					switch (config.actionType())
-					{
-						case FLEXO:
-							flexo.mouseMove(cp.getX(), cp.getY());
-							flexo.mousePressAndRelease(1);
-							break;
-						case MOUSEEVENTS:
-							leftClick(cp.getX(), cp.getY());
-							try
-							{
-								Thread.sleep(getMillis());
-							}
-							catch (InterruptedException e)
-							{
-								e.printStackTrace();
-							}
-							break;
-						case MENUACTIONS:
-							client.invokeMenuAction(item.getIndex(), 9764864, 34, item.getId(), "", "", item.getCanvasLocation().getX(), item.getCanvasLocation().getY());
-							try
-							{
-								Thread.sleep(getMillis());
-							}
-							catch (InterruptedException e)
-							{
-								e.printStackTrace();
-							}
-							break;
-					}
-				});
-			}
+			log.info("Grabbing Bounds and CP of: " + itemManager.getItemComposition(item.getId()).getName());
+			handleSwitch(item.getCanvasBounds());
 		}
 	}
 
@@ -591,101 +527,26 @@ public class ToBCheats extends Plugin
 		}
 		if (prayer != null)
 		{
-			Rectangle bounds = prayer.getBounds();
-			Point cp = getClickPoint(bounds);
-			if (cp.getX() >= 1)
+			handleSwitch(prayer.getBounds());
+			if (config.backToInventory())
 			{
-				executorService.submit(() -> {
-					if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
-					{
-						return;
-					}
-					switch (config.actionType())
-					{
-						case FLEXO:
-							flexo.mouseMove(cp.getX(), cp.getY());
-							flexo.mousePressAndRelease(1);
-							flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-							break;
-						case MOUSEEVENTS:
-							leftClick(cp.getX(), cp.getY());
-							try
-							{
-								Thread.sleep(getMillis());
-							}
-							catch (InterruptedException e)
-							{
-								e.printStackTrace();
-							}
-							flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-							break;
-						case MENUACTIONS:
-							client.invokeMenuAction(-1, prayer.getId(), 57, 1, "Activate", prayer.getName(),
-								prayer.getCanvasLocation().getX(), prayer.getCanvasLocation().getY());
-							try
-							{
-								Thread.sleep(getMillis());
-							}
-							catch (InterruptedException e)
-							{
-								e.printStackTrace();
-							}
-							flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-							break;
-					}
-				});
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
 			}
 		}
 	}
 
 	private void clickSpell(Widget spell)
 	{
-		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
+		if (client.getWidget(WidgetInfo.SPELL_ICE_BARRAGE).isHidden())
 		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.MAGIC));
 		}
 		if (spell != null)
 		{
-			Rectangle bounds = spell.getBounds();
-			Point cp = getClickPoint(bounds);
-			if (cp.getX() >= 1)
+			handleSwitch(spell.getBounds());
+			if (config.backToInventory())
 			{
-				executorService.submit(() -> {
-					if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
-					{
-						return;
-					}
-					switch (config.actionType())
-					{
-						case FLEXO:
-							flexo.mouseMove(cp.getX(), cp.getY());
-							flexo.mousePressAndRelease(1);
-							break;
-						case MOUSEEVENTS:
-							leftClick(cp.getX(), cp.getY());
-							try
-							{
-								Thread.sleep(getMillis());
-							}
-							catch (InterruptedException e)
-							{
-								e.printStackTrace();
-							}
-							break;
-						case MENUACTIONS:
-							client.invokeMenuAction(-1, spell.getId(), 25, 0, "Cast", spell.getName(),
-								spell.getCanvasLocation().getX(), spell.getCanvasLocation().getY());
-							try
-							{
-								Thread.sleep(getMillis());
-							}
-							catch (InterruptedException e)
-							{
-								e.printStackTrace();
-							}
-							break;
-					}
-				});
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
 			}
 		}
 	}
@@ -696,59 +557,33 @@ public class ToBCheats extends Plugin
 		{
 			if (actor.getConvexHull() != null)
 			{
-				Rectangle bounds = actor.getConvexHull().getBounds();
-				Point cp = getClickPoint(bounds);
-				if (cp.getX() >= 1)
-				{
-					executorService.submit(() -> {
-						switch (config.actionType())
-						{
-							case FLEXO:
-								flexo.mouseMove(cp.getX(), cp.getY());
-								flexo.mousePressAndRelease(1);
-								break;
-							case MOUSEEVENTS:
-								leftClick(cp.getX(), cp.getY());
-								try
-								{
-									Thread.sleep(getMillis());
-								}
-								catch (InterruptedException e)
-								{
-									e.printStackTrace();
-								}
-								break;
-							case MENUACTIONS:
-								if (actor instanceof Player)
-								{
-									Player target = (Player) actor;
-									client.invokeMenuAction(0, 0, 45, target.getPlayerId(), "Attack", "<col=ffffff>" + target.getName() + "<col=ff00>  (level-" + target.getCombatLevel() + ")", 0, 0);
-									try
-									{
-										Thread.sleep(getMillis());
-									}
-									catch (InterruptedException e)
-									{
-										e.printStackTrace();
-									}
-								}
-								if (actor instanceof NPC)
-								{
-									NPC target = (NPC) actor;
-									client.invokeMenuAction(0, 0, 10, target.getId(), "Attack", "<col=ffffff>" + target.getName() + "<col=ff00>  (level-" + target.getCombatLevel() + ")", 0, 0);
-									try
-									{
-										Thread.sleep(getMillis());
-									}
-									catch (InterruptedException e)
-									{
-										e.printStackTrace();
-									}
-								}
-								break;
-						}
-					});
-				}
+				handleSwitch(actor.getConvexHull().getBounds());
+			}
+		}
+	}
+
+	private void handleSwitch(Rectangle rectangle)
+	{
+		Point cp = getClickPoint(rectangle);
+		if (cp.getX() >= 1)
+		{
+			switch (config.actionType())
+			{
+				case FLEXO:
+					flexo.mouseMove(cp.getX(), cp.getY());
+					flexo.mousePressAndRelease(1);
+					break;
+				case MOUSEEVENTS:
+					leftClick(cp.getX(), cp.getY());
+					try
+					{
+						Thread.sleep(getMillis());
+					}
+					catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+					break;
 			}
 		}
 	}
