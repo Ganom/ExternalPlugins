@@ -44,6 +44,7 @@ import net.runelite.api.NpcID;
 import net.runelite.api.Point;
 import net.runelite.api.Prayer;
 import net.runelite.api.Projectile;
+import net.runelite.api.Skill;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
@@ -69,7 +70,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @PluginDescriptor(
 	name = "ToB Cheats",
 	description = "ToB Cheats",
-	tags = {"ToB", "theatre", "blood", "cheats", "flexo"},
+	tags = {"ToB", "theatre", "blood", "cheats"},
 	enabledByDefault = false,
 	type = PluginType.EXTERNAL
 )
@@ -362,6 +363,7 @@ public class ToBCheats extends Plugin
 		{
 			if (Maiden != null)
 			{
+				log.info("Health: " + Maiden.getHealth() + "| Health Percent: " + Maiden.getHealthRatio());
 				boolean maidenswap70 = false;
 				boolean maidenswap50 = false;
 				boolean maidenswap30 = false;
@@ -371,45 +373,33 @@ public class ToBCheats extends Plugin
 					double truehealth = (healthpercent * 0.625);
 					if (truehealth <= 71 && truehealth >= 70)
 					{
+						log.info("Maiden Swap 70 reached.");
 						maidenswap70 = true;
 					}
 					if (truehealth <= 51 && truehealth >= 50)
 					{
+						log.info("Maiden Swap 50 reached.");
 						maidenswap50 = true;
 					}
 					if (truehealth <= 31 && truehealth >= 30)
 					{
+						log.info("Maiden Swap 30 reached.");
 						maidenswap30 = true;
 					}
 				}
 				if (maidenswap70 && !lock1)
 				{
-					if (!client.isPrayerActive(Prayer.AUGURY))
-					{
-						executePrayer(WidgetInfo.PRAYER_AUGURY);
-					}
-					executeItem(getMage());
-					executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
+					handleBarrage("Maiden Swap 70 locked.");
 					lock1 = true;
 				}
 				if (maidenswap50 && !lock2)
 				{
-					if (!client.isPrayerActive(Prayer.AUGURY))
-					{
-						executePrayer(WidgetInfo.PRAYER_AUGURY);
-					}
-					executeItem(getMage());
-					executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
+					handleBarrage("Maiden Swap 50 locked.");
 					lock2 = true;
 				}
 				if (maidenswap30 && !lock3)
 				{
-					if (!client.isPrayerActive(Prayer.AUGURY))
-					{
-						executePrayer(WidgetInfo.PRAYER_AUGURY);
-					}
-					executeItem(getMage());
-					executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
+					handleBarrage("Maiden Swap 30 locked.");
 					lock3 = true;
 				}
 			}
@@ -568,6 +558,24 @@ public class ToBCheats extends Plugin
 				handleSwitch(actor.getConvexHull().getBounds());
 			}
 		}
+	}
+
+	private void handleBarrage(String logger)
+	{
+		if (!client.isPrayerActive(Prayer.AUGURY))
+		{
+			executePrayer(WidgetInfo.PRAYER_AUGURY);
+		}
+		executeItem(getMage());
+		if (client.getBoostedSkillLevel(Skill.MAGIC) >= 94)
+		{
+			executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
+		}
+		else
+		{
+			executeSpell(WidgetInfo.SPELL_ICE_BURST);
+		}
+		log.info(logger);
 	}
 
 	private void handleSwitch(Rectangle rectangle)
