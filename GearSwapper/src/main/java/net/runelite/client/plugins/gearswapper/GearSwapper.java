@@ -264,7 +264,7 @@ public class GearSwapper extends Plugin
 		}
 		if (item != null)
 		{
-			log.info("Grabbing Bounds and CP of: " + itemManager.getItemComposition(item.getId()).getName());
+			log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
 			handleSwitch(item.getCanvasBounds());
 		}
 	}

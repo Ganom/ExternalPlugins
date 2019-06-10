@@ -281,25 +281,23 @@ public class ToBCheats extends Plugin
 	public void onNpcSpawned(NpcSpawned npcSpawned)
 	{
 		NPC npc = npcSpawned.getNpc();
-		if (config.nyloSwapper())
+
+		switch (npc.getId())
 		{
-			switch (npc.getId())
-			{
-				case 8355:
+			case NpcID.NYLOCAS_VASILIAS_8355:
+			case NpcID.NYLOCAS_VASILIAS_8356:
+			case NpcID.NYLOCAS_VASILIAS_8357:
+				if (config.nyloSwapper())
+				{
 					Nylo = npc;
-				case 8356:
-					Nylo = npc;
-				case 8357:
-					Nylo = npc;
-					break;
-			}
-		}
-		if (config.maidenSwapper())
-		{
-			if (npc.getId() == NpcID.THE_MAIDEN_OF_SUGADINTI)
-			{
-				Maiden = npc;
-			}
+				}
+				break;
+			case NpcID.THE_MAIDEN_OF_SUGADINTI:
+				if (config.maidenSwapper())
+				{
+					Maiden = npc;
+				}
+				break;
 		}
 	}
 
@@ -363,7 +361,6 @@ public class ToBCheats extends Plugin
 		{
 			if (Maiden != null)
 			{
-				log.info("Health: " + Maiden.getHealth() + "| Health Percent: " + Maiden.getHealthRatio());
 				boolean maidenswap70 = false;
 				boolean maidenswap50 = false;
 				boolean maidenswap30 = false;
@@ -449,21 +446,41 @@ public class ToBCheats extends Plugin
 					nylolockMe = false;
 					nylolockMa = true;
 				}
-				if (Nylo.getId() == 8355 && !nylolockMe && spec <= 29)
+				if (Nylo.getId() == 8355 && !nylolockMe)
 				{
-					if (!client.isPrayerActive(Prayer.PROTECT_FROM_MELEE))
+					if (config.handleSpec() && config.specThreshold() <= spec)
 					{
-						executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
+						if (!client.isPrayerActive(Prayer.PROTECT_FROM_MELEE))
+						{
+							executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
+						}
+						if (!client.isPrayerActive(Prayer.PIETY))
+						{
+							executePrayer(WidgetInfo.PRAYER_PIETY);
+						}
+						log.info("Attempting Melee Swap");
+						executeItem(getMelee());
+						if (config.autoAttack())
+						{
+							executeActor(getNylo());
+						}
 					}
-					if (!client.isPrayerActive(Prayer.PIETY))
+					else
 					{
-						executePrayer(WidgetInfo.PRAYER_PIETY);
-					}
-					log.info("Attempting Melee Swap");
-					executeItem(getMelee());
-					if (config.autoAttack())
-					{
-						executeActor(getNylo());
+						if (!client.isPrayerActive(Prayer.PROTECT_FROM_MELEE))
+						{
+							executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
+						}
+						if (!client.isPrayerActive(Prayer.PIETY))
+						{
+							executePrayer(WidgetInfo.PRAYER_PIETY);
+						}
+						log.info("Attempting Melee Swap");
+						executeItem(getMelee());
+						if (config.autoAttack())
+						{
+							executeActor(getNylo());
+						}
 					}
 					nylolockRa = false;
 					nylolockMe = true;
@@ -512,7 +529,7 @@ public class ToBCheats extends Plugin
 		}
 		if (item != null)
 		{
-			log.info("Grabbing Bounds and CP of: " + itemManager.getItemComposition(item.getId()).getName());
+			log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
 			handleSwitch(item.getCanvasBounds());
 		}
 	}

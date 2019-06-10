@@ -156,7 +156,7 @@ public interface GearSwapperConfig extends Config
 		keyName = "actionType",
 		name = "Action Type",
 		parent = "config",
-		description = "Flexo is smooth mouse<br> MouseEvents is ghost mouse<br> MenuAction is no mouse, just invokes - BANNABLE",
+		description = "Flexo is smooth mouse<br> MouseEvents is ghost mouse",
 		position = 12
 	)
 	default ActionType actionType()

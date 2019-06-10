@@ -38,7 +38,7 @@ public interface PraySwapConfig extends Config
 		position = 0,
 		keyName = "actionType",
 		name = "Action Type",
-		description = "Flexo is smooth mouse, MouseEvents is ghost mouse, MenuAction is no mouse, just invokes. BANNABLE"
+		description = "Flexo is smooth mouse, MouseEvents is ghost mouse."
 	)
 	default ActionType actionType()
 	{
@@ -158,7 +158,7 @@ public interface PraySwapConfig extends Config
 	@ConfigItem(
 		keyName = "randLow",
 		name = "Minimum Delay",
-		description = "For MouseEvents/MenuActions only.",
+		description = "For MouseEvents",
 		position = 39
 	)
 	default int randLow()
@@ -169,7 +169,7 @@ public interface PraySwapConfig extends Config
 	@ConfigItem(
 		keyName = "randLower",
 		name = "Maximum Delay",
-		description = "For MouseEvents/MenuActions only.",
+		description = "For MouseEvents",
 		position = 40
 	)
 	default int randHigh()

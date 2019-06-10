@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.prayswap.utils;
+package net.runelite.client.plugins.olmswapper.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,5 +13,8 @@ public enum ActionType
 	private String name;
 
 	@Override
-	public String toString() {return getName();}
+	public String toString()
+	{
+		return getName();
+	}
 }

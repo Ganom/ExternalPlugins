@@ -8,8 +8,7 @@ import lombok.Getter;
 public enum ActionType
 {
 	FLEXO("Flexo"),
-	MOUSEEVENTS("MouseEvents"),
-	MENUACTIONS("MenuActions");
+	MOUSEEVENTS("MouseEvents");
 
 	private String name;
 
