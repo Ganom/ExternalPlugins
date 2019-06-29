@@ -21,7 +21,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package net.runelite.client.plugins.tobcheats;
 
 import com.google.inject.Provides;
@@ -30,15 +29,15 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.Actor;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
 import net.runelite.api.Point;
@@ -48,6 +47,7 @@ import net.runelite.api.Skill;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.NpcCompositionChanged;
 import net.runelite.api.events.NpcDespawned;
 import net.runelite.api.events.NpcSpawned;
 import net.runelite.api.events.ProjectileMoved;
@@ -58,7 +58,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.input.KeyManager;
+import net.runelite.client.game.NPCManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
@@ -70,7 +70,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @PluginDescriptor(
 	name = "ToB Cheats",
 	description = "ToB Cheats",
-	tags = {"ToB", "theatre", "blood", "cheats"},
+	tags = {"tob", "theatre", "blood", "cheats"},
 	enabledByDefault = false,
 	type = PluginType.EXTERNAL
 )
@@ -78,56 +78,26 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @Slf4j
 public class ToBCheats extends Plugin
 {
-	@Getter(AccessLevel.PACKAGE)
-	private NPC Maiden;
-
-	@Getter(AccessLevel.PACKAGE)
-	private NPC Nylo;
-
-	@Getter(AccessLevel.PACKAGE)
-	private boolean tickeat;
-
-	@Getter(AccessLevel.PACKAGE)
-	private boolean Active;
-
-	@Getter
-	private Widget widget;
-
 	@Inject
 	private Client client;
-
 	@Inject
 	private ToBCheatsConfig config;
-
 	@Inject
 	private OverlayManager overlayManager;
-
 	@Inject
-	private ToBCheatsOverlay overlay;
-
-	@Inject
-	private KeyManager keyManager;
-
-	@Inject
-	private ConfigManager externalConfig;
-
+	private ConfigManager configManager;
 	@Inject
 	private TabUtils tabUtils;
-
 	@Inject
 	private ItemManager itemManager;
-
+	@Inject
+	private NPCManager npcManager;
 	private Flexo flexo;
-
-	private ExecutorService executorService = Executors.newFixedThreadPool(1);
-
-	private double scalingfactor;
-
-	private boolean magepray;
-	private boolean rangepray;
-	private boolean nylolockRa;
-	private boolean nylolockMe;
-	private boolean nylolockMa;
+	private BlockingQueue queue = new ArrayBlockingQueue(1);
+	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 2, TimeUnit.SECONDS, queue,
+		new ThreadPoolExecutor.DiscardPolicy());
+	private NPC maiden;
+	private NPC nylo;
 	private boolean lock1;
 	private boolean lock2;
 	private boolean lock3;
@@ -184,8 +154,7 @@ public class ToBCheats extends Plugin
 	@Override
 	protected void startUp()
 	{
-		overlayManager.add(overlay);
-		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
+		reset();
 		Flexo.client = client;
 		executorService.submit(() -> {
 			flexo = null;
@@ -203,112 +172,46 @@ public class ToBCheats extends Plugin
 	@Override
 	protected void shutDown()
 	{
-		overlayManager.remove(overlay);
-		Nylo = null;
-		Maiden = null;
-		tickeat = false;
-		Active = false;
-		lock1 = false;
-		lock2 = false;
-		lock3 = false;
-		nylolockMa = false;
-		nylolockMe = false;
-		nylolockRa = false;
-		magepray = false;
-		rangepray = false;
-		flexo = null;
+		reset();
 	}
 
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged event)
 	{
-		switch (event.getGameState())
+		if (event.getGameState() != GameState.LOGGED_IN)
 		{
-			case HOPPING:
-			case LOGIN_SCREEN:
-			case LOADING:
-			case LOGGED_IN:
-				scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
-				Nylo = null;
-				Maiden = null;
-				Active = false;
-				lock1 = false;
-				lock2 = false;
-				lock3 = false;
-				nylolockMa = false;
-				nylolockMe = false;
-				nylolockRa = false;
-				Flexo.client = client;
-				break;
+			reset();
 		}
 	}
 
 	@Subscribe
-	public void onChatMessage(ChatMessage event)
+	public void onNpcSpawned(NpcSpawned event)
 	{
-		if (config.testing())
-		{
-			if (event.getType() == ChatMessageType.PUBLICCHAT)
-			{
-				if (event.getMessage().toLowerCase().contains("1"))
-				{
-					executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
-					executePrayer(WidgetInfo.PRAYER_AUGURY);
-					executeItem(getMage());
-				}
-				if (event.getMessage().toLowerCase().contains("2"))
-				{
-					executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
-					executePrayer(WidgetInfo.PRAYER_RIGOUR);
-					executeItem(getRange());
-				}
-				if (event.getMessage().toLowerCase().contains("3"))
-				{
-					executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
-					executePrayer(WidgetInfo.PRAYER_PIETY);
-					executeItem(getMelee());
-				}
-				if (event.getMessage().toLowerCase().contains("4"))
-				{
-					executeItem(getMage());
-					executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
-				}
-			}
-		}
-	}
-
-	@Subscribe
-	public void onNpcSpawned(NpcSpawned npcSpawned)
-	{
-		NPC npc = npcSpawned.getNpc();
+		final NPC npc = event.getNpc();
 
 		switch (npc.getId())
 		{
-			case NpcID.NYLOCAS_VASILIAS_8355:
-			case NpcID.NYLOCAS_VASILIAS_8356:
-			case NpcID.NYLOCAS_VASILIAS_8357:
-				if (config.nyloSwapper())
-				{
-					Nylo = npc;
-				}
+			case NpcID.NYLOCAS_VASILIAS:
+				nylo = npc;
 				break;
 			case NpcID.THE_MAIDEN_OF_SUGADINTI:
-				if (config.maidenSwapper())
-				{
-					Maiden = npc;
-				}
+				maiden = npc;
 				break;
 		}
 	}
 
 	@Subscribe
-	public void onNpcDespawned(NpcDespawned npcDespawned)
+	public void onNpcDespawned(NpcDespawned event)
 	{
-		NPC npc = npcDespawned.getNpc();
-		switch (npc.getId()) //Keeping switch in case i need npc checks later.
+		final NPC npc = event.getNpc();
+
+		switch (npc.getId())
 		{
+			case NpcID.NYLOCAS_VASILIAS:
+				nylo = null;
+				break;
 			case NpcID.THE_MAIDEN_OF_SUGADINTI:
-				Maiden = null;
+				maiden = null;
 				break;
 		}
 	}
@@ -317,28 +220,24 @@ public class ToBCheats extends Plugin
 	public void onProjectileMoved(ProjectileMoved event)
 	{
 		Projectile projectile = event.getProjectile();
+
 		if (config.Verzik())
 		{
-			if (projectile.getId() == 1594)
+			switch (projectile.getId())
 			{
-				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
-				{
-					magepray = true;
-				}
-			}
-			if (projectile.getId() == 1593)
-			{
-				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
-				{
-					rangepray = true;
-				}
-			}
-			if (projectile.getId() == 1591)
-			{
-				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
-				{
-					magepray = true;
-				}
+				case 1591:
+				case 1594:
+					if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
+					{
+						executorService.submit(() -> clickWidget(Prayer.PROTECT_FROM_MAGIC.getWidgetInfo(), Tab.PRAYER));
+					}
+					break;
+				case 1593:
+					if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
+					{
+						executorService.submit(() -> clickWidget(Prayer.PROTECT_FROM_MISSILES.getWidgetInfo(), Tab.PRAYER));
+					}
+					break;
 			}
 		}
 	}
@@ -346,43 +245,32 @@ public class ToBCheats extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
-		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
-		if (magepray)
-		{
-			executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
-			magepray = false;
-		}
-		if (rangepray)
-		{
-			executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
-			rangepray = false;
-		}
 		if (config.maidenSwapper())
 		{
-			if (Maiden != null)
+			if (maiden != null)
 			{
 				boolean maidenswap70 = false;
 				boolean maidenswap50 = false;
 				boolean maidenswap30 = false;
-				int healthpercent = Maiden.getHealthRatio();
-				if (healthpercent > -1)
+				final float hpPercent = 100 * ((float) maiden.getHealthRatio() / (float) maiden.getHealth());
+				if (hpPercent > -1)
 				{
-					double truehealth = (healthpercent * 0.625);
-					if (truehealth <= 71 && truehealth >= 70)
-					{
-						log.info("Maiden Swap 70 reached.");
-						maidenswap70 = true;
-					}
-					if (truehealth <= 51 && truehealth >= 50)
-					{
-						log.info("Maiden Swap 50 reached.");
-						maidenswap50 = true;
-					}
-					if (truehealth <= 31 && truehealth >= 30)
-					{
-						log.info("Maiden Swap 30 reached.");
-						maidenswap30 = true;
-					}
+					return;
+				}
+				if (hpPercent <= 70.5 && hpPercent >= 69)
+				{
+					log.info("Maiden Swap 70 reached.");
+					maidenswap70 = true;
+				}
+				if (hpPercent <= 50.5 && hpPercent >= 49)
+				{
+					log.info("Maiden Swap 50 reached.");
+					maidenswap50 = true;
+				}
+				if (hpPercent <= 30.5 && hpPercent >= 29)
+				{
+					log.info("Maiden Swap 30 reached.");
+					maidenswap30 = true;
 				}
 				if (maidenswap70 && !lock1)
 				{
@@ -401,198 +289,123 @@ public class ToBCheats extends Plugin
 				}
 			}
 		}
-		if (config.nyloSwapper())
+	}
+
+	@Subscribe
+	public void onNpcCompositionChanged(NpcCompositionChanged event)
+	{
+		final NPC npc = event.getNpc();
+
+		if (npc.getName().equals("Nylocas Vasilias"))
 		{
-			if (Nylo != null)
+			Rectangle bounds = nylo.getConvexHull().getBounds();
+			switch (npc.getId())
 			{
-				int spec = Integer.parseInt(client.getWidget(160, 31).getText());
-				if (Nylo.getId() == 8357 && !nylolockRa)
+				case NpcID.NYLOCAS_VASILIAS_8355:
+					executorService.submit(() -> handleNylo(getMelee(), Prayer.PROTECT_FROM_MELEE, Prayer.PIETY, bounds, "Melee Nylo Detected"));
+					break;
+				case NpcID.NYLOCAS_VASILIAS_8356:
+					executorService.submit(() -> handleNylo(getRange(), Prayer.PROTECT_FROM_MISSILES, Prayer.RIGOUR, bounds, "Ranged Nylo Detected"));
+					break;
+				case NpcID.NYLOCAS_VASILIAS_8357:
+					executorService.submit(() -> handleNylo(getMage(), Prayer.PROTECT_FROM_MAGIC, Prayer.AUGURY, bounds, "Mage Nylo Detected"));
+					break;
+			}
+		}
+	}
+
+	@Subscribe
+	public void onChatMessage(ChatMessage event)
+	{
+		if (config.testing())
+		{
+			if (event.getType() == ChatMessageType.PUBLICCHAT)
+			{
+				switch (event.getMessage().toLowerCase())
 				{
-					if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
-					{
-						executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
-					}
-					if (!client.isPrayerActive(Prayer.RIGOUR))
-					{
-						executePrayer(WidgetInfo.PRAYER_RIGOUR);
-					}
-					log.info("Attempting Range Swap");
-					executeItem(getRange());
-					if (config.autoAttack())
-					{
-						executeActor(getNylo());
-					}
-					nylolockRa = true;
-					nylolockMe = false;
-					nylolockMa = false;
-				}
-				if (Nylo.getId() == 8356 && !nylolockMa)
-				{
-					if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
-					{
-						executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
-					}
-					if (!client.isPrayerActive(Prayer.AUGURY))
-					{
-						executePrayer(WidgetInfo.PRAYER_AUGURY);
-					}
-					log.info("Attempting Mage Swap");
-					executeItem(getMage());
-					if (config.autoAttack())
-					{
-						executeActor(getNylo());
-					}
-					nylolockRa = false;
-					nylolockMe = false;
-					nylolockMa = true;
-				}
-				if (Nylo.getId() == 8355 && !nylolockMe)
-				{
-					if (config.handleSpec() && config.specThreshold() <= spec)
-					{
-						if (!client.isPrayerActive(Prayer.PROTECT_FROM_MELEE))
-						{
-							executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
-						}
-						if (!client.isPrayerActive(Prayer.PIETY))
-						{
-							executePrayer(WidgetInfo.PRAYER_PIETY);
-						}
-						log.info("Attempting Melee Swap");
-						executeItem(getMelee());
-						if (config.autoAttack())
-						{
-							executeActor(getNylo());
-						}
-					}
-					else
-					{
-						if (!client.isPrayerActive(Prayer.PROTECT_FROM_MELEE))
-						{
-							executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
-						}
-						if (!client.isPrayerActive(Prayer.PIETY))
-						{
-							executePrayer(WidgetInfo.PRAYER_PIETY);
-						}
-						log.info("Attempting Melee Swap");
-						executeItem(getMelee());
-						if (config.autoAttack())
-						{
-							executeActor(getNylo());
-						}
-					}
-					nylolockRa = false;
-					nylolockMe = true;
-					nylolockMa = false;
+					case "1":
+						executorService.submit(() -> handleNylo(getMage(), Prayer.PROTECT_FROM_MAGIC, Prayer.AUGURY, null, "Mage Nylo Detected"));
+						break;
+					case "2":
+						executorService.submit(() -> handleNylo(getRange(), Prayer.PROTECT_FROM_MISSILES, Prayer.RIGOUR, null, "Ranged Nylo Detected"));
+						break;
+					case "3":
+						executorService.submit(() -> handleNylo(getMelee(), Prayer.PROTECT_FROM_MELEE, Prayer.PIETY, null, "Melee Nylo Detected"));
+						break;
+					case "4":
+						executorService.submit(() -> handleBarrage("Yeet"));
+						break;
 				}
 			}
 		}
 	}
 
-	private void executePrayer(WidgetInfo prayer)
+	private void handleNylo(List<WidgetItem> itemList, Prayer prayer, Prayer secondPrayer, Rectangle nyloBounds, String logs)
 	{
-		Widget pray = client.getWidget(prayer);
-		executorService.submit(() -> clickPrayer(pray));
-	}
-
-	private void executeSpell(WidgetInfo spell)
-	{
-		Widget cast = client.getWidget(spell);
-		executorService.submit(() -> clickSpell(cast));
-	}
-
-	private void executeItem(List<WidgetItem> list)
-	{
-		executorService.submit(() -> {
-			if (list.isEmpty())
-			{
-				return;
-			}
-			for (WidgetItem items : list)
-			{
-				clickItem(items);
-			}
-		});
-	}
-
-	private void executeActor(Actor actor)
-	{
-		executorService.submit(() -> clickActor(actor));
-	}
-
-	private void clickItem(WidgetItem item)
-	{
-		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+		clickItem(itemList);
+		if (!client.isPrayerActive(prayer))
+		{
+			clickWidget(prayer.getWidgetInfo(), Tab.PRAYER);
+		}
+		if (!client.isPrayerActive(secondPrayer))
+		{
+			clickWidget(secondPrayer.getWidgetInfo(), Tab.PRAYER);
+		}
+		if (nyloBounds != null)
+		{
+			handleSwitch(nyloBounds);
+		}
+		if (config.backToInventory())
 		{
 			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
 		}
-		if (item != null)
-		{
-			log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
-			handleSwitch(item.getCanvasBounds());
-		}
-	}
-
-	private void clickPrayer(Widget prayer)
-	{
-		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
-		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
-		}
-		if (prayer != null)
-		{
-			handleSwitch(prayer.getBounds());
-			if (config.backToInventory())
-			{
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-			}
-		}
-	}
-
-	private void clickSpell(Widget spell)
-	{
-		if (client.getWidget(WidgetInfo.SPELL_ICE_BARRAGE).isHidden())
-		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.MAGIC));
-		}
-		if (spell != null)
-		{
-			handleSwitch(spell.getBounds());
-			if (config.backToInventory())
-			{
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-			}
-		}
-	}
-
-	private void clickActor(Actor actor)
-	{
-		if (actor != null)
-		{
-			if (actor.getConvexHull() != null)
-			{
-				handleSwitch(actor.getConvexHull().getBounds());
-			}
-		}
+		log.info(logs);
 	}
 
 	private void handleBarrage(String logger)
 	{
 		if (!client.isPrayerActive(Prayer.AUGURY))
 		{
-			executePrayer(WidgetInfo.PRAYER_AUGURY);
+			clickWidget(Prayer.AUGURY.getWidgetInfo(), Tab.PRAYER);
 		}
-		executeItem(getMage());
-		if (client.getBoostedSkillLevel(Skill.MAGIC) >= 94)
-		{
-			executeSpell(WidgetInfo.SPELL_ICE_BARRAGE);
-		}
-		else
-		{
-			executeSpell(WidgetInfo.SPELL_ICE_BURST);
-		}
+		clickItem(getMage());
+		clickWidget(client.getBoostedSkillLevel(Skill.MAGIC) >= 94 ? WidgetInfo.SPELL_ICE_BARRAGE : WidgetInfo.SPELL_ICE_BURST, Tab.MAGIC);
 		log.info(logger);
+	}
+
+	private void clickItem(List<WidgetItem> itemList)
+	{
+		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+		{
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+		}
+		if (itemList.isEmpty())
+		{
+			return;
+		}
+		for (WidgetItem item : itemList)
+		{
+			if (item != null)
+			{
+				log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
+				handleSwitch(item.getCanvasBounds());
+			}
+		}
+	}
+
+	private void clickWidget(WidgetInfo widgetInfo, Tab tab)
+	{
+		flexo.keyPress(tabUtils.getTabHotkey(tab));
+
+		if (widgetInfo != null)
+		{
+			Widget widget = client.getWidget(widgetInfo);
+
+			if (widget != null)
+			{
+				handleSwitch(widget.getBounds());
+			}
+		}
 	}
 
 	private void handleSwitch(Rectangle rectangle)
@@ -621,21 +434,43 @@ public class ToBCheats extends Plugin
 		}
 	}
 
+	private void reset()
+	{
+		lock1 = false;
+		lock2 = false;
+		lock3 = false;
+		flexo = null;
+		maiden = null;
+		nylo = null;
+	}
+
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
+	}
+
+	private void moveMouse(int x, int y)
+	{
+		MouseEvent mouseEntered = new MouseEvent(this.client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
+		this.client.getCanvas().dispatchEvent(mouseEntered);
+		MouseEvent mouseExited = new MouseEvent(this.client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
+		this.client.getCanvas().dispatchEvent(mouseExited);
+		MouseEvent mouseMoved = new MouseEvent(this.client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
+		this.client.getCanvas().dispatchEvent(mouseMoved);
 	}
 
 	private void leftClick(int x, int y)
 	{
 		if (client.isStretchedEnabled())
 		{
+			double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
 			Point p = this.client.getMouseCanvasPosition();
 			if (p.getX() != x || p.getY() != y)
 			{
 				this.moveMouse(x, y);
 			}
 			double scale = 1 + (scalingfactor / 100);
+			log.info("Scale: " + Double.toString(scale));
 
 			MouseEvent mousePressed =
 				new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
@@ -663,18 +498,9 @@ public class ToBCheats extends Plugin
 		}
 	}
 
-	private void moveMouse(int x, int y)
-	{
-		MouseEvent mouseEntered = new MouseEvent(this.client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseEntered);
-		MouseEvent mouseExited = new MouseEvent(this.client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseExited);
-		MouseEvent mouseMoved = new MouseEvent(this.client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseMoved);
-	}
-
 	private Point getClickPoint(Rectangle rect)
 	{
+		double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
 		if (client.isStretchedEnabled())
 		{
 			int rand = (Math.random() <= 0.5) ? 1 : 2;

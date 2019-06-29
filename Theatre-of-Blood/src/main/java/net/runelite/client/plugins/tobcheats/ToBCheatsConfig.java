@@ -117,34 +117,6 @@ public interface ToBCheatsConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "handleSpec",
-		name = "Wait for Spec to Swap",
-		description = "If enabled the bot will wait for you to spec before swapping on nylo.",
-		position = 8,
-		parent = "configs",
-		hidden = true,
-		unhide = "nyloSwapper"
-	)
-	default boolean handleSpec()
-	{
-		return false;
-	}
-
-	@ConfigItem(
-		position = 9,
-		keyName = "specThreshold",
-		name = "Spec Threshold",
-		description = "If you are below this spec percent, you will swap.",
-		parent = "configs",
-		hidden = true,
-		unhide = "handleSpec"
-	)
-	default int specThreshold()
-	{
-		return 29;
-	}
-
-	@ConfigItem(
 		keyName = "testing",
 		name = "Test the features",
 		description = "Type in chat 1 for mage swap, 2 for range, 3 for melee, 4 for ice barrage.",
