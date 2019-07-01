@@ -24,6 +24,9 @@
 
 package net.runelite.client.plugins.prayswap;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import net.runelite.api.Prayer;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -33,7 +36,6 @@ import net.runelite.client.plugins.prayswap.utils.ActionType;
 @ConfigGroup("PraySwap")
 public interface PraySwapConfig extends Config
 {
-
 	@ConfigItem(
 		position = 0,
 		keyName = "actionType",
@@ -156,6 +158,105 @@ public interface PraySwapConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "comboOne",
+		name = "Combo One",
+		description = "Press this key to active combo one.",
+		position = 10
+	)
+	default Keybind comboOne()
+	{
+		return Keybind.NOT_SET;
+	}
+
+	@ConfigItem(
+		keyName = "comboOnePrayerOne",
+		name = "Prayer 1",
+		description = "Prayer 1",
+		position = 11
+	)
+	default Prayers comboOnePrayerOne()
+	{
+		return Prayers.PROTECT_MAGE;
+	}
+
+	@ConfigItem(
+		keyName = "comboOnePrayerTwo",
+		name = "Prayer 2",
+		description = "Prayer 2",
+		position = 12
+	)
+	default Prayers comboOnePrayerTwo()
+	{
+		return Prayers.RIGOUR;
+	}
+
+	@ConfigItem(
+		keyName = "comboTwo",
+		name = "Combo Two",
+		description = "Press this key to active combo one.",
+		position = 13
+	)
+	default Keybind comboTwo()
+	{
+		return Keybind.NOT_SET;
+	}
+
+	@ConfigItem(
+		keyName = "comboOnePrayerOne",
+		name = "Prayer 1",
+		description = "Prayer 1",
+		position = 14
+	)
+	default Prayers comboTwoPrayerOne()
+	{
+		return Prayers.PROTECT_RANGE;
+	}
+
+	@ConfigItem(
+		keyName = "comboTwoPrayerTwo",
+		name = "Prayer 2",
+		description = "Prayer 2",
+		position = 15
+	)
+	default Prayers comboTwoPrayerTwo()
+	{
+		return Prayers.PIETY;
+	}
+
+	@ConfigItem(
+		keyName = "comboThree",
+		name = "Combo Three",
+		description = "Press this key to active combo one.",
+		position = 16
+	)
+	default Keybind comboThree()
+	{
+		return Keybind.NOT_SET;
+	}
+
+	@ConfigItem(
+		keyName = "comboThreePrayerOne",
+		name = "Prayer 1",
+		description = "Prayer 1",
+		position = 17
+	)
+	default Prayers comboThreePrayerOne()
+	{
+		return Prayers.PROTECT_MELEE;
+	}
+
+	@ConfigItem(
+		keyName = "comboThreePrayerTwo",
+		name = "Prayer 2",
+		description = "Prayer 2",
+		position = 18
+	)
+	default Prayers comboThreePrayerTwo()
+	{
+		return Prayers.AUGURY;
+	}
+
+	@ConfigItem(
 		keyName = "randLow",
 		name = "Minimum Delay",
 		description = "For MouseEvents",
@@ -177,4 +278,24 @@ public interface PraySwapConfig extends Config
 		return 80;
 	}
 
+	@Getter
+	@AllArgsConstructor
+	public enum Prayers
+	{
+		PROTECT_MELEE("Protect Melee", Prayer.PROTECT_FROM_MELEE),
+		PROTECT_RANGE("Protect Range", Prayer.PROTECT_FROM_MISSILES),
+		PROTECT_MAGE("Protect Mage", Prayer.PROTECT_FROM_MAGIC),
+		AUGURY("Augury", Prayer.AUGURY),
+		RIGOUR("Rigour", Prayer.RIGOUR),
+		PIETY("Piety", Prayer.PIETY);
+
+		private String name;
+		private Prayer prayer;
+
+		@Override
+		public String toString()
+		{
+			return getName();
+		}
+	}
 }

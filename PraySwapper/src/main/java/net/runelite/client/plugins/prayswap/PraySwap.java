@@ -28,24 +28,20 @@ import com.google.inject.Provides;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import lombok.Getter;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
 import net.runelite.api.Prayer;
 import net.runelite.api.Skill;
-import net.runelite.api.events.ConfigChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.client.callback.ClientThread;
-import net.runelite.client.chat.ChatMessageManager;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.flexo.Flexo;
-import net.runelite.client.game.ItemManager;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
@@ -54,7 +50,6 @@ import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.prayswap.utils.Tab;
 import net.runelite.client.plugins.prayswap.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
-import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
 	name = "PraySwap",
@@ -68,26 +63,16 @@ public class PraySwap extends Plugin implements KeyListener
 	@Inject
 	private Client client;
 	@Inject
-	private OverlayManager overlayManager;
-	@Inject
-	private ItemManager itemManager;
-	@Inject
-	private ChatMessageManager chatMessageManager;
-	@Inject
 	private KeyManager keyManager;
 	@Inject
 	private PraySwapConfig config;
 	@Inject
-	private ClientThread clientThread;
-	@Getter
-	private Widget widget;
-	@Inject
-	private ConfigManager externalConfig;
+	private ConfigManager configManager;
 	@Inject
 	private TabUtils tabUtils;
-
-	private ExecutorService executorService = Executors.newFixedThreadPool(1);
-	private double scalingfactor;
+	private BlockingQueue queue = new ArrayBlockingQueue(1);
+	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 1, TimeUnit.SECONDS, queue,
+		new ThreadPoolExecutor.DiscardPolicy());
 	private Flexo flexo;
 
 	@Provides
@@ -99,7 +84,6 @@ public class PraySwap extends Plugin implements KeyListener
 	protected void startUp()
 	{
 		keyManager.registerKeyListener(this);
-		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
 		Flexo.client = client;
 		executorService.submit(() -> {
 			flexo = null;
@@ -120,20 +104,11 @@ public class PraySwap extends Plugin implements KeyListener
 	}
 
 	@Subscribe
-	public void onConfigChanged(ConfigChanged event)
-	{
-		if (event.getGroup().equals("stretchedmode"))
-		{
-			scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
-		}
-	}
-
-	@Subscribe
 	public void onGameTick(GameTick event)
 	{
 		if (shouldProtPray())
 		{
-			executePrayer(WidgetInfo.PRAYER_PROTECT_ITEM);
+			clickPrayer(Prayer.PROTECT_ITEM);
 		}
 	}
 
@@ -143,48 +118,53 @@ public class PraySwap extends Plugin implements KeyListener
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e)
+	public void keyPressed(KeyEvent e)
 	{
+		if (e.getKeyCode() == config.hotkeyMage().getKeyCode())
+		{
+			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MAGIC));
+		}
+		if (e.getKeyCode() == config.hotkeyRange().getKeyCode())
+		{
+			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MISSILES));
+		}
+		if (e.getKeyCode() == config.hotkeyMelee().getKeyCode())
+		{
+			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MELEE));
+		}
+		if (e.getKeyCode() == config.hotkeyAugury().getKeyCode())
+		{
+			executorService.submit(() -> clickPrayer(Prayer.AUGURY));
+		}
+		if (e.getKeyCode() == config.hotkeyRigour().getKeyCode())
+		{
+			executorService.submit(() -> clickPrayer(Prayer.RIGOUR));
+		}
+		if (e.getKeyCode() == config.hotkeyPiety().getKeyCode())
+		{
+			executorService.submit(() -> clickPrayer(Prayer.PIETY));
+		}
+		if (e.getKeyCode() == config.hotkeySmite().getKeyCode())
+		{
+			executorService.submit(() -> clickPrayer(Prayer.SMITE));
+		}
+		if (e.getKeyCode() == config.comboOne().getKeyCode())
+		{
+			executorService.submit(() -> clickPrayer(config.comboOnePrayerOne().getPrayer(), config.comboOnePrayerTwo().getPrayer()));
+		}
+		if (e.getKeyCode() == config.comboTwo().getKeyCode())
+		{
+			executorService.submit(() -> clickPrayer(config.comboTwoPrayerTwo().getPrayer(), config.comboTwoPrayerTwo().getPrayer()));
+		}
+		if (e.getKeyCode() == config.comboThree().getKeyCode())
+		{
+			executorService.submit(() -> clickPrayer(config.comboThreePrayerOne().getPrayer(), config.comboThreePrayerTwo().getPrayer()));
+		}
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e)
+	public void keyReleased(KeyEvent e)
 	{
-		int MageHotkey = config.hotkeyMage().getKeyCode();
-		int RangeHotkey = config.hotkeyRange().getKeyCode();
-		int MeleeHotkey = config.hotkeyMelee().getKeyCode();
-		int AuguryHotkey = config.hotkeyAugury().getKeyCode();
-		int RigourHotkey = config.hotkeyRigour().getKeyCode();
-		int PietyHotkey = config.hotkeyPiety().getKeyCode();
-		int SmiteHotkey = config.hotkeySmite().getKeyCode();
-		if (e.getKeyCode() == MageHotkey)
-		{
-			executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MAGIC);
-		}
-		if (e.getKeyCode() == RangeHotkey)
-		{
-			executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MISSILES);
-		}
-		if (e.getKeyCode() == MeleeHotkey)
-		{
-			executePrayer(WidgetInfo.PRAYER_PROTECT_FROM_MELEE);
-		}
-		if (e.getKeyCode() == AuguryHotkey)
-		{
-			executePrayer(WidgetInfo.PRAYER_AUGURY);
-		}
-		if (e.getKeyCode() == RigourHotkey)
-		{
-			executePrayer(WidgetInfo.PRAYER_RIGOUR);
-		}
-		if (e.getKeyCode() == PietyHotkey)
-		{
-			executePrayer(WidgetInfo.PRAYER_PIETY);
-		}
-		if (e.getKeyCode() == SmiteHotkey)
-		{
-			executePrayer(WidgetInfo.PRAYER_SMITE);
-		}
 	}
 
 	private boolean shouldProtPray()
@@ -192,24 +172,36 @@ public class PraySwap extends Plugin implements KeyListener
 		return config.protectItem() && !client.isPrayerActive(Prayer.PROTECT_ITEM) && client.getBoostedSkillLevel(Skill.PRAYER) >= 1;
 	}
 
-	private void executePrayer(WidgetInfo prayer)
+	private void clickPrayer(Prayer prayer)
 	{
-		Widget pray = client.getWidget(prayer);
-		executorService.submit(() -> clickPrayer(pray));
-	}
-
-	private void clickPrayer(Widget prayer)
-	{
-		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
-		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
-		}
 		if (prayer != null)
 		{
-			handleSwitch(prayer.getBounds());
-			if (config.backToInventory())
+			Widget widget = client.getWidget(prayer.getWidgetInfo());
+			if (widget != null)
 			{
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+				handleSwitch(widget.getBounds());
+			}
+		}
+	}
+
+	private void clickPrayer(Prayer prayer, Prayer prayer2)
+	{
+		if (prayer != null)
+		{
+			Widget widget = client.getWidget(prayer.getWidgetInfo());
+
+			if (widget != null)
+			{
+				handleSwitch(widget.getBounds());
+			}
+		}
+		if (prayer2 != null)
+		{
+			Widget widget2 = client.getWidget(prayer2.getWidgetInfo());
+
+			if (widget2 != null)
+			{
+				handleSwitch(widget2.getBounds());
 			}
 		}
 	}
@@ -240,15 +232,60 @@ public class PraySwap extends Plugin implements KeyListener
 		}
 	}
 
+	private void handleSwitch(Rectangle rectangle, Tab tab)
+	{
+		Point cp = getClickPoint(rectangle);
+		if (cp.getX() >= 1)
+		{
+			switch (config.actionType())
+			{
+				case FLEXO:
+					flexo.mouseMove(cp.getX(), cp.getY());
+					flexo.mousePressAndRelease(1);
+					if (config.backToInventory())
+					{
+						flexo.keyPress(tabUtils.getTabHotkey(tab));
+					}
+					break;
+				case MOUSEEVENTS:
+					leftClick(cp.getX(), cp.getY());
+					try
+					{
+						Thread.sleep(getMillis());
+					}
+					catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+					if (config.backToInventory())
+					{
+						flexo.keyPress(tabUtils.getTabHotkey(tab));
+					}
+					break;
+			}
+		}
+	}
+
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
+	}
+
+	private void moveMouse(int x, int y)
+	{
+		MouseEvent mouseEntered = new MouseEvent(this.client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
+		this.client.getCanvas().dispatchEvent(mouseEntered);
+		MouseEvent mouseExited = new MouseEvent(this.client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
+		this.client.getCanvas().dispatchEvent(mouseExited);
+		MouseEvent mouseMoved = new MouseEvent(this.client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
+		this.client.getCanvas().dispatchEvent(mouseMoved);
 	}
 
 	private void leftClick(int x, int y)
 	{
 		if (client.isStretchedEnabled())
 		{
+			double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
 			Point p = this.client.getMouseCanvasPosition();
 			if (p.getX() != x || p.getY() != y)
 			{
@@ -282,18 +319,9 @@ public class PraySwap extends Plugin implements KeyListener
 		}
 	}
 
-	private void moveMouse(int x, int y)
-	{
-		MouseEvent mouseEntered = new MouseEvent(this.client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseEntered);
-		MouseEvent mouseExited = new MouseEvent(this.client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseExited);
-		MouseEvent mouseMoved = new MouseEvent(this.client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseMoved);
-	}
-
 	private Point getClickPoint(Rectangle rect)
 	{
+		double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
 		if (client.isStretchedEnabled())
 		{
 			int rand = (Math.random() <= 0.5) ? 1 : 2;
