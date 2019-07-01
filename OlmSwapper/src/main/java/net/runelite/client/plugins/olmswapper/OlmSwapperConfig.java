@@ -1,16 +1,16 @@
 package net.runelite.client.plugins.olmswapper;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
-import net.runelite.client.plugins.olmswapper.utils.ActionType;
 
-@ConfigGroup(value = "olmswapper")
-public interface olmswapperSettings
-	extends Config
+@ConfigGroup(value = "OlmSwapper")
+public interface OlmSwapperConfig extends Config
 {
 	@ConfigItem(
-		position = 23,
+		position = 1,
 		keyName = "actionType",
 		name = "Action Type",
 		description = "Flexo is smooth mouse, MouseEvents is ghost mouse."
@@ -21,7 +21,7 @@ public interface olmswapperSettings
 	}
 
 	@ConfigItem(
-		position = 24,
+		position = 2,
 		keyName = "randLow",
 		name = "Minimum Delay",
 		description = "For MouseEvents"
@@ -32,7 +32,7 @@ public interface olmswapperSettings
 	}
 
 	@ConfigItem(
-		position = 25,
+		position = 3,
 		keyName = "randLower",
 		name = "Maximum Delay",
 		description = "For MouseEvents"
@@ -40,6 +40,22 @@ public interface olmswapperSettings
 	default int randHigh()
 	{
 		return 80;
+	}
+
+	@Getter
+	@AllArgsConstructor
+	public enum ActionType
+	{
+		FLEXO("Flexo"),
+		MOUSEEVENTS("MouseEvents");
+
+		private String name;
+
+		@Override
+		public String toString()
+		{
+			return getName();
+		}
 	}
 }
 
