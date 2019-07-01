@@ -47,7 +47,7 @@ import net.runelite.api.Skill;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
-import net.runelite.api.events.NpcCompositionChanged;
+import net.runelite.api.events.NpcDefinitionChanged;
 import net.runelite.api.events.NpcDespawned;
 import net.runelite.api.events.NpcSpawned;
 import net.runelite.api.events.ProjectileMoved;
@@ -58,14 +58,12 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.game.ItemManager;
-import net.runelite.client.game.NPCManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 import net.runelite.client.plugins.tobcheats.utils.Tab;
 import net.runelite.client.plugins.tobcheats.utils.TabUtils;
-import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
 	name = "ToB Cheats",
@@ -83,15 +81,11 @@ public class ToBCheats extends Plugin
 	@Inject
 	private ToBCheatsConfig config;
 	@Inject
-	private OverlayManager overlayManager;
-	@Inject
 	private ConfigManager configManager;
 	@Inject
 	private TabUtils tabUtils;
 	@Inject
 	private ItemManager itemManager;
-	@Inject
-	private NPCManager npcManager;
 	private Flexo flexo;
 	private BlockingQueue queue = new ArrayBlockingQueue(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 2, TimeUnit.SECONDS, queue,
@@ -292,7 +286,7 @@ public class ToBCheats extends Plugin
 	}
 
 	@Subscribe
-	public void onNpcCompositionChanged(NpcCompositionChanged event)
+	public void onNpcDefinitionChanged(NpcDefinitionChanged event)
 	{
 		final NPC npc = event.getNpc();
 
