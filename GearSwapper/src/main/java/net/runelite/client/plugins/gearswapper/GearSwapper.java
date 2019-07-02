@@ -79,13 +79,6 @@ public class GearSwapper extends Plugin
 	private ExecutorService executorService = Executors.newFixedThreadPool(1);
 	private double scalingfactor;
 	private Flexo flexo;
-
-	@Provides
-	GearSwapperConfig getConfig(ConfigManager configManager)
-	{
-		return configManager.getConfig(GearSwapperConfig.class);
-	}
-
 	private final HotkeyListener mage = new HotkeyListener(() -> config.hotkeyMage())
 	{
 		@Override
@@ -95,7 +88,6 @@ public class GearSwapper extends Plugin
 			log.info("Mage Hotkey Pressed");
 		}
 	};
-
 	private final HotkeyListener range = new HotkeyListener(() -> config.hotkeyRange())
 	{
 		@Override
@@ -105,7 +97,6 @@ public class GearSwapper extends Plugin
 			log.info("Range Hotkey Pressed");
 		}
 	};
-
 	private final HotkeyListener melee = new HotkeyListener(() -> config.hotkeyMelee())
 	{
 		@Override
@@ -115,7 +106,6 @@ public class GearSwapper extends Plugin
 			log.info("Melee Hotkey Pressed");
 		}
 	};
-
 	private final HotkeyListener util = new HotkeyListener(() -> config.hotkeyUtil())
 	{
 		@Override
@@ -125,6 +115,12 @@ public class GearSwapper extends Plugin
 			log.info("Util Hotkey Pressed");
 		}
 	};
+
+	@Provides
+	GearSwapperConfig getConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(GearSwapperConfig.class);
+	}
 
 	protected void startUp()
 	{
@@ -264,14 +260,21 @@ public class GearSwapper extends Plugin
 		}
 		if (item != null)
 		{
-			log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
-			handleSwitch(item.getCanvasBounds());
+			if (itemManager.getItemDefinition(item.getId()) != null)
+			{
+				log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
+			}
+			if (item.getCanvasBounds() != null)
+			{
+				handleSwitch(item.getCanvasBounds());
+			}
 		}
 	}
 
 	private void handleSwitch(Rectangle rectangle)
 	{
 		Point cp = getClickPoint(rectangle);
+
 		if (cp.getX() >= 1)
 		{
 			switch (config.actionType())
