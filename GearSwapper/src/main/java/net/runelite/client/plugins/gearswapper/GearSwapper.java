@@ -203,7 +203,7 @@ public class GearSwapper extends Plugin
 		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden())
 		{
 			flexo.keyPress(tabUtils.getTabHotkey(Tab.EQUIPMENT));
-			flexo.delay(25);
+			flexo.delay(35);
 		}
 
 		for (Widget item : items)
@@ -251,7 +251,7 @@ public class GearSwapper extends Plugin
 	{
 		equipItem(equip);
 
-		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden())
+		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden() && remove.size() > 0)
 		{
 			flexo.keyPress(tabUtils.getTabHotkey(Tab.EQUIPMENT));
 		}
