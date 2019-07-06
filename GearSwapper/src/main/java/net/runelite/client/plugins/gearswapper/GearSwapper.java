@@ -29,10 +29,11 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
@@ -65,26 +66,28 @@ public class GearSwapper extends Plugin
 	@Inject
 	private Client client;
 	@Inject
-	private ConfigManager externalConfig;
+	private ConfigManager configManager;
 	@Inject
 	private GearSwapperConfig config;
 	@Inject
 	private KeyManager keyManager;
-	@Getter
-	private Widget widget;
 	@Inject
 	private TabUtils tabUtils;
 	@Inject
 	private ItemManager itemManager;
-	private ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+	private BlockingQueue queue = new ArrayBlockingQueue(1);
+	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, queue,
+		new ThreadPoolExecutor.DiscardPolicy());
 	private double scalingfactor;
 	private Flexo flexo;
+
 	private final HotkeyListener mage = new HotkeyListener(() -> config.hotkeyMage())
 	{
 		@Override
 		public void hotkeyPressed()
 		{
-			executeItem(getMage());
+			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.mageSet())), getEquippedItems(stringToIntArray(config.removeMageSet()))));
 			log.info("Mage Hotkey Pressed");
 		}
 	};
@@ -93,7 +96,7 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executeItem(getRange());
+			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.rangeSet())), getEquippedItems(stringToIntArray(config.removeRangeSet()))));
 			log.info("Range Hotkey Pressed");
 		}
 	};
@@ -102,7 +105,7 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executeItem(getMelee());
+			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.meleeSet())), getEquippedItems(stringToIntArray(config.removeMeleeSet()))));
 			log.info("Melee Hotkey Pressed");
 		}
 	};
@@ -111,7 +114,7 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executeItem(getUtil());
+			executorService.submit(() -> equipItem(getItems(stringToIntArray(config.util()))));
 			log.info("Util Hotkey Pressed");
 		}
 	};
@@ -128,7 +131,7 @@ public class GearSwapper extends Plugin
 		keyManager.registerKeyListener(range);
 		keyManager.registerKeyListener(melee);
 		keyManager.registerKeyListener(util);
-		scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
+		scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
 		Flexo.client = client;
 		executorService.submit(() -> {
 			flexo = null;
@@ -152,121 +155,69 @@ public class GearSwapper extends Plugin
 		keyManager.unregisterKeyListener(util);
 	}
 
-	private List<WidgetItem> getMage()
-	{
-		String gear = config.mainhandMage() + "," +
-			config.offhandMage() + "," +
-			config.helmetMage() + "," +
-			config.capeMage() + "," +
-			config.neckMage() + "," +
-			config.bodyMage() + "," +
-			config.legsMage() + "," +
-			config.ringMage() + "," +
-			config.bootsMage() + "," +
-			config.glovesMage();
-		int[] gearIds = Arrays.stream(gear.split(","))
-			.map(String::trim).mapToInt(Integer::parseInt).toArray();
-		return getItems(gearIds);
-	}
-
-	private List<WidgetItem> getRange()
-	{
-		String gear = config.mainhandRange() + "," +
-			config.offhandRange() + "," +
-			config.helmetRange() + "," +
-			config.capeRange() + "," +
-			config.neckRange() + "," +
-			config.bodyRange() + "," +
-			config.legsRange() + "," +
-			config.ringRange() + "," +
-			config.bootsRange() + "," +
-			config.glovesRange();
-		int[] gearIds = Arrays.stream(gear.split(","))
-			.map(String::trim).mapToInt(Integer::parseInt).toArray();
-		return getItems(gearIds);
-	}
-
-	private List<WidgetItem> getMelee()
-	{
-		String gear = config.mainhandMelee() + "," +
-			config.offhandMelee() + "," +
-			config.helmetMelee() + "," +
-			config.capeMelee() + "," +
-			config.neckMelee() + "," +
-			config.bodyMelee() + "," +
-			config.legsMelee() + "," +
-			config.ringMelee() + "," +
-			config.bootsMelee() + "," +
-			config.glovesMelee();
-		int[] gearIds = Arrays.stream(gear.split(","))
-			.map(String::trim).mapToInt(Integer::parseInt).toArray();
-		return getItems(gearIds);
-	}
-
-	private List<WidgetItem> getUtil()
-	{
-		int[] gearIds = Arrays.stream(config.util().split(","))
-			.map(String::trim).mapToInt(Integer::parseInt).toArray();
-		return getItems(gearIds);
-	}
-
-	private List<WidgetItem> getItems(int... itemIds)
-	{
-		Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
-		ArrayList<Integer> itemIDs = new ArrayList<>();
-		for (int i : itemIds)
-		{
-			itemIDs.add(i);
-		}
-		List<WidgetItem> listToReturn = new ArrayList<>();
-		for (WidgetItem item : inventoryWidget.getWidgetItems())
-		{
-			if (itemIDs.contains(item.getId()))
-			{
-				listToReturn.add(item);
-			}
-		}
-		return listToReturn;
-	}
-
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
 		if (event.getGroup().equals("stretchedmode"))
 		{
-			scalingfactor = externalConfig.getConfig(StretchedModeConfig.class).scalingFactor();
+			scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
 		}
 	}
 
-	private void executeItem(List<WidgetItem> list)
+	private void equipItem(List<WidgetItem> items)
 	{
-		executorService.submit(() -> {
-			if (list.isEmpty())
-			{
-				return;
-			}
-			for (WidgetItem items : list)
-			{
-				clickItem(items);
-			}
-		});
-	}
+		if (items.isEmpty())
+		{
+			return;
+		}
 
-	private void clickItem(WidgetItem item)
-	{
 		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
 		{
 			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+			flexo.delay(25);
 		}
-		if (item != null)
+
+		for (WidgetItem item : items)
 		{
-			if (itemManager.getItemDefinition(item.getId()) != null)
+			if (item != null)
 			{
-				log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
+				if (itemManager.getItemDefinition(item.getId()) != null)
+				{
+					log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
+				}
+				if (item.getCanvasBounds() != null)
+				{
+					handleSwitch(item.getCanvasBounds());
+				}
 			}
-			if (item.getCanvasBounds() != null)
+		}
+	}
+
+	private void removeItem(List<Widget> items)
+	{
+		if (items.isEmpty())
+		{
+			return;
+		}
+
+		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden())
+		{
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.EQUIPMENT));
+			flexo.delay(25);
+		}
+
+		for (Widget item : items)
+		{
+			if (item != null)
 			{
-				handleSwitch(item.getCanvasBounds());
+				if (itemManager.getItemDefinition(item.getItemId()) != null)
+				{
+					log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
+				}
+				if (item.getBounds() != null)
+				{
+					handleSwitch(item.getBounds());
+				}
 			}
 		}
 	}
@@ -285,17 +236,90 @@ public class GearSwapper extends Plugin
 					break;
 				case MOUSEEVENTS:
 					leftClick(cp.getX(), cp.getY());
-					try
-					{
-						Thread.sleep(getMillis());
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					flexo.delay((int) getMillis());
 					break;
 			}
 		}
+	}
+
+	private int[] stringToIntArray(String string)
+	{
+		return Arrays.stream(string.split(",")).map(String::trim).mapToInt(Integer::parseInt).toArray();
+	}
+
+	private void executeSwap(List<WidgetItem> equip, List<Widget> remove)
+	{
+		equipItem(equip);
+
+		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden())
+		{
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.EQUIPMENT));
+		}
+
+		removeItem(remove);
+
+		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+		{
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+		}
+	}
+
+	private List<WidgetItem> getItems(int... itemIds)
+	{
+		Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
+
+		ArrayList<Integer> itemIDs = new ArrayList<>();
+
+		for (int i : itemIds)
+		{
+			itemIDs.add(i);
+		}
+
+		List<WidgetItem> listToReturn = new ArrayList<>();
+
+		for (WidgetItem item : inventoryWidget.getWidgetItems())
+		{
+			if (itemIDs.contains(item.getId()))
+			{
+				listToReturn.add(item);
+			}
+		}
+
+		return listToReturn;
+	}
+
+	private List<Widget> getEquippedItems(int... itemIds)
+	{
+		Widget equipmentWidget = client.getWidget(WidgetInfo.EQUIPMENT);
+
+		ArrayList<Integer> equippedIds = new ArrayList<>();
+
+		for (int i : itemIds)
+		{
+			equippedIds.add(i);
+		}
+
+		List<Widget> equipped = new ArrayList<>();
+
+		if (equipmentWidget.getStaticChildren() != null)
+		{
+			for (Widget widgets : equipmentWidget.getStaticChildren())
+			{
+				for (Widget items : widgets.getDynamicChildren())
+				{
+					if (equippedIds.contains(items.getItemId()))
+					{
+						equipped.add(items);
+					}
+				}
+			}
+		}
+		else
+		{
+			log.error("Static Children is Null!");
+		}
+
+		return equipped;
 	}
 
 	private long getMillis()
