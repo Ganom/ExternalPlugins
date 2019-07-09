@@ -1,5 +1,5 @@
 # ExternalPlugins
-![[Discord]](https://discordapp.com/api/guilds/597985733403475982/widget.png?style=shield)
+[![Discord](https://discordapp.com/api/guilds/597985733403475982/widget.png?style=shield)](https://discord.gg/hVPfVAR)
 [![GitHub issues](https://img.shields.io/github/issues/Ganom/ExternalPlugins.svg)](https://github.com/Ganom/ExternalPlugins/issues)
 
 External plugins for use with RL+, this is a seperate entity, not RL+.
