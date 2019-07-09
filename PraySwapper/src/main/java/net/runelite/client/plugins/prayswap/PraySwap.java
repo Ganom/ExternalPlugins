@@ -108,7 +108,7 @@ public class PraySwap extends Plugin implements KeyListener
 	{
 		if (shouldProtPray())
 		{
-			clickPrayer(Prayer.PROTECT_ITEM);
+			clickPrayer(Prayer.PROTECT_ITEM, true);
 		}
 	}
 
@@ -122,43 +122,77 @@ public class PraySwap extends Plugin implements KeyListener
 	{
 		if (e.getKeyCode() == config.hotkeyMage().getKeyCode())
 		{
-			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MAGIC));
+			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MAGIC, true));
 		}
 		if (e.getKeyCode() == config.hotkeyRange().getKeyCode())
 		{
-			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MISSILES));
+			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MISSILES, true));
 		}
 		if (e.getKeyCode() == config.hotkeyMelee().getKeyCode())
 		{
-			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MELEE));
+			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MELEE, true));
 		}
 		if (e.getKeyCode() == config.hotkeyAugury().getKeyCode())
 		{
-			executorService.submit(() -> clickPrayer(Prayer.AUGURY));
+			if (config.lowLevel())
+			{
+				executorService.submit(() -> clickPrayer(Prayer.MYSTIC_MIGHT, true));
+			}
+			else
+			{
+				executorService.submit(() -> clickPrayer(Prayer.AUGURY, true));
+			}
 		}
 		if (e.getKeyCode() == config.hotkeyRigour().getKeyCode())
 		{
-			executorService.submit(() -> clickPrayer(Prayer.RIGOUR));
+			if (config.lowLevel())
+			{
+				executorService.submit(() -> clickPrayer(Prayer.EAGLE_EYE, true));
+			}
+			else
+			{
+				executorService.submit(() -> clickPrayer(Prayer.RIGOUR, true));
+			}
 		}
 		if (e.getKeyCode() == config.hotkeyPiety().getKeyCode())
 		{
-			executorService.submit(() -> clickPrayer(Prayer.PIETY));
+			if (config.lowLevel())
+			{
+				executorService.submit(() -> {
+					clickPrayer(Prayer.STEEL_SKIN, false);
+					clickPrayer(Prayer.ULTIMATE_STRENGTH, false);
+					clickPrayer(Prayer.INCREDIBLE_REFLEXES, true);
+				});
+			}
+			else
+			{
+				executorService.submit(() -> clickPrayer(Prayer.PIETY, true));
+			}
 		}
 		if (e.getKeyCode() == config.hotkeySmite().getKeyCode())
 		{
-			executorService.submit(() -> clickPrayer(Prayer.SMITE));
+			executorService.submit(() -> clickPrayer(Prayer.SMITE, true));
 		}
 		if (e.getKeyCode() == config.comboOne().getKeyCode())
 		{
-			executorService.submit(() -> clickPrayer(config.comboOnePrayerOne().getPrayer(), config.comboOnePrayerTwo().getPrayer()));
+			executorService.submit(() -> {
+				clickPrayer(config.comboOnePrayerOne().getPrayer(), false);
+				clickPrayer(config.comboOnePrayerTwo().getPrayer(), true);
+			});
 		}
 		if (e.getKeyCode() == config.comboTwo().getKeyCode())
 		{
-			executorService.submit(() -> clickPrayer(config.comboTwoPrayerTwo().getPrayer(), config.comboTwoPrayerTwo().getPrayer()));
+			executorService.submit(() -> {
+				clickPrayer(config.comboTwoPrayerOne().getPrayer(), false);
+				clickPrayer(config.comboTwoPrayerTwo().getPrayer(), true);
+			});
 		}
 		if (e.getKeyCode() == config.comboThree().getKeyCode())
 		{
-			executorService.submit(() -> clickPrayer(config.comboThreePrayerOne().getPrayer(), config.comboThreePrayerTwo().getPrayer()));
+			executorService.submit(() -> {
+				clickPrayer(config.comboThreePrayerOne().getPrayer(), false);
+				clickPrayer(config.comboThreePrayerTwo().getPrayer(), true);
+			});
 		}
 	}
 
@@ -172,19 +206,7 @@ public class PraySwap extends Plugin implements KeyListener
 		return config.protectItem() && !client.isPrayerActive(Prayer.PROTECT_ITEM) && client.getBoostedSkillLevel(Skill.PRAYER) >= 1;
 	}
 
-	private void clickPrayer(Prayer prayer)
-	{
-		if (prayer != null)
-		{
-			Widget widget = client.getWidget(prayer.getWidgetInfo());
-			if (widget != null)
-			{
-				handleSwitch(widget.getBounds());
-			}
-		}
-	}
-
-	private void clickPrayer(Prayer prayer, Prayer prayer2)
+	private void clickPrayer(Prayer prayer, boolean swapBack)
 	{
 		if (prayer != null)
 		{
@@ -192,59 +214,29 @@ public class PraySwap extends Plugin implements KeyListener
 
 			if (widget != null)
 			{
-				handleSwitch(widget.getBounds());
-			}
-		}
-		if (prayer2 != null)
-		{
-			Widget widget2 = client.getWidget(prayer2.getWidgetInfo());
-
-			if (widget2 != null)
-			{
-				handleSwitch(widget2.getBounds());
+				if (widget.isHidden())
+				{
+					flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
+				}
+				handleSwitch(widget.getBounds(), swapBack);
 			}
 		}
 	}
 
-	private void handleSwitch(Rectangle rectangle)
+	private void handleSwitch(Rectangle rectangle, boolean swapBack)
 	{
 		Point cp = getClickPoint(rectangle);
-		if (cp.getX() >= 1)
+		if (cp.getX() >= 1 && cp.getY() >= 1)
 		{
 			switch (config.actionType())
 			{
 				case FLEXO:
 					flexo.mouseMove(cp.getX(), cp.getY());
 					flexo.mousePressAndRelease(1);
-					break;
-				case MOUSEEVENTS:
-					leftClick(cp.getX(), cp.getY());
-					try
+					flexo.delay(10);
+					if (swapBack && config.backToInventory())
 					{
-						Thread.sleep(getMillis());
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-					break;
-			}
-		}
-	}
-
-	private void handleSwitch(Rectangle rectangle, Tab tab)
-	{
-		Point cp = getClickPoint(rectangle);
-		if (cp.getX() >= 1)
-		{
-			switch (config.actionType())
-			{
-				case FLEXO:
-					flexo.mouseMove(cp.getX(), cp.getY());
-					flexo.mousePressAndRelease(1);
-					if (config.backToInventory())
-					{
-						flexo.keyPress(tabUtils.getTabHotkey(tab));
+						flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
 					}
 					break;
 				case MOUSEEVENTS:
@@ -257,9 +249,9 @@ public class PraySwap extends Plugin implements KeyListener
 					{
 						e.printStackTrace();
 					}
-					if (config.backToInventory())
+					if (swapBack && config.backToInventory())
 					{
-						flexo.keyPress(tabUtils.getTabHotkey(tab));
+						flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
 					}
 					break;
 			}
@@ -303,7 +295,7 @@ public class PraySwap extends Plugin implements KeyListener
 				new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
 			this.client.getCanvas().dispatchEvent(mouseClicked);
 		}
-		if (!client.isStretchedEnabled())
+		else
 		{
 			Point p = this.client.getMouseCanvasPosition();
 			if (p.getX() != x || p.getY() != y)
@@ -322,20 +314,18 @@ public class PraySwap extends Plugin implements KeyListener
 	private Point getClickPoint(Rectangle rect)
 	{
 		double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
+
+		int rand = (Math.random() <= 0.5) ? 1 : 2;
+		int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
+		int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
+
+		double scale = 1 + (scalingfactor / 100);
+
 		if (client.isStretchedEnabled())
 		{
-			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
-			double scale = 1 + (scalingfactor / 100);
 			return new Point((int) (x * scale), (int) (y * scale));
 		}
-		else
-		{
-			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
-			return new Point(x, y);
-		}
+
+		return new Point(x, y);
 	}
 }
