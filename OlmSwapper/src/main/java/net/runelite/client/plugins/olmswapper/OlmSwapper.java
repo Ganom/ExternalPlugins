@@ -128,6 +128,7 @@ public class OlmSwapper extends Plugin
 			case "the great olm fires a sphere of aggression your way.":
 				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MELEE))
 				{
+					log.info("Protect Melee Being Activated");
 					executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MELEE));
 				}
 				break;
@@ -135,6 +136,7 @@ public class OlmSwapper extends Plugin
 			case "the great olm fires a sphere of magical power your way.":
 				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
 				{
+					log.info("Protect Magic Being Activated");
 					executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MAGIC));
 				}
 				break;
@@ -142,6 +144,7 @@ public class OlmSwapper extends Plugin
 			case "the great olm fires a sphere of accuracy and dexterity your way.":
 				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
 				{
+					log.info("Protect Missiles Being Activated");
 					executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MISSILES));
 				}
 				break;
@@ -151,18 +154,26 @@ public class OlmSwapper extends Plugin
 	@Subscribe
 	public void onProjectileSpawned(ProjectileSpawned event)
 	{
-		int projId = event.getProjectile().getId();
-		switch (projId)
+		if (!config.swapAutos())
+		{
+			return;
+		}
+
+		int id = event.getProjectile().getId();
+
+		switch (id)
 		{
 			case 1339:
 				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
 				{
+					log.info("Protect Magic Being Activated -- Auto Attack");
 					executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MAGIC));
 				}
 				break;
 			case 1340:
 				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
 				{
+					log.info("Protect Missiles Being Activated -- Auto Attack");
 					executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MISSILES));
 				}
 				break;
@@ -190,18 +201,23 @@ public class OlmSwapper extends Plugin
 
 		Point cp = getClickPoint(widget.getBounds());
 
-		if (cp.getX() >= 1)
+		if (cp.getX() >= 1 && cp.getY() >= 1)
 		{
 			if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
 			{
 				return;
 			}
+
 			switch (config.actionType())
 			{
 				case FLEXO:
 					flexo.mouseMove(cp.getX(), cp.getY());
 					flexo.mousePressAndRelease(1);
-					flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+					flexo.delay(10);
+					if (client.isPrayerActive(prayer))
+					{
+						flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+					}
 					break;
 				case MOUSEEVENTS:
 					leftClick(cp.getX(), cp.getY());
@@ -213,7 +229,10 @@ public class OlmSwapper extends Plugin
 					{
 						e.printStackTrace();
 					}
-					flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+					if (client.isPrayerActive(prayer))
+					{
+						flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+					}
 					break;
 			}
 		}

@@ -10,6 +10,17 @@ import net.runelite.client.config.ConfigItem;
 public interface OlmSwapperConfig extends Config
 {
 	@ConfigItem(
+		position = 0,
+		keyName = "swapAutos",
+		name = "Swap on Auto Attacks",
+		description = "This will swap prayers for olms auto attacks as-well."
+	)
+	default boolean swapAutos()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		position = 1,
 		keyName = "actionType",
 		name = "Action Type",
