@@ -186,7 +186,11 @@ public class ToBCheats extends Plugin
 		switch (npc.getId())
 		{
 			case NpcID.NYLOCAS_VASILIAS:
+			case NpcID.NYLOCAS_VASILIAS_8355:
+			case NpcID.NYLOCAS_VASILIAS_8356:
+			case NpcID.NYLOCAS_VASILIAS_8357:
 				nylo = npc;
+				log.info("Nylo Detected");
 				break;
 			case NpcID.THE_MAIDEN_OF_SUGADINTI:
 				maiden = npc;
@@ -290,9 +294,16 @@ public class ToBCheats extends Plugin
 	{
 		final NPC npc = event.getNpc();
 
-		if (npc.getName().equals("Nylocas Vasilias"))
+		if (nylo == null)
+		{
+			log.error("Nylo is null, and is trying to be reached in Definition Change Event");
+			return;
+		}
+
+		if (npc == nylo)
 		{
 			Rectangle bounds = nylo.getConvexHull().getBounds();
+
 			switch (npc.getId())
 			{
 				case NpcID.NYLOCAS_VASILIAS_8355:
