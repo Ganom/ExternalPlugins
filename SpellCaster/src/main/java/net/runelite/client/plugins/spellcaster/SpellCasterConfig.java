@@ -157,7 +157,7 @@ public interface SpellCasterConfig extends Config
 	@ConfigItem(
 		position = 9,
 		keyName = "ancientFive",
-		name = "1",
+		name = "5",
 		description = "",
 		parent = "ancientsStub"
 	)
@@ -287,7 +287,7 @@ public interface SpellCasterConfig extends Config
 	@ConfigItem(
 		position = 9,
 		keyName = "standardFive",
-		name = "1",
+		name = "5",
 		description = "",
 		parent = "standardsStub"
 	)
@@ -418,7 +418,7 @@ public interface SpellCasterConfig extends Config
 	@ConfigItem(
 		position = 9,
 		keyName = "lunarFive",
-		name = "1",
+		name = "5",
 		description = "",
 		parent = "lunarsStub"
 	)
