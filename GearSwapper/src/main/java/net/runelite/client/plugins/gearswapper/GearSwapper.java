@@ -324,22 +324,25 @@ public class GearSwapper extends Plugin
 
 	private void spec()
 	{
-		if (client.getWidget(WidgetInfo.MINIMAP_SPEC_SPRITE).getSpriteId() == 1607 || client.getWidget(WidgetInfo.MINIMAP_SPEC_SPRITE).getSpriteId() == 1608)
+		Widget specOrb = client.getWidget(WidgetID.MINIMAP_GROUP_ID, 32);
+		if (specOrb == null)
+		{
+			return;
+		}
+		if (specOrb.getSpriteId() == 1607 || specOrb.getSpriteId() == 1608)
 		{
 			handleSwitch(client.getWidget(WidgetInfo.MINIMAP_SPEC_ORB).getBounds());
 		}
 		else
 		{
 			flexo.keyPress(tabUtils.getTabHotkey(Tab.ATTACK));
-			try
+			flexo.delay((int) getMillis());
+			Widget specClickbox = client.getWidget(WidgetID.COMBAT_GROUP_ID, 35);
+			if (specClickbox == null)
 			{
-				Thread.sleep(getMillis());
+				return;
 			}
-			catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-			handleSwitch(client.getWidget(WidgetInfo.COMBAT_SPEC_CLICKBOX).getBounds());
+			handleSwitch(specClickbox.getBounds());
 			if (config.backToInventory())
 			{
 				flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
