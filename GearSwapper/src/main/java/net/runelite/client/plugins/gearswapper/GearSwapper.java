@@ -322,6 +322,31 @@ public class GearSwapper extends Plugin
 		return equipped;
 	}
 
+	private void spec()
+	{
+		if (client.getWidget(WidgetInfo.MINIMAP_SPEC_SPRITE).getSpriteId() == 1607 || client.getWidget(WidgetInfo.MINIMAP_SPEC_SPRITE).getSpriteId() == 1608)
+		{
+			handleSwitch(client.getWidget(WidgetInfo.MINIMAP_SPEC_ORB).getBounds());
+		}
+		else
+		{
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.ATTACK));
+			try
+			{
+				Thread.sleep(getMillis());
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+			handleSwitch(client.getWidget(WidgetInfo.COMBAT_SPEC_CLICKBOX).getBounds());
+			if (config.backToInventory())
+			{
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+			}
+		}
+	}
+	
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
