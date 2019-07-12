@@ -24,8 +24,6 @@
 package net.runelite.client.plugins.olmswapper;
 
 import com.google.inject.Provides;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -34,24 +32,21 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
-import net.runelite.api.Point;
 import net.runelite.api.Prayer;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.ProjectileSpawned;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.client.chat.ChatMessageManager;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.flexo.Flexo;
-import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
+import net.runelite.client.plugins.olmswapper.utils.ExtUtils;
 import net.runelite.client.plugins.olmswapper.utils.Tab;
 import net.runelite.client.plugins.olmswapper.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
-import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.Text;
 
 
@@ -68,17 +63,9 @@ public class OlmSwapper extends Plugin
 	@Inject
 	private Client client;
 	@Inject
-	private OverlayManager overlayManager;
-	@Inject
-	private ItemManager itemManager;
-	@Inject
-	private ChatMessageManager chatMessageManager;
-	@Inject
 	private OlmSwapperConfig config;
 	@Inject
 	private ConfigManager configManager;
-	@Inject
-	private TabUtils tabUtils;
 	private BlockingQueue queue = new ArrayBlockingQueue(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
@@ -189,7 +176,7 @@ public class OlmSwapper extends Plugin
 
 		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
 		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
+			flexo.keyPress(TabUtils.getTabHotkey(Tab.PRAYER, client));
 		}
 
 		Widget widget = client.getWidget(prayer.getWidgetInfo());
@@ -199,116 +186,16 @@ public class OlmSwapper extends Plugin
 			return;
 		}
 
-		Point cp = getClickPoint(widget.getBounds());
+		ExtUtils.handleSwitch(widget.getBounds(), config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis());
 
-		if (cp.getX() >= 1 && cp.getY() >= 1)
+		if (client.isPrayerActive(prayer))
 		{
-			if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
-			{
-				return;
-			}
-
-			switch (config.actionType())
-			{
-				case FLEXO:
-					flexo.mouseMove(cp.getX(), cp.getY());
-					flexo.mousePressAndRelease(1);
-					flexo.delay(10);
-					if (client.isPrayerActive(prayer))
-					{
-						flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-					}
-					break;
-				case MOUSEEVENTS:
-					leftClick(cp.getX(), cp.getY());
-					try
-					{
-						Thread.sleep(getMillis());
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-					if (client.isPrayerActive(prayer))
-					{
-						flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-					}
-					break;
-			}
+			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
 		}
 	}
 
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
-	}
-
-	private void moveMouse(int x, int y)
-	{
-		MouseEvent mouseEntered = new MouseEvent(this.client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseEntered);
-		MouseEvent mouseExited = new MouseEvent(this.client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseExited);
-		MouseEvent mouseMoved = new MouseEvent(this.client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseMoved);
-	}
-
-	private void leftClick(int x, int y)
-	{
-		if (client.isStretchedEnabled())
-		{
-			double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
-			Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
-			double scale = 1 + (scalingfactor / 100);
-			log.info("Scale: " + Double.toString(scale));
-
-			MouseEvent mousePressed =
-				new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mousePressed);
-			MouseEvent mouseReleased =
-				new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseReleased);
-			MouseEvent mouseClicked =
-				new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseClicked);
-		}
-		if (!client.isStretchedEnabled())
-		{
-			Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
-			MouseEvent mousePressed = new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mousePressed);
-			MouseEvent mouseReleased = new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseReleased);
-			MouseEvent mouseClicked = new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseClicked);
-		}
-	}
-
-	private Point getClickPoint(Rectangle rect)
-	{
-		double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
-		if (client.isStretchedEnabled())
-		{
-			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
-			double scale = 1 + (scalingfactor / 100);
-			return new Point((int) (x * scale), (int) (y * scale));
-		}
-		else
-		{
-			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
-			return new Point(x, y);
-		}
 	}
 }

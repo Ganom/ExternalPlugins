@@ -25,9 +25,6 @@ package net.runelite.client.plugins.tobcheats;
 
 import com.google.inject.Provides;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -40,7 +37,6 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
-import net.runelite.api.Point;
 import net.runelite.api.Prayer;
 import net.runelite.api.Projectile;
 import net.runelite.api.Skill;
@@ -62,6 +58,7 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
+import net.runelite.client.plugins.tobcheats.utils.ExtUtils;
 import net.runelite.client.plugins.tobcheats.utils.Tab;
 import net.runelite.client.plugins.tobcheats.utils.TabUtils;
 
@@ -83,8 +80,6 @@ public class ToBCheats extends Plugin
 	@Inject
 	private ConfigManager configManager;
 	@Inject
-	private TabUtils tabUtils;
-	@Inject
 	private ItemManager itemManager;
 	private Flexo flexo;
 	private BlockingQueue queue = new ArrayBlockingQueue(1);
@@ -104,45 +99,17 @@ public class ToBCheats extends Plugin
 
 	private List<WidgetItem> getMage()
 	{
-		int[] mage = Arrays.stream(config.mage().split(","))
-			.map(String::trim).mapToInt(Integer::parseInt).toArray();
-		return getItems(mage);
+		return ExtUtils.getItems(ExtUtils.stringToIntArray(config.mage()), client);
 	}
 
 	private List<WidgetItem> getRange()
 	{
-		int[] range = Arrays.stream(config.range().split(","))
-			.map(String::trim).mapToInt(Integer::parseInt).toArray();
-		return getItems(range);
+		return ExtUtils.getItems(ExtUtils.stringToIntArray(config.range()), client);
 	}
 
 	private List<WidgetItem> getMelee()
 	{
-		int[] melee = Arrays.stream(config.melee().split(","))
-			.map(String::trim).mapToInt(Integer::parseInt).toArray();
-		return getItems(melee);
-	}
-
-	private List<WidgetItem> getItems(int... itemIds)
-	{
-		Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
-		ArrayList<Integer> itemIDs = new ArrayList<>();
-		for (int i : itemIds)
-		{
-			itemIDs.add(i);
-		}
-
-		List<WidgetItem> listToReturn = new ArrayList<>();
-
-		for (WidgetItem item : inventoryWidget.getWidgetItems())
-		{
-			if (itemIDs.contains(item.getId()))
-			{
-				listToReturn.add(item);
-			}
-		}
-
-		return listToReturn;
+		return ExtUtils.getItems(ExtUtils.stringToIntArray(config.melee()), client);
 	}
 
 	@Override
@@ -362,7 +329,7 @@ public class ToBCheats extends Plugin
 		}
 		if (config.backToInventory())
 		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
 		}
 		log.info(logs);
 	}
@@ -382,7 +349,7 @@ public class ToBCheats extends Plugin
 	{
 		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
 		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
 		}
 		if (itemList.isEmpty())
 		{
@@ -400,7 +367,7 @@ public class ToBCheats extends Plugin
 
 	private void clickWidget(WidgetInfo widgetInfo, Tab tab)
 	{
-		flexo.keyPress(tabUtils.getTabHotkey(tab));
+		flexo.keyPress(TabUtils.getTabHotkey(tab, client));
 
 		if (widgetInfo != null)
 		{
@@ -415,28 +382,7 @@ public class ToBCheats extends Plugin
 
 	private void handleSwitch(Rectangle rectangle)
 	{
-		Point cp = getClickPoint(rectangle);
-		if (cp.getX() >= 1)
-		{
-			switch (config.actionType())
-			{
-				case FLEXO:
-					flexo.mouseMove(cp.getX(), cp.getY());
-					flexo.mousePressAndRelease(1);
-					break;
-				case MOUSEEVENTS:
-					leftClick(cp.getX(), cp.getY());
-					try
-					{
-						Thread.sleep(getMillis());
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-					break;
-			}
-		}
+		ExtUtils.handleSwitch(rectangle, config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis());
 	}
 
 	private void reset()
@@ -452,74 +398,5 @@ public class ToBCheats extends Plugin
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
-	}
-
-	private void moveMouse(int x, int y)
-	{
-		MouseEvent mouseEntered = new MouseEvent(this.client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseEntered);
-		MouseEvent mouseExited = new MouseEvent(this.client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseExited);
-		MouseEvent mouseMoved = new MouseEvent(this.client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseMoved);
-	}
-
-	private void leftClick(int x, int y)
-	{
-		if (client.isStretchedEnabled())
-		{
-			double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
-			Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
-			double scale = 1 + (scalingfactor / 100);
-			log.info("Scale: " + Double.toString(scale));
-
-			MouseEvent mousePressed =
-				new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mousePressed);
-			MouseEvent mouseReleased =
-				new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseReleased);
-			MouseEvent mouseClicked =
-				new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseClicked);
-		}
-		if (!client.isStretchedEnabled())
-		{
-			Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
-			MouseEvent mousePressed = new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mousePressed);
-			MouseEvent mouseReleased = new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseReleased);
-			MouseEvent mouseClicked = new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseClicked);
-		}
-	}
-
-	private Point getClickPoint(Rectangle rect)
-	{
-		double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
-		if (client.isStretchedEnabled())
-		{
-			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
-			double scale = 1 + (scalingfactor / 100);
-			return new Point((int) (x * scale), (int) (y * scale));
-		}
-		else
-		{
-			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
-			return new Point(x, y);
-		}
 	}
 }

@@ -26,9 +26,6 @@ package net.runelite.client.plugins.onetick;
 import com.google.common.base.Strings;
 import com.google.inject.Provides;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -40,14 +37,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
-import net.runelite.api.Point;
 import net.runelite.api.VarClientStr;
 import net.runelite.api.events.GameObjectDespawned;
 import net.runelite.api.events.GameObjectSpawned;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
-import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -56,7 +50,7 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
-import net.runelite.client.plugins.onetick.util.TabUtils;
+import net.runelite.client.plugins.onetick.utils.ExtUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 import net.runelite.client.util.HotkeyListener;
 
@@ -75,8 +69,6 @@ public class OneTick extends Plugin
 	@Inject
 	private Client client;
 	@Inject
-	private TabUtils tabUtils;
-	@Inject
 	private OneTickConfig config;
 	@Inject
 	private KeyManager keyManager;
@@ -88,7 +80,7 @@ public class OneTick extends Plugin
 	private Flexo flexo;
 	private boolean oneTick;
 	private BlockingQueue queue = new ArrayBlockingQueue(1);
-	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(2, 2, 10, TimeUnit.SECONDS, queue,
+	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 25, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 
 	private final HotkeyListener oneTickHotkey = new HotkeyListener(() -> config.oneTick())
@@ -106,33 +98,13 @@ public class OneTick extends Plugin
 		return configManager.getConfig(OneTickConfig.class);
 	}
 
-	private List<WidgetItem> getItems(int... itemIds)
-	{
-		Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
-
-		ArrayList<Integer> itemIDs = new ArrayList<>();
-		for (int i : itemIds)
-		{
-			itemIDs.add(i);
-		}
-		List<WidgetItem> listToReturn = new ArrayList<>();
-
-		for (WidgetItem item : inventoryWidget.getWidgetItems())
-		{
-			if (itemIDs.contains(item.getId()))
-			{
-				listToReturn.add(item);
-			}
-		}
-		return listToReturn;
-	}
-
 	@Override
 	protected void startUp()
 	{
 		keyManager.registerKeyListener(oneTickHotkey);
 		Flexo.client = client;
-		executorService.submit(() -> {
+		executorService.submit(() ->
+		{
 			flexo = null;
 			try
 			{
@@ -195,12 +167,13 @@ public class OneTick extends Plugin
 	{
 		if (oneTick)
 		{
-			if (getItems(config.boneId()).size() <= 0)
+			if (ExtUtils.getItems(ExtUtils.stringToIntArray(config.boneId()), client).size() <= 0)
 			{
 				oneTick = false;
 			}
 
-			executorService.submit(() -> {
+			executorService.submit(() ->
+			{
 				final String typedText = client.getVar(VarClientStr.CHATBOX_TYPED_TEXT);
 
 				if (!Strings.isNullOrEmpty(typedText))
@@ -213,139 +186,20 @@ public class OneTick extends Plugin
 					return;
 				}
 
-				WidgetItem next = getItems(config.boneId()).iterator().next();
-				clickItem(next);
-				clickGameObject(altar);
+				WidgetItem next = ExtUtils.getItems(ExtUtils.stringToIntArray(config.boneId()), client).iterator().next();
+				handleSwitch(next.getCanvasBounds());
+				handleSwitch(altar.getConvexHull().getBounds());
 			});
-		}
-	}
-
-	private void clickItem(WidgetItem item)
-	{
-		if (item != null)
-		{
-			Rectangle bounds = item.getCanvasBounds();
-
-			if (item.getCanvasBounds() == null)
-			{
-				return;
-			}
-
-			handleSwitch(bounds);
-		}
-	}
-
-	private void clickGameObject(GameObject gameObject)
-	{
-		if (gameObject != null)
-		{
-			Rectangle bounds = gameObject.getConvexHull().getBounds();
-
-			if (gameObject.getConvexHull() == null)
-			{
-				return;
-			}
-
-			handleSwitch(bounds);
 		}
 	}
 
 	private void handleSwitch(Rectangle rectangle)
 	{
-		Point cp = getClickPoint(rectangle);
-		if (cp.getX() >= 1)
-		{
-			switch (config.actionType())
-			{
-				case FLEXO:
-					flexo.mouseMove(cp.getX(), cp.getY());
-					flexo.mousePressAndRelease(1);
-					break;
-				case MOUSEEVENTS:
-					leftClick(cp.getX(), cp.getY());
-					try
-					{
-						Thread.sleep(getMillis());
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-					break;
-			}
-		}
+		ExtUtils.handleSwitch(rectangle, config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis());
 	}
 
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
-	}
-
-	private void moveMouse(int x, int y)
-	{
-		MouseEvent mouseEntered = new MouseEvent(this.client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseEntered);
-		MouseEvent mouseExited = new MouseEvent(this.client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseExited);
-		MouseEvent mouseMoved = new MouseEvent(this.client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseMoved);
-	}
-
-	private void leftClick(int x, int y)
-	{
-		if (client.isStretchedEnabled())
-		{
-			double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
-			Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
-			double scale = 1 + (scalingfactor / 100);
-
-			MouseEvent mousePressed =
-				new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mousePressed);
-			MouseEvent mouseReleased =
-				new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseReleased);
-			MouseEvent mouseClicked =
-				new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseClicked);
-		}
-		if (!client.isStretchedEnabled())
-		{
-			Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
-			MouseEvent mousePressed = new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mousePressed);
-			MouseEvent mouseReleased = new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseReleased);
-			MouseEvent mouseClicked = new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseClicked);
-		}
-	}
-
-	private Point getClickPoint(Rectangle rect)
-	{
-		double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
-		if (client.isStretchedEnabled())
-		{
-			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
-			double scale = 1 + (scalingfactor / 100);
-			return new Point((int) (x * scale), (int) (y * scale));
-		}
-		else
-		{
-			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
-			return new Point(x, y);
-		}
 	}
 }

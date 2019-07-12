@@ -24,10 +24,6 @@
 package net.runelite.client.plugins.gearswapper;
 
 import com.google.inject.Provides;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -36,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-import net.runelite.api.Point;
 import net.runelite.api.events.ConfigChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
@@ -49,6 +44,7 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
+import net.runelite.client.plugins.gearswapper.utils.ExtUtils;
 import net.runelite.client.plugins.gearswapper.utils.Tab;
 import net.runelite.client.plugins.gearswapper.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
@@ -72,12 +68,10 @@ public class GearSwapper extends Plugin
 	@Inject
 	private KeyManager keyManager;
 	@Inject
-	private TabUtils tabUtils;
-	@Inject
 	private ItemManager itemManager;
 
 	private BlockingQueue queue = new ArrayBlockingQueue(1);
-	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, queue,
+	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 2, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 	private double scalingfactor;
 	private Flexo flexo;
@@ -87,7 +81,8 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.mageSet())), getEquippedItems(stringToIntArray(config.removeMageSet()))));
+			executorService.submit(() -> executeSwap(ExtUtils.getItems(ExtUtils.stringToIntArray(config.mageSet()), client),
+				ExtUtils.getEquippedItems(ExtUtils.stringToIntArray(config.removeMageSet()), client)));
 			log.info("Mage Hotkey Pressed");
 		}
 	};
@@ -96,7 +91,8 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.rangeSet())), getEquippedItems(stringToIntArray(config.removeRangeSet()))));
+			executorService.submit(() -> executeSwap(ExtUtils.getItems(ExtUtils.stringToIntArray(config.rangeSet()), client),
+				ExtUtils.getEquippedItems(ExtUtils.stringToIntArray(config.removeRangeSet()), client)));
 			log.info("Range Hotkey Pressed");
 		}
 	};
@@ -105,7 +101,8 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.meleeSet())), getEquippedItems(stringToIntArray(config.removeMeleeSet()))));
+			executorService.submit(() -> executeSwap(ExtUtils.getItems(ExtUtils.stringToIntArray(config.meleeSet()), client),
+				ExtUtils.getEquippedItems(ExtUtils.stringToIntArray(config.removeMeleeSet()), client)));
 			log.info("Melee Hotkey Pressed");
 		}
 	};
@@ -114,7 +111,7 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executorService.submit(() -> equipItem(getItems(stringToIntArray(config.util()))));
+			executorService.submit(() -> equipItem(ExtUtils.getItems(ExtUtils.stringToIntArray(config.util()), client)));
 			log.info("Util Hotkey Pressed");
 		}
 	};
@@ -173,7 +170,7 @@ public class GearSwapper extends Plugin
 
 		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
 		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
 			flexo.delay(25);
 		}
 
@@ -187,7 +184,7 @@ public class GearSwapper extends Plugin
 				}
 				if (item.getCanvasBounds() != null)
 				{
-					handleSwitch(item.getCanvasBounds());
+					ExtUtils.handleSwitch(item.getCanvasBounds(), config.actionType(), flexo, client, scalingfactor, (int) getMillis());
 				}
 			}
 		}
@@ -202,7 +199,7 @@ public class GearSwapper extends Plugin
 
 		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden())
 		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.EQUIPMENT));
+			flexo.keyPress(TabUtils.getTabHotkey(Tab.EQUIPMENT, client));
 			flexo.delay(35);
 		}
 
@@ -216,35 +213,10 @@ public class GearSwapper extends Plugin
 				}
 				if (item.getBounds() != null)
 				{
-					handleSwitch(item.getBounds());
+					ExtUtils.handleSwitch(item.getBounds(), config.actionType(), flexo, client, scalingfactor, (int) getMillis());
 				}
 			}
 		}
-	}
-
-	private void handleSwitch(Rectangle rectangle)
-	{
-		Point cp = getClickPoint(rectangle);
-
-		if (cp.getX() >= 1)
-		{
-			switch (config.actionType())
-			{
-				case FLEXO:
-					flexo.mouseMove(cp.getX(), cp.getY());
-					flexo.mousePressAndRelease(1);
-					break;
-				case MOUSEEVENTS:
-					leftClick(cp.getX(), cp.getY());
-					flexo.delay((int) getMillis());
-					break;
-			}
-		}
-	}
-
-	private int[] stringToIntArray(String string)
-	{
-		return Arrays.stream(string.split(",")).map(String::trim).mapToInt(Integer::parseInt).toArray();
 	}
 
 	private void executeSwap(List<WidgetItem> equip, List<Widget> remove)
@@ -253,143 +225,19 @@ public class GearSwapper extends Plugin
 
 		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden() && remove.size() > 0)
 		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.EQUIPMENT));
+			flexo.keyPress(TabUtils.getTabHotkey(Tab.EQUIPMENT, client));
 		}
 
 		removeItem(remove);
 
 		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
 		{
-			flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
 		}
-	}
-
-	private List<WidgetItem> getItems(int... itemIds)
-	{
-		Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
-
-		ArrayList<Integer> itemIDs = new ArrayList<>();
-
-		for (int i : itemIds)
-		{
-			itemIDs.add(i);
-		}
-
-		List<WidgetItem> listToReturn = new ArrayList<>();
-
-		for (WidgetItem item : inventoryWidget.getWidgetItems())
-		{
-			if (itemIDs.contains(item.getId()))
-			{
-				listToReturn.add(item);
-			}
-		}
-
-		return listToReturn;
-	}
-
-	private List<Widget> getEquippedItems(int... itemIds)
-	{
-		Widget equipmentWidget = client.getWidget(WidgetInfo.EQUIPMENT);
-
-		ArrayList<Integer> equippedIds = new ArrayList<>();
-
-		for (int i : itemIds)
-		{
-			equippedIds.add(i);
-		}
-
-		List<Widget> equipped = new ArrayList<>();
-
-		if (equipmentWidget.getStaticChildren() != null)
-		{
-			for (Widget widgets : equipmentWidget.getStaticChildren())
-			{
-				for (Widget items : widgets.getDynamicChildren())
-				{
-					if (equippedIds.contains(items.getItemId()))
-					{
-						equipped.add(items);
-					}
-				}
-			}
-		}
-		else
-		{
-			log.error("Static Children is Null!");
-		}
-
-		return equipped;
 	}
 
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
-	}
-
-	private void leftClick(int x, int y)
-	{
-		if (client.isStretchedEnabled())
-		{
-			net.runelite.api.Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
-			double scale = 1 + (scalingfactor / 100);
-
-			MouseEvent mousePressed =
-				new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mousePressed);
-			MouseEvent mouseReleased =
-				new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseReleased);
-			MouseEvent mouseClicked =
-				new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, (int) (this.client.getMouseCanvasPosition().getX() * scale), (int) (this.client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseClicked);
-		}
-		if (!client.isStretchedEnabled())
-		{
-			net.runelite.api.Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
-			MouseEvent mousePressed = new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mousePressed);
-			MouseEvent mouseReleased = new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseReleased);
-			MouseEvent mouseClicked = new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
-			this.client.getCanvas().dispatchEvent(mouseClicked);
-		}
-	}
-
-	private void moveMouse(int x, int y)
-	{
-		MouseEvent mouseEntered = new MouseEvent(this.client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseEntered);
-		MouseEvent mouseExited = new MouseEvent(this.client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseExited);
-		MouseEvent mouseMoved = new MouseEvent(this.client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
-		this.client.getCanvas().dispatchEvent(mouseMoved);
-	}
-
-	private Point getClickPoint(Rectangle rect)
-	{
-		if (client.isStretchedEnabled())
-		{
-			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
-			double scale = 1 + (scalingfactor / 100);
-			return new Point((int) (x * scale), (int) (y * scale));
-		}
-		else
-		{
-			int rand = (Math.random() <= 0.5) ? 1 : 2;
-			int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
-			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
-			return new Point(x, y);
-		}
 	}
 }

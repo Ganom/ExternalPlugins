@@ -1,13 +1,13 @@
 package net.runelite.client.plugins.tobcheats.utils;
 
-import javax.inject.Inject;
 import net.runelite.api.Client;
 
 public class TabUtils
 {
 	private static int[] tabs = new int[Tab.values().length];
 
-	static {
+	static
+	{
 		tabs[Tab.LOGOUT.ordinal()] = 1;
 		tabs[Tab.FRIENDS.ordinal()] = 2;
 		tabs[Tab.IGNORES.ordinal()] = 3;
@@ -25,29 +25,28 @@ public class TabUtils
 		tabs[Tab.PRAYER.ordinal()] = 15;
 	}
 
-	private Client client;
-
-	@Inject
-	public TabUtils(Client client)
+	public static int getTabHotkey(Tab tab, Client client)
 	{
-		this.client = client;
-	}
-
-	public int getTabHotkey(Tab tab) {
 		int keyCode;
-		if ((keyCode = client.getVarps()[doSomething(tab)]) < 0) {
+		if ((keyCode = client.getVarps()[doSomething(tab)]) < 0)
+		{
 			keyCode -= -2147483648;
 		}
 
-		if ((keyCode = keyCode >>> doSomethingElse(tab) & 15) == 0) {
+		if ((keyCode = keyCode >>> doSomethingElse(tab) & 15) == 0)
+		{
 			return -1;
-		} else {
+		}
+		else
+		{
 			return keyCode == 13 ? 27 : 112 + keyCode - 1;
 		}
 	}
 
-	private int doSomething(Tab tab) {
-		switch (tabs[tab.ordinal()]) {
+	private static int doSomething(Tab tab)
+	{
+		switch (tabs[tab.ordinal()])
+		{
 			case 2:
 			case 4:
 			case 5:
@@ -69,8 +68,10 @@ public class TabUtils
 		}
 	}
 
-	private int doSomethingElse(Tab tab) {
-		switch (tabs[tab.ordinal()]) {
+	private static int doSomethingElse(Tab tab)
+	{
+		switch (tabs[tab.ordinal()])
+		{
 			case 1:
 			case 4:
 			case 11:
@@ -94,5 +95,4 @@ public class TabUtils
 				return 0;
 		}
 	}
-
 }

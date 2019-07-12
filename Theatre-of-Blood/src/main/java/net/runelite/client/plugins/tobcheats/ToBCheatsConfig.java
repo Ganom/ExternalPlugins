@@ -24,12 +24,11 @@
 
 package net.runelite.client.plugins.tobcheats;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Stub;
+import net.runelite.client.plugins.tobcheats.utils.ActionType;
 
 @ConfigGroup("tobcheats")
 
@@ -206,21 +205,4 @@ public interface ToBCheatsConfig extends Config
 	{
 		return 80;
 	}
-
-	@Getter
-	@AllArgsConstructor
-	public enum ActionType
-	{
-		FLEXO("Flexo"),
-		MOUSEEVENTS("MouseEvents");
-
-		private String name;
-
-		@Override
-		public String toString()
-		{
-			return getName();
-		}
-	}
-
 }

@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.onetick.util;
+package net.runelite.client.plugins.tickeater.utils;
 
 public enum Tab
 {

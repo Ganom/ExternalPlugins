@@ -1,6 +1,5 @@
 package net.runelite.client.plugins.olmswapper.utils;
 
-import javax.inject.Inject;
 import net.runelite.api.Client;
 
 public class TabUtils
@@ -26,15 +25,7 @@ public class TabUtils
 		tabs[Tab.PRAYER.ordinal()] = 15;
 	}
 
-	private Client client;
-
-	@Inject
-	public TabUtils(Client client)
-	{
-		this.client = client;
-	}
-
-	public int getTabHotkey(Tab tab)
+	public static int getTabHotkey(Tab tab, Client client)
 	{
 		int keyCode;
 		if ((keyCode = client.getVarps()[doSomething(tab)]) < 0)
@@ -52,7 +43,7 @@ public class TabUtils
 		}
 	}
 
-	private int doSomething(Tab tab)
+	private static int doSomething(Tab tab)
 	{
 		switch (tabs[tab.ordinal()])
 		{
@@ -77,7 +68,7 @@ public class TabUtils
 		}
 	}
 
-	private int doSomethingElse(Tab tab)
+	private static int doSomethingElse(Tab tab)
 	{
 		switch (tabs[tab.ordinal()])
 		{
@@ -104,5 +95,4 @@ public class TabUtils
 				return 0;
 		}
 	}
-
 }

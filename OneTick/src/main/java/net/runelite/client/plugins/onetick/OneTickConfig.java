@@ -1,11 +1,10 @@
 package net.runelite.client.plugins.onetick;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Keybind;
+import net.runelite.client.plugins.onetick.utils.ActionType;
 
 @ConfigGroup("OneTick")
 public interface OneTickConfig extends Config
@@ -27,9 +26,9 @@ public interface OneTickConfig extends Config
 		description = "to 1 tick",
 		position = 2
 	)
-	default int boneId()
+	default String boneId()
 	{
-		return 22780;
+		return "22780, 22786";
 	}
 
 	@ConfigItem(
@@ -66,21 +65,5 @@ public interface OneTickConfig extends Config
 	default int randHigh()
 	{
 		return 80;
-	}
-
-	@Getter
-	@AllArgsConstructor
-	public enum ActionType
-	{
-		FLEXO("Flexo"),
-		MOUSEEVENTS("MouseEvents");
-
-		private String name;
-
-		@Override
-		public String toString()
-		{
-			return getName();
-		}
 	}
 }

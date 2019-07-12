@@ -1,10 +1,9 @@
 package net.runelite.client.plugins.olmswapper;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.plugins.olmswapper.utils.ActionType;
 
 @ConfigGroup(value = "OlmSwapper")
 public interface OlmSwapperConfig extends Config
@@ -51,22 +50,6 @@ public interface OlmSwapperConfig extends Config
 	default int randHigh()
 	{
 		return 80;
-	}
-
-	@Getter
-	@AllArgsConstructor
-	public enum ActionType
-	{
-		FLEXO("Flexo"),
-		MOUSEEVENTS("MouseEvents");
-
-		private String name;
-
-		@Override
-		public String toString()
-		{
-			return getName();
-		}
 	}
 }
 
