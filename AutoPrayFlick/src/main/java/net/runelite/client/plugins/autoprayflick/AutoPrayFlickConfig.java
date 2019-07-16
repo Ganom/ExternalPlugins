@@ -34,6 +34,17 @@ import net.runelite.client.config.Keybind;
 public interface AutoPrayFlickConfig extends Config
 {
 	@ConfigItem(
+		keyName = "onlyInNmz",
+		name = "Only flick in NMZ",
+		description = "If you leave nmz, it will stop working.",
+		position = 10
+	)
+	default boolean onlyInNmz()
+	{
+		return false;
+	}
+
+	@ConfigItem(
 		keyName = "useMouse",
 		name = "Use Mouse Button",
 		description = "Uses mouse button instead of /",

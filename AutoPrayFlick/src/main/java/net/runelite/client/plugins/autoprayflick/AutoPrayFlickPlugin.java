@@ -30,6 +30,7 @@ import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -59,6 +60,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 @Slf4j
 public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseListener
 {
+	private static final int[] NMZ_MAP_REGION = {9033};
 
 	boolean toggleFlick = false;
 	@Inject
@@ -165,6 +167,11 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
+		if (config.onlyInNmz() && !isInNightmareZone())
+		{
+			return;
+		}
+
 		if (toggleFlick && config.clicks())
 		{
 			doubleClick();
@@ -199,7 +206,6 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	{
 		final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 		service.schedule(this::simLeftClick, randomDelay(1, 9), TimeUnit.MILLISECONDS);
-
 		service.shutdown();
 	}
 
@@ -207,7 +213,6 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	{
 		final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 		service.schedule(this::simLeftClick, randomDelay(90, 100), TimeUnit.MILLISECONDS);
-
 		service.shutdown();
 	}
 
@@ -290,5 +295,10 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	public MouseEvent mouseMoved(MouseEvent e)
 	{
 		return e;
+	}
+
+	boolean isInNightmareZone()
+	{
+		return Arrays.equals(client.getMapRegions(), NMZ_MAP_REGION);
 	}
 }
