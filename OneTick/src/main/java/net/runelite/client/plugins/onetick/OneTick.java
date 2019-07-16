@@ -286,6 +286,8 @@ public class OneTick extends Plugin
 						return;
 					}
 
+					karambwans = ExtUtils.getItems(KARAMBWAN, client);
+
 					if (!karambwans.iterator().hasNext())
 					{
 						oneTick = false;
