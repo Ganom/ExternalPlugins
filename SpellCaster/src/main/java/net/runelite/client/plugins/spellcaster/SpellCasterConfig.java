@@ -32,6 +32,7 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.config.Stub;
+import net.runelite.client.plugins.spellcaster.utils.ActionType;
 
 @ConfigGroup("SpellCaster")
 public interface SpellCasterConfig extends Config
@@ -177,6 +178,7 @@ public interface SpellCasterConfig extends Config
 	{
 		return Keybind.NOT_SET;
 	}
+
 	@ConfigItem(
 		position = 0,
 		keyName = "standardsStub",
@@ -318,6 +320,7 @@ public interface SpellCasterConfig extends Config
 	{
 		return new Stub();
 	}
+
 	//lunars
 	@ConfigItem(
 		position = 1,
@@ -438,6 +441,7 @@ public interface SpellCasterConfig extends Config
 	{
 		return Keybind.NOT_SET;
 	}
+
 	//end lunars
 	@ConfigItem(
 		position = 22,
@@ -484,22 +488,6 @@ public interface SpellCasterConfig extends Config
 	default int randHigh()
 	{
 		return 80;
-	}
-
-	@Getter
-	@AllArgsConstructor
-	public enum ActionType
-	{
-		FLEXO("Flexo"),
-		MOUSEEVENTS("MouseEvents");
-
-		private String name;
-
-		@Override
-		public String toString()
-		{
-			return getName();
-		}
 	}
 
 	@Getter
