@@ -4,10 +4,13 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.GameObject;
 import net.runelite.api.Point;
+import net.runelite.api.TileObject;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
@@ -81,14 +84,19 @@ public class ExtUtils
 
 	public static void handleSwitch(Rectangle rectangle, ActionType actionType, Flexo flexo, Client client, double scalingfactor, int delay)
 	{
-		Point cp = ExtUtils.getClickPoint(rectangle, scalingfactor, client.isStretchedEnabled());
+		Point cp = getClickPoint(rectangle, scalingfactor, client.isStretchedEnabled());
+		Point tmp = client.getMouseCanvasPosition();
+		java.awt.Point mousePos = new java.awt.Point(tmp.getX(), tmp.getY());
 
 		if (cp.getX() >= 1)
 		{
 			switch (actionType)
 			{
 				case FLEXO:
-					flexo.mouseMove(cp.getX(), cp.getY());
+					if (!rectangle.contains(mousePos))
+					{
+						flexo.mouseMove(cp.getX(), cp.getY());
+					}
 					flexo.mousePressAndRelease(1);
 					break;
 				case MOUSEEVENTS:
@@ -127,11 +135,14 @@ public class ExtUtils
 			{
 				moveMouse(x, y, client);
 			}
-			MouseEvent mousePressed = new MouseEvent(client.getCanvas(), 501, System.currentTimeMillis(), 0, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), 1, false, 1);
+			MouseEvent mousePressed =
+				new MouseEvent(client.getCanvas(), 501, System.currentTimeMillis(), 0, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), 1, false, 1);
 			client.getCanvas().dispatchEvent(mousePressed);
-			MouseEvent mouseReleased = new MouseEvent(client.getCanvas(), 502, System.currentTimeMillis(), 0, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), 1, false, 1);
+			MouseEvent mouseReleased =
+				new MouseEvent(client.getCanvas(), 502, System.currentTimeMillis(), 0, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), 1, false, 1);
 			client.getCanvas().dispatchEvent(mouseReleased);
-			MouseEvent mouseClicked = new MouseEvent(client.getCanvas(), 500, System.currentTimeMillis(), 0, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), 1, false, 1);
+			MouseEvent mouseClicked =
+				new MouseEvent(client.getCanvas(), 500, System.currentTimeMillis(), 0, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), 1, false, 1);
 			client.getCanvas().dispatchEvent(mouseClicked);
 		}
 	}
@@ -163,5 +174,59 @@ public class ExtUtils
 			int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
 			return new Point(x, y);
 		}
+	}
+
+	public static GameObject grabNearestObjectToPlayer(int id, List<GameObject> objects, java.awt.Point playerPoint)
+	{
+		List<Double> tmp = new ArrayList<>();
+		final GameObject[] temp = {null};
+
+		objects.forEach(object ->
+		{
+			if (object.getId() == id)
+			{
+				final Rectangle b = object.getConvexHull().getBounds();
+				final double distance = distance(playerPoint.x, playerPoint.y, (int) b.getCenterX(), (int) b.getCenterY());
+				tmp.add(distance);
+				double lowest = Collections.min(tmp);
+
+				if (distance == lowest)
+				{
+					temp[0] = object;
+				}
+			}
+		});
+		return temp[0];
+	}
+
+	public static WidgetItem grabNearestItemToObject(int id, List<WidgetItem> items, TileObject object)
+	{
+		List<Double> tmp = new ArrayList<>();
+		final WidgetItem[] temp = {null};
+
+		items.forEach(item ->
+		{
+			if (item.getId() == id)
+			{
+				final Rectangle p = item.getCanvasBounds();
+				final Rectangle b = object.getCanvasTilePoly().getBounds();
+				final double distance = distance((int) p.getCenterX(), (int) p.getCenterY(), (int) b.getCenterX(), (int) b.getCenterY());
+				tmp.add(distance);
+				double lowest = Collections.min(tmp);
+
+				if (distance == lowest)
+				{
+					temp[0] = item;
+				}
+			}
+		});
+		return temp[0];
+	}
+
+	private static double distance(int x1, int y1, int x2, int y2)
+	{
+		int dx = x2 - x1;
+		int dy = y2 - y1;
+		return Math.sqrt(dx * dx + dy * dy);
 	}
 }

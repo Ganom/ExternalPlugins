@@ -11,10 +11,4 @@ public enum ActionType
 	MOUSEEVENTS("MouseEvents");
 
 	private String name;
-
-	@Override
-	public String toString()
-	{
-		return getName();
-	}
 }
