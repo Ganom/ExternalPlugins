@@ -3,12 +3,10 @@ package net.runelite.client.plugins.onetick;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;
 import net.runelite.api.TileObject;
-import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.graphics.ModelOutlineRenderer;
 import net.runelite.client.ui.overlay.Overlay;
@@ -49,13 +47,6 @@ public class OneTickOverlay extends Overlay
 			}
 
 			modelOutliner.drawOutline(object, 4, Color.CYAN, TRANSPARENT);
-		}
-		if (plugin.getKaram() != null)
-		{
-			final WidgetItem karam = plugin.getKaram();
-
-			final BufferedImage outline = itemManager.getItemOutline(karam.getId(), karam.getQuantity(), Color.CYAN);
-			graphics.drawImage(outline, (int) karam.getCanvasBounds().getX(), (int) karam.getCanvasBounds().getY(), null);
 		}
 		return null;
 	}

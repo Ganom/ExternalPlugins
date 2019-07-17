@@ -82,7 +82,7 @@ public class ExtUtils
 		return equipped;
 	}
 
-	public static void handleSwitch(Rectangle rectangle, ActionType actionType, Flexo flexo, Client client, double scalingfactor, int delay)
+	public static void handleSwitch(Rectangle rectangle, ActionType actionType, Flexo flexo, Client client, double scalingfactor, int delay, boolean click)
 	{
 		Point cp = getClickPoint(rectangle, scalingfactor, client.isStretchedEnabled());
 		Point tmp = client.getMouseCanvasPosition();
@@ -97,10 +97,20 @@ public class ExtUtils
 					{
 						flexo.mouseMove(cp.getX(), cp.getY());
 					}
-					flexo.mousePressAndRelease(1);
+					if (click)
+					{
+						flexo.mousePressAndRelease(1);
+					}
 					break;
 				case MOUSEEVENTS:
-					leftClick(cp.getX(), cp.getY(), client, scalingfactor);
+					if (!rectangle.contains(mousePos))
+					{
+						moveMouse(cp.getX(), cp.getY(), client);
+					}
+					if (click)
+					{
+						leftClick(cp.getX(), cp.getY(), client, scalingfactor);
+					}
 					flexo.delay(delay);
 					break;
 			}
@@ -111,11 +121,6 @@ public class ExtUtils
 	{
 		if (client.isStretchedEnabled())
 		{
-			Point p = client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				moveMouse(x, y, client);
-			}
 			double scale = 1 + (scalingFactor / 100);
 
 			MouseEvent mousePressed =
@@ -130,11 +135,6 @@ public class ExtUtils
 		}
 		if (!client.isStretchedEnabled())
 		{
-			Point p = client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				moveMouse(x, y, client);
-			}
 			MouseEvent mousePressed =
 				new MouseEvent(client.getCanvas(), 501, System.currentTimeMillis(), 0, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), 1, false, 1);
 			client.getCanvas().dispatchEvent(mousePressed);

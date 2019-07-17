@@ -149,14 +149,18 @@ public class OneTick extends Plugin
 						{
 							oneTick = false;
 						}
-						handleSwitch(bolt.getCanvasBounds());
-						handleSwitch(feather.getCanvasBounds());
+						handleSwitch(bolt.getCanvasBounds(), true);
+						handleSwitch(feather.getCanvasBounds(), true);
 						if (config.boltDelay() > 10)
 						{
 							flexo.delay(config.boltDelay());
 						}
 					}
 				});
+			}
+			else if (config.method().equals(Method.KARAMBWAN))
+			{
+				karambwans = ExtUtils.getItems(KARAMBWAN, client);
 			}
 		}
 	};
@@ -254,8 +258,8 @@ public class OneTick extends Plugin
 							return;
 						}
 
-						handleSwitch(next.getCanvasBounds());
-						handleSwitch(target.getCanvasTilePoly().getBounds());
+						handleSwitch(next.getCanvasBounds(), true);
+						handleSwitch(target.getCanvasTilePoly().getBounds(), true);
 					});
 					break;
 				case ENCHANT_BOLTS:
@@ -274,7 +278,7 @@ public class OneTick extends Plugin
 						}
 
 						flexo.keyPress(32);
-						handleSwitch(bolts.getBounds());
+						handleSwitch(bolts.getBounds(), true);
 						flexo.keyPress(32);
 					});
 					break;
@@ -286,28 +290,36 @@ public class OneTick extends Plugin
 						return;
 					}
 
-					karambwans = ExtUtils.getItems(KARAMBWAN, client);
+					Iterator<WidgetItem> itr = karambwans.iterator();
 
-					if (!karambwans.iterator().hasNext())
+					if (!itr.hasNext())
 					{
 						oneTick = false;
+						executorService.submit(() -> flexo.keyPress(50));
 						return;
 					}
 
+					karam = itr.next();
+					itr.remove();
 					assignObject();
-					karam = karambwans.iterator().next();
-					karambwans.iterator().remove();
 
-					executorService.submit(() -> {
+					if (target.getClickbox() == null)
+					{
+						return;
+					}
+
+					executorService.submit(() ->
+					{
 						if (inventory.isHidden())
 						{
 							flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
 						}
+
 						flexo.keyPress(50);
-						handleSwitch(karam.getCanvasBounds());
-						handleSwitch(target.getCanvasTilePoly().getBounds());
-						flexo.delay(10);
+						handleSwitch(karam.getCanvasBounds(), true);
+						handleSwitch(target.getClickbox().getBounds(), true);
 						flexo.keyPress(50);
+						handleSwitch(itr.next().getCanvasBounds(), false);
 					});
 /*				case KARAMBWAN:
 					Widget inventory = client.getWidget(WidgetInfo.INVENTORY);
@@ -547,9 +559,9 @@ public class OneTick extends Plugin
 		}
 	}
 
-	private void handleSwitch(Rectangle rectangle)
+	private void handleSwitch(Rectangle rectangle, boolean click)
 	{
-		ExtUtils.handleSwitch(rectangle, config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis());
+		ExtUtils.handleSwitch(rectangle, config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis(), click);
 	}
 
 	private long getMillis()
