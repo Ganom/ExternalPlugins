@@ -42,7 +42,7 @@ import net.runelite.api.VarClientStr;
 import net.runelite.api.events.FocusChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.input.MouseListener;
@@ -75,6 +75,8 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	private KeyManager keyManager;
 	@Inject
 	private MouseManager mouseManager;
+	@Inject
+	private EventBus eventBus;
 	private boolean held = false;
 
 	private static int randomDelay(int min, int max)
@@ -97,6 +99,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	@Override
 	protected void startUp()
 	{
+		addSubscriptions();
 		keyManager.registerKeyListener(this);
 		mouseManager.registerMouseListener(this);
 		overlayManager.add(autoPrayFlickOverlay);
@@ -107,6 +110,13 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	{
 		keyManager.unregisterKeyListener(this);
 		overlayManager.remove(autoPrayFlickOverlay);
+		eventBus.unregister(this);
+	}
+
+	private void addSubscriptions()
+	{
+		eventBus.subscribe(FocusChanged.class, this, this::onFocusChanged);
+		eventBus.subscribe(GameTick.class, this, this::onGameTick);
 	}
 
 	@Override
@@ -164,8 +174,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		}
 	}
 
-	@Subscribe
-	public void onGameTick(GameTick event)
+	private void onGameTick(GameTick event)
 	{
 		if (config.onlyInNmz() && !isInNightmareZone())
 		{
@@ -182,8 +191,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		}
 	}
 
-	@Subscribe
-	public void onFocusChanged(FocusChanged focusChanged)
+	private void onFocusChanged(FocusChanged focusChanged)
 	{
 		if (!focusChanged.isFocused())
 		{
@@ -297,7 +305,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		return e;
 	}
 
-	boolean isInNightmareZone()
+	private boolean isInNightmareZone()
 	{
 		return Arrays.equals(client.getMapRegions(), NMZ_MAP_REGION);
 	}
