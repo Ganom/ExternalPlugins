@@ -107,6 +107,7 @@ public class ExtUtils
 					{
 						moveMouse(cp.getX(), cp.getY(), client);
 					}
+					flexo.delay(20);
 					if (click)
 					{
 						leftClick(cp.getX(), cp.getY(), client, scalingfactor);

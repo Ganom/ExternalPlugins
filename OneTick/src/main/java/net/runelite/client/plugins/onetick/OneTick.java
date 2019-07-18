@@ -68,7 +68,7 @@ import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
@@ -116,6 +116,8 @@ public class OneTick extends Plugin
 	private OneTickOverlay oneTickOverlay;
 	@Inject
 	private ClientThread clientThread;
+	@Inject
+	private EventBus eventBus;
 	@Setter
 	@Getter
 	private TileObject target;
@@ -174,6 +176,7 @@ public class OneTick extends Plugin
 	@Override
 	protected void startUp()
 	{
+		addSubscriptions();
 		keyManager.registerKeyListener(oneTickHotkey);
 		overlayManager.add(oneTickOverlay);
 		Flexo.client = client;
@@ -199,10 +202,20 @@ public class OneTick extends Plugin
 		flexo = null;
 		setTarget(null);
 		setKaram(null);
+		eventBus.unregister(this);
 	}
 
-	@Subscribe
-	public void onGameStateChanged(GameStateChanged event)
+	private void addSubscriptions()
+	{
+		eventBus.subscribe(GameObjectSpawned.class, this, this::onGameObjectSpawned);
+		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
+		eventBus.subscribe(GameObjectDespawned.class, this, this::onGameObjectDespawned);
+		eventBus.subscribe(MenuEntryAdded.class, this, this::onMenuEntryAdded);
+		eventBus.subscribe(MenuOptionClicked.class, this, this::onMenuOptionClicked);
+		eventBus.subscribe(GameTick.class, this, this::onGameTick);
+	}
+
+	private void onGameStateChanged(GameStateChanged event)
 	{
 		if (!event.getGameState().equals(GameState.LOGGED_IN))
 		{
@@ -211,21 +224,18 @@ public class OneTick extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onGameObjectSpawned(GameObjectSpawned event)
+	private void onGameObjectSpawned(GameObjectSpawned event)
 	{
 		final GameObject eventObject = event.getGameObject();
 		checkObjectPoints(eventObject);
 	}
 
-	@Subscribe
-	public void onGameObjectDespawned(GameObjectDespawned event)
+	private void onGameObjectDespawned(GameObjectDespawned event)
 	{
 		objects.remove(event.getGameObject());
 	}
 
-	@Subscribe
-	public void onGameTick(GameTick event)
+	private void onGameTick(GameTick event)
 	{
 
 		if (oneTick)
@@ -364,8 +374,7 @@ public class OneTick extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onMenuEntryAdded(MenuEntryAdded event)
+	private void onMenuEntryAdded(MenuEntryAdded event)
 	{
 		if (event.getType() != MenuAction.EXAMINE_OBJECT.getId())
 		{
@@ -384,8 +393,7 @@ public class OneTick extends Plugin
 		client.setMenuEntries(menuEntries);
 	}
 
-	@Subscribe
-	public void onMenuOptionClicked(MenuOptionClicked event)
+	private void onMenuOptionClicked(MenuOptionClicked event)
 	{
 		if (event.getMenuAction() != MenuAction.RUNELITE || (!event.getOption().equals(MARK) && !event.getOption().equals(UNMARK)))
 		{
@@ -418,9 +426,9 @@ public class OneTick extends Plugin
 
 	private void assignObject()
 	{
+		List<Integer> tmp = new ArrayList<>();
 		objects.forEach(object ->
 		{
-			List<Integer> tmp = new ArrayList<>();
 			final int distance = object.getWorldLocation().distanceTo(client.getLocalPlayer().getWorldArea());
 			tmp.add(distance);
 			int lowest = Collections.min(tmp);
@@ -430,6 +438,7 @@ public class OneTick extends Plugin
 				setTarget(object);
 			}
 		});
+		tmp.clear();
 	}
 
 	private String grabOjbect(int x, int y, int id)
