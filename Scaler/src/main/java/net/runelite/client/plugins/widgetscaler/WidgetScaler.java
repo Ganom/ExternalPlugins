@@ -31,11 +31,10 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
-
 
 @PluginDescriptor(
 	name = "Widget Scaler",
@@ -48,9 +47,10 @@ public class WidgetScaler extends Plugin
 {
 	@Inject
 	private Client client;
-
 	@Inject
 	private WidgetScalerConfig config;
+	@Inject
+	private EventBus eventBus;
 
 	@Provides
 	WidgetScalerConfig getConfig(ConfigManager configManager)
@@ -58,9 +58,19 @@ public class WidgetScaler extends Plugin
 		return configManager.getConfig(WidgetScalerConfig.class);
 	}
 
+	@Override
+	protected void startUp()
+	{
+		eventBus.subscribe(GameTick.class, this, this::onGameTick);
+	}
 
-	@Subscribe
-	public void onGameTick(GameTick event)
+	@Override
+	protected void shutDown()
+	{
+		eventBus.unregister(this);
+	}
+
+	private void onGameTick(GameTick event)
 	{
 		Widget ring = client.getWidget(WidgetInfo.EQUIPMENT_RING);
 
