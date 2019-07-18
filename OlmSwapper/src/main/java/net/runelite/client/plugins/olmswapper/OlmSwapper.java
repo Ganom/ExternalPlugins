@@ -38,7 +38,7 @@ import net.runelite.api.events.ProjectileSpawned;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -66,6 +66,8 @@ public class OlmSwapper extends Plugin
 	private OlmSwapperConfig config;
 	@Inject
 	private ConfigManager configManager;
+	@Inject
+	private EventBus eventBus;
 	private BlockingQueue queue = new ArrayBlockingQueue(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
@@ -81,6 +83,7 @@ public class OlmSwapper extends Plugin
 	@Override
 	protected void startUp()
 	{
+		addSubscriptions();
 		Flexo.client = client;
 		executorService.submit(() -> {
 			flexo = null;
@@ -99,10 +102,16 @@ public class OlmSwapper extends Plugin
 	protected void shutDown()
 	{
 		flexo = null;
+		eventBus.unregister(this);
 	}
 
-	@Subscribe
-	public void onChatMessage(ChatMessage event)
+	private void addSubscriptions()
+	{
+		eventBus.subscribe(ChatMessage.class, this, this::onChatMessage);
+		eventBus.subscribe(ProjectileSpawned.class, this, this::onProjectileSpawned);
+	}
+
+	private void onChatMessage(ChatMessage event)
 	{
 		if (event.getType() != ChatMessageType.GAMEMESSAGE)
 		{
@@ -138,8 +147,7 @@ public class OlmSwapper extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onProjectileSpawned(ProjectileSpawned event)
+	private void onProjectileSpawned(ProjectileSpawned event)
 	{
 		if (!config.swapAutos())
 		{
