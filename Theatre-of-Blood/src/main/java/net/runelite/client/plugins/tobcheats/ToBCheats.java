@@ -84,7 +84,7 @@ public class ToBCheats extends Plugin
 	@Inject
 	private EventBus eventBus;
 	private Flexo flexo;
-	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(1);
+	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 2, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 	private NPC maiden;
