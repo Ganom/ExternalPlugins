@@ -42,7 +42,7 @@ import net.runelite.api.events.ProjectileSpawned;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
@@ -65,18 +65,16 @@ public class TickEater extends Plugin
 {
 	@Inject
 	private Client client;
-
 	@Inject
 	private TickEaterConfig config;
-
 	@Inject
 	private ItemManager itemManager;
-
 	@Inject
 	private ConfigManager configManager;
-
+	@Inject
+	private EventBus eventBus;
 	private Flexo flexo;
-	private BlockingQueue queue = new ArrayBlockingQueue(1);
+	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 	private int ticksRemaining;
@@ -88,8 +86,39 @@ public class TickEater extends Plugin
 		return configManager.getConfig(TickEaterConfig.class);
 	}
 
-	@Subscribe
-	public void onProjectileSpawned(ProjectileSpawned event)
+	@Override
+	protected void startUp()
+	{
+		addSubscriptions();
+		Flexo.client = client;
+		executorService.submit(() -> {
+			flexo = null;
+			try
+			{
+				flexo = new Flexo();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		});
+	}
+
+	@Override
+	protected void shutDown()
+	{
+		flexo = null;
+		eventBus.unregister(this);
+	}
+
+	private void addSubscriptions()
+	{
+		eventBus.subscribe(ProjectileSpawned.class, this, this::onProjectileSpawned);
+		eventBus.subscribe(AnimationChanged.class, this, this::onAnimationChanged);
+		eventBus.subscribe(GameTick.class, this, this::onGameTick);
+	}
+
+	private void onProjectileSpawned(ProjectileSpawned event)
 	{
 		Projectile projectile = event.getProjectile();
 
@@ -102,8 +131,7 @@ public class TickEater extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onAnimationChanged(AnimationChanged event)
+	private void onAnimationChanged(AnimationChanged event)
 	{
 		Actor actor = event.getActor();
 
@@ -116,8 +144,7 @@ public class TickEater extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onGameTick(GameTick event)
+	private void onGameTick(GameTick event)
 	{
 		if (!projectiles.isEmpty())
 		{
