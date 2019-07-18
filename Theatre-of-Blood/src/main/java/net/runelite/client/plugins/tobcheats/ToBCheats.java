@@ -51,7 +51,7 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
@@ -81,8 +81,10 @@ public class ToBCheats extends Plugin
 	private ConfigManager configManager;
 	@Inject
 	private ItemManager itemManager;
+	@Inject
+	private EventBus eventBus;
 	private Flexo flexo;
-	private BlockingQueue queue = new ArrayBlockingQueue(1);
+	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<Runnable>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 2, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 	private NPC maiden;
@@ -115,6 +117,7 @@ public class ToBCheats extends Plugin
 	@Override
 	protected void startUp()
 	{
+		addSubscriptions();
 		reset();
 		Flexo.client = client;
 		executorService.submit(() -> {
@@ -134,10 +137,21 @@ public class ToBCheats extends Plugin
 	protected void shutDown()
 	{
 		reset();
+		eventBus.unregister(this);
 	}
 
-	@Subscribe
-	public void onGameStateChanged(GameStateChanged event)
+	private void addSubscriptions()
+	{
+		eventBus.subscribe(NpcSpawned.class, this, this::onNpcSpawned);
+		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
+		eventBus.subscribe(NpcDespawned.class, this, this::onNpcDespawned);
+		eventBus.subscribe(ProjectileMoved.class, this, this::onProjectileMoved);
+		eventBus.subscribe(NpcDefinitionChanged.class, this, this::onNpcDefinitionChanged);
+		eventBus.subscribe(GameTick.class, this, this::onGameTick);
+		eventBus.subscribe(ChatMessage.class, this, this::onChatMessage);
+	}
+
+	private void onGameStateChanged(GameStateChanged event)
 	{
 		if (event.getGameState() != GameState.LOGGED_IN)
 		{
@@ -145,8 +159,7 @@ public class ToBCheats extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onNpcSpawned(NpcSpawned event)
+	private void onNpcSpawned(NpcSpawned event)
 	{
 		final NPC npc = event.getNpc();
 
@@ -165,8 +178,7 @@ public class ToBCheats extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onNpcDespawned(NpcDespawned event)
+	private void onNpcDespawned(NpcDespawned event)
 	{
 		final NPC npc = event.getNpc();
 
@@ -181,8 +193,7 @@ public class ToBCheats extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onProjectileMoved(ProjectileMoved event)
+	private void onProjectileMoved(ProjectileMoved event)
 	{
 		Projectile projectile = event.getProjectile();
 
@@ -207,8 +218,7 @@ public class ToBCheats extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onGameTick(GameTick event)
+	private void onGameTick(GameTick event)
 	{
 		if (config.maidenSwapper())
 		{
@@ -256,8 +266,7 @@ public class ToBCheats extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onNpcDefinitionChanged(NpcDefinitionChanged event)
+	private void onNpcDefinitionChanged(NpcDefinitionChanged event)
 	{
 		final NPC npc = event.getNpc();
 
@@ -286,8 +295,7 @@ public class ToBCheats extends Plugin
 		}
 	}
 
-	@Subscribe
-	public void onChatMessage(ChatMessage event)
+	private void onChatMessage(ChatMessage event)
 	{
 		if (config.testing())
 		{
