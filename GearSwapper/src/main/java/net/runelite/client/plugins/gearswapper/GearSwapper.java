@@ -37,7 +37,7 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.input.KeyManager;
@@ -69,6 +69,8 @@ public class GearSwapper extends Plugin
 	private KeyManager keyManager;
 	@Inject
 	private ItemManager itemManager;
+	@Inject
+	private EventBus eventBus;
 
 	private BlockingQueue queue = new ArrayBlockingQueue(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 2, TimeUnit.SECONDS, queue,
@@ -141,6 +143,7 @@ public class GearSwapper extends Plugin
 				e.printStackTrace();
 			}
 		});
+		eventBus.subscribe(ConfigChanged.class, this, this::onConfigChanged);
 	}
 
 	protected void shutDown()
@@ -150,10 +153,10 @@ public class GearSwapper extends Plugin
 		keyManager.unregisterKeyListener(range);
 		keyManager.unregisterKeyListener(melee);
 		keyManager.unregisterKeyListener(util);
+		eventBus.unregister(this);
 	}
 
-	@Subscribe
-	public void onConfigChanged(ConfigChanged event)
+	private void onConfigChanged(ConfigChanged event)
 	{
 		if (event.getGroup().equals("stretchedmode"))
 		{
