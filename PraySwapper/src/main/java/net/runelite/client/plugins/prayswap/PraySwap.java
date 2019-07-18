@@ -40,7 +40,7 @@ import net.runelite.api.Skill;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
@@ -70,7 +70,9 @@ public class PraySwap extends Plugin implements KeyListener
 	private ConfigManager configManager;
 	@Inject
 	private TabUtils tabUtils;
-	private BlockingQueue queue = new ArrayBlockingQueue(1);
+	@Inject
+	private EventBus eventBus;
+	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 1, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 	private Flexo flexo;
@@ -83,6 +85,7 @@ public class PraySwap extends Plugin implements KeyListener
 
 	protected void startUp()
 	{
+		eventBus.subscribe(GameTick.class, this, this::onGameTick);
 		keyManager.registerKeyListener(this);
 		Flexo.client = client;
 		executorService.submit(() -> {
@@ -101,10 +104,11 @@ public class PraySwap extends Plugin implements KeyListener
 	protected void shutDown()
 	{
 		keyManager.unregisterKeyListener(this);
+		eventBus.unregister(this);
 	}
 
-	@Subscribe
-	public void onGameTick(GameTick event)
+
+	private void onGameTick(GameTick event)
 	{
 		if (shouldProtPray())
 		{
