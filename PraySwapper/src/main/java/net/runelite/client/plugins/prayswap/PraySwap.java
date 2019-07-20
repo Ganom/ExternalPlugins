@@ -50,6 +50,7 @@ import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.prayswap.utils.Tab;
 import net.runelite.client.plugins.prayswap.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
+import net.runelite.api.VarClientInt;
 
 @PluginDescriptor(
 	name = "PraySwap",
@@ -218,7 +219,7 @@ public class PraySwap extends Plugin implements KeyListener
 
 			if (widget != null)
 			{
-				if (widget.isHidden())
+				if (client.getVar(VarClientInt.PLAYER_INVENTORY_OPENED) != 5)
 				{
 					flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
 				}
