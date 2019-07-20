@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.VarClientInt;
 import net.runelite.api.events.ConfigChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
@@ -171,7 +172,7 @@ public class GearSwapper extends Plugin
 			return;
 		}
 
-		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+		if (client.getVar(VarClientInt.PLAYER_INVENTORY_OPENED) != 3)
 		{
 			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
 			flexo.delay(25);
@@ -200,7 +201,7 @@ public class GearSwapper extends Plugin
 			return;
 		}
 
-		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden())
+		if (client.getVar(VarClientInt.PLAYER_INVENTORY_OPENED) != 4)
 		{
 			flexo.keyPress(TabUtils.getTabHotkey(Tab.EQUIPMENT, client));
 			flexo.delay(35);
@@ -226,14 +227,14 @@ public class GearSwapper extends Plugin
 	{
 		equipItem(equip);
 
-		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden() && remove.size() > 0)
+		if (client.getVar(VarClientInt.PLAYER_INVENTORY_OPENED) != 4 && remove.size() > 0)
 		{
 			flexo.keyPress(TabUtils.getTabHotkey(Tab.EQUIPMENT, client));
 		}
 
 		removeItem(remove);
 
-		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+		if (client.getVar(VarClientInt.PLAYER_INVENTORY_OPENED) != 3)
 		{
 			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
 		}

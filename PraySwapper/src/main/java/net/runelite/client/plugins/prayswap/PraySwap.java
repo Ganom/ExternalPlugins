@@ -37,6 +37,7 @@ import net.runelite.api.Client;
 import net.runelite.api.Point;
 import net.runelite.api.Prayer;
 import net.runelite.api.Skill;
+import net.runelite.api.VarClientInt;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.Keybind;
@@ -52,7 +53,6 @@ import net.runelite.client.plugins.prayswap.utils.Tab;
 import net.runelite.client.plugins.prayswap.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 import net.runelite.client.util.HotkeyListener;
-import net.runelite.api.VarClientInt;
 
 @PluginDescriptor(
 	name = "PraySwap",
