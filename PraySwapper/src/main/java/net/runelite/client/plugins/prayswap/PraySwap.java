@@ -318,7 +318,8 @@ public class PraySwap extends Plugin
 			{
 				case FLEXO:
 					flexo.mouseMove(cp.getX(), cp.getY());
-					flexo.mousePressAndRelease(1);
+					this.delay();
+					this.leftClickAndRelease();
 					flexo.delay(10);
 					if (swapBack && config.backToInventory())
 					{
@@ -361,14 +362,19 @@ public class PraySwap extends Plugin
 
 	private void leftClick(int x, int y)
 	{
+		Point p = this.client.getMouseCanvasPosition();
+		if (p.getX() != x || p.getY() != y)
+		{
+			this.moveMouse(x, y);
+		}
+		this.leftClickAndRelease();
+	}
+
+	private void leftClickAndRelease()
+	{
 		if (client.isStretchedEnabled())
 		{
 			double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
-			Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
 			double scale = 1 + (scalingfactor / 100);
 
 			MouseEvent mousePressed =
@@ -383,17 +389,24 @@ public class PraySwap extends Plugin
 		}
 		else
 		{
-			Point p = this.client.getMouseCanvasPosition();
-			if (p.getX() != x || p.getY() != y)
-			{
-				this.moveMouse(x, y);
-			}
 			MouseEvent mousePressed = new MouseEvent(this.client.getCanvas(), 501, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
 			this.client.getCanvas().dispatchEvent(mousePressed);
 			MouseEvent mouseReleased = new MouseEvent(this.client.getCanvas(), 502, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
 			this.client.getCanvas().dispatchEvent(mouseReleased);
 			MouseEvent mouseClicked = new MouseEvent(this.client.getCanvas(), 500, System.currentTimeMillis(), 0, this.client.getMouseCanvasPosition().getX(), this.client.getMouseCanvasPosition().getY(), 1, false, 1);
 			this.client.getCanvas().dispatchEvent(mouseClicked);
+		}
+	}
+
+	private void delay()
+	{
+		try
+		{
+			Thread.sleep(getMillis());
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
 		}
 	}
 
