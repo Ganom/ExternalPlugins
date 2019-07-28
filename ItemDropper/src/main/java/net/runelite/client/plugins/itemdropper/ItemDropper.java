@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.ItemDefinition;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.flexo.Flexo;
@@ -42,7 +43,6 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 import net.runelite.client.util.HotkeyListener;
-import net.runelite.http.api.item.ItemStats;
 
 @PluginDescriptor(
 	name = "Item Dropper",
@@ -66,7 +66,7 @@ public class ItemDropper extends Plugin
 	@Inject
 	private ItemManager itemManager;
 	private Flexo flexo;
-	private BlockingQueue queue = new ArrayBlockingQueue(1);
+	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 25, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 	private final HotkeyListener toggle = new HotkeyListener(() -> config.toggle())
@@ -115,15 +115,9 @@ public class ItemDropper extends Plugin
 		executorService.submit(() -> {
 			for (WidgetItem item : dropList)
 			{
-				ItemStats itemStats = itemManager.getItemStats(item.getId(), true);
+				ItemDefinition itemDef = itemManager.getItemDefinition(item.getId());
 
-				if (itemStats == null)
-				{
-					log.info("Item Stats is null on: {}", item.getId());
-					continue;
-				}
-
-				final String name = itemStats.getName();
+				final String name = itemDef.getName();
 				menuManager.addPriorityEntry("Drop", name);
 				ExtUtils.handleSwitch(item.getCanvasBounds(), config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis());
 				menuManager.removePriorityEntry("Drop", name);
