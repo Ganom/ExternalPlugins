@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, DennisDeV <https://github.com/DevDennis>
+ * Copyright (c) 2019, Ganom <https://github.com/ganom>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,6 +39,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.Prayer;
 import net.runelite.api.VarClientStr;
 import net.runelite.api.events.FocusChanged;
 import net.runelite.api.events.GameTick;
@@ -78,6 +80,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	@Inject
 	private EventBus eventBus;
 	private boolean held = false;
+	private boolean firstFlick = false;
 
 	private static int randomDelay(int min, int max)
 	{
@@ -132,22 +135,21 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		{
 			return;
 		}
-		int keycode = config.hotkey2().getKeyCode();
+		final int keycode = config.hotkey2().getKeyCode();
 		if (e.getKeyCode() == keycode && toggleFlick && !held)
 		{
-
 			toggleFlick = false;
-
+			firstFlick = true;
 		}
 		else if (e.getKeyCode() == keycode && !toggleFlick && !held)
 		{
-
 			toggleFlick = true;
-
+			firstFlick = true;
 		}
 		if (config.holdMode())
 		{
 			held = true;
+			firstFlick = true;
 		}
 	}
 
@@ -162,6 +164,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		{
 			toggleFlick = false;
 			held = false;
+			firstFlick = false;
 		}
 		if (config.clearChat() && config.hotkey2().matches(e))
 		{
@@ -183,7 +186,24 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 
 		if (toggleFlick && config.clicks())
 		{
+			int p = 0;
+			for (Prayer prayer : Prayer.values())
+			{
+				if (!client.isPrayerActive(prayer))
+				{
+					p++;
+				}
+			}
+			if (p == 29 && !firstFlick)
+			{
+				singleClick();
+				return;
+			}
 			doubleClick();
+			if (firstFlick)
+			{
+				firstFlick = false;
+			}
 		}
 		if (toggleFlick && !config.clicks())
 		{
@@ -196,6 +216,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		if (!focusChanged.isFocused())
 		{
 			toggleFlick = false;
+			firstFlick = false;
 		}
 	}
 
@@ -253,19 +274,18 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		}
 		if (e.getButton() == config.mouseButton() && toggleFlick && !held)
 		{
-
 			toggleFlick = false;
-
+			firstFlick = false;
 		}
 		else if (e.getButton() == config.mouseButton() && !toggleFlick && !held)
 		{
-
 			toggleFlick = true;
-
+			firstFlick = true;
 		}
 		if (config.holdMode() && e.getButton() == config.mouseButton())
 		{
 			held = true;
+			firstFlick = true;
 		}
 		return e;
 	}
@@ -276,6 +296,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		if (config.holdMode() && e.getButton() == config.mouseButton())
 		{
 			toggleFlick = false;
+			firstFlick = false;
 			held = false;
 		}
 		return e;
