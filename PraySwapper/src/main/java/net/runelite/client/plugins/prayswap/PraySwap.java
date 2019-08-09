@@ -300,7 +300,7 @@ public class PraySwap extends Plugin
 
 			if (widget != null)
 			{
-				if (client.getVar(VarClientInt.PLAYER_INVENTORY_OPENED) != 5)
+				if (client.getVar(VarClientInt.PLAYER_INTERFACE_CONTAINER_OPENED) != 5)
 				{
 					flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
 				}

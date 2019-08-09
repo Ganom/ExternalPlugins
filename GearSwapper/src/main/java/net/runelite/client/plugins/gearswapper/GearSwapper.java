@@ -172,7 +172,7 @@ public class GearSwapper extends Plugin
 			return;
 		}
 
-		if (client.getVar(VarClientInt.PLAYER_INVENTORY_OPENED) != 3)
+		if (client.getVar(VarClientInt.PLAYER_INTERFACE_CONTAINER_OPENED) != 3)
 		{
 			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
 			flexo.delay(25);
@@ -197,7 +197,7 @@ public class GearSwapper extends Plugin
 			return;
 		}
 
-		if (client.getVar(VarClientInt.PLAYER_INVENTORY_OPENED) != 4)
+		if (client.getVar(VarClientInt.PLAYER_INTERFACE_CONTAINER_OPENED) != 4)
 		{
 			flexo.keyPress(TabUtils.getTabHotkey(Tab.EQUIPMENT, client));
 			flexo.delay(35);
@@ -219,14 +219,14 @@ public class GearSwapper extends Plugin
 	{
 		equipItem(equip);
 
-		if (client.getVar(VarClientInt.PLAYER_INVENTORY_OPENED) != 4 && remove.size() > 0)
+		if (client.getVar(VarClientInt.PLAYER_INTERFACE_CONTAINER_OPENED) != 4 && remove.size() > 0)
 		{
 			flexo.keyPress(TabUtils.getTabHotkey(Tab.EQUIPMENT, client));
 		}
 
 		removeItem(remove);
 
-		if (client.getVar(VarClientInt.PLAYER_INVENTORY_OPENED) != 3)
+		if (client.getVar(VarClientInt.PLAYER_INTERFACE_CONTAINER_OPENED) != 3)
 		{
 			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
 		}
