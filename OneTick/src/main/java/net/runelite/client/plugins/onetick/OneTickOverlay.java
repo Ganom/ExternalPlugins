@@ -36,7 +36,7 @@ public class OneTickOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
-		if (plugin.getObjects() == null)
+		if (plugin.getObjects().isEmpty())
 		{
 			return null;
 		}
