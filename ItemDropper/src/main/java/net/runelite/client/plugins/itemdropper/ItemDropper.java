@@ -1,4 +1,3 @@
-package net.runelite.client.plugins.itemdropper;
 /*
  * Copyright (c) 2019, ganom <https://github.com/Ganom>
  * All rights reserved.
@@ -22,7 +21,10 @@ package net.runelite.client.plugins.itemdropper;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package net.runelite.client.plugins.itemdropper;
+
 import com.google.inject.Provides;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -41,6 +43,8 @@ import net.runelite.client.menus.MenuManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
+import static net.runelite.client.plugins.itemdropper.ExtUtils.getItems;
+import static net.runelite.client.plugins.itemdropper.ExtUtils.stringToIntArray;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 import net.runelite.client.util.HotkeyListener;
 
@@ -74,7 +78,13 @@ public class ItemDropper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			dropItems(ExtUtils.getItems(ExtUtils.stringToIntArray(config.items()), client));
+			List<WidgetItem> items = new ArrayList<>(getItems(stringToIntArray(config.items()), client));
+			if (items.isEmpty())
+			{
+				log.debug("Item list is empty.");
+				return;
+			}
+			dropItems(items);
 		}
 	};
 
@@ -112,11 +122,11 @@ public class ItemDropper extends Plugin
 
 	private void dropItems(List<WidgetItem> dropList)
 	{
-		executorService.submit(() -> {
+		executorService.submit(() ->
+		{
 			for (WidgetItem item : dropList)
 			{
 				ItemDefinition itemDef = itemManager.getItemDefinition(item.getId());
-
 				final String name = itemDef.getName();
 				menuManager.addPriorityEntry("Drop", name);
 				ExtUtils.handleSwitch(item.getCanvasBounds(), config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis());
