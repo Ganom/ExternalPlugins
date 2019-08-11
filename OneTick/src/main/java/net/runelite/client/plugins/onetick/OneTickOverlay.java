@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.Client;
 import net.runelite.api.TileObject;
-import net.runelite.client.game.ItemManager;
 import net.runelite.client.graphics.ModelOutlineRenderer;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
@@ -22,15 +21,13 @@ public class OneTickOverlay extends Overlay
 	private final Client client;
 	private final OneTick plugin;
 	private final ModelOutlineRenderer modelOutliner;
-	private final ItemManager itemManager;
 
 	@Inject
-	private OneTickOverlay(final Client client, final OneTick plugin, final ModelOutlineRenderer modelOutliner, final ItemManager itemManager)
+	private OneTickOverlay(final Client client, final OneTick plugin, final ModelOutlineRenderer modelOutliner)
 	{
 		this.client = client;
 		this.plugin = plugin;
 		this.modelOutliner = modelOutliner;
-		this.itemManager = itemManager;
 		setPosition(OverlayPosition.DYNAMIC);
 		setPriority(OverlayPriority.LOW);
 		setLayer(OverlayLayer.ABOVE_SCENE);
@@ -39,6 +36,11 @@ public class OneTickOverlay extends Overlay
 	@Override
 	public Dimension render(Graphics2D graphics)
 	{
+		if (plugin.getObjects() == null)
+		{
+			return null;
+		}
+
 		for (TileObject object : plugin.getObjects())
 		{
 			if (object.getPlane() != client.getPlane())

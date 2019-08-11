@@ -41,6 +41,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +56,7 @@ import net.runelite.api.ObjectDefinition;
 import net.runelite.api.Scene;
 import net.runelite.api.Tile;
 import net.runelite.api.TileObject;
+import net.runelite.api.VarClientInt;
 import net.runelite.api.VarClientStr;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameObjectDespawned;
@@ -66,7 +68,6 @@ import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
-import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.flexo.Flexo;
@@ -75,6 +76,8 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.onetick.utils.ExtUtils;
+import static net.runelite.client.plugins.onetick.utils.ExtUtils.getItems;
+import static net.runelite.client.plugins.onetick.utils.ExtUtils.stringToIntArray;
 import net.runelite.client.plugins.onetick.utils.Method;
 import net.runelite.client.plugins.onetick.utils.ObjectPoint;
 import net.runelite.client.plugins.onetick.utils.Tab;
@@ -96,7 +99,6 @@ public class OneTick extends Plugin
 {
 	private static final String MARK = ColorUtil.prependColorTag("Mark One-Tick", Color.GREEN);
 	private static final String UNMARK = ColorUtil.prependColorTag("Unmark One-Tick", Color.RED);
-
 	private static final int[] KARAMBWAN = {3142};
 	private static final int[] FEATHERS = {314};
 	@Getter
@@ -115,22 +117,20 @@ public class OneTick extends Plugin
 	@Inject
 	private OneTickOverlay oneTickOverlay;
 	@Inject
-	private ClientThread clientThread;
-	@Inject
 	private EventBus eventBus;
-	@Setter
-	@Getter
+	@Setter(AccessLevel.PACKAGE)
+	@Getter(AccessLevel.PACKAGE)
 	private TileObject target;
-	@Setter
-	@Getter
+	@Setter(AccessLevel.PACKAGE)
+	@Getter(AccessLevel.PACKAGE)
 	private WidgetItem karam;
 	private Flexo flexo;
 	private boolean oneTick;
-	private boolean activated;
-	private List<WidgetItem> karambwans;
-	private BlockingQueue queue = new ArrayBlockingQueue(1);
-	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 25, TimeUnit.SECONDS, queue,
-		new ThreadPoolExecutor.DiscardPolicy());
+	private List<WidgetItem> karambwans = new ArrayList<>();
+	private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
+	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(
+		1, 1, 25, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.DiscardPolicy()
+	);
 	private final HotkeyListener oneTickHotkey = new HotkeyListener(() -> config.oneTick())
 	{
 		@Override
@@ -139,26 +139,7 @@ public class OneTick extends Plugin
 			oneTick = !oneTick;
 			if (config.method() == Method.MAKE_BOLTS)
 			{
-				WidgetItem bolt = ExtUtils.getItems(ExtUtils.stringToIntArray(config.boltId()), client).iterator().next();
-				WidgetItem feather = ExtUtils.getItems(FEATHERS, client).iterator().next();
-
-				executorService.submit(() ->
-				{
-					while (oneTick)
-					{
-						if (!ExtUtils.getItems(ExtUtils.stringToIntArray(config.boltId()), client).iterator().hasNext()
-							|| !ExtUtils.getItems(FEATHERS, client).iterator().hasNext())
-						{
-							oneTick = false;
-						}
-						handleSwitch(bolt.getCanvasBounds(), true);
-						handleSwitch(feather.getCanvasBounds(), true);
-						if (config.boltDelay() > 10)
-						{
-							flexo.delay(config.boltDelay());
-						}
-					}
-				});
+				handleMakingBolts();
 			}
 			else if (config.method().equals(Method.KARAMBWAN))
 			{
@@ -195,13 +176,14 @@ public class OneTick extends Plugin
 	}
 
 	@Override
-	protected void shutDown() throws Exception
+	protected void shutDown()
 	{
 		overlayManager.remove(oneTickOverlay);
 		keyManager.unregisterKeyListener(oneTickHotkey);
 		flexo = null;
 		setTarget(null);
 		setKaram(null);
+		oneTick = false;
 		eventBus.unregister(this);
 	}
 
@@ -221,6 +203,7 @@ public class OneTick extends Plugin
 		{
 			setTarget(null);
 			setKaram(null);
+			oneTick = false;
 		}
 	}
 
@@ -237,138 +220,18 @@ public class OneTick extends Plugin
 
 	private void onGameTick(GameTick event)
 	{
-
 		if (oneTick)
 		{
 			switch (config.method())
 			{
 				case PRAYER:
-					Iterator<WidgetItem> bone = ExtUtils.getItems(ExtUtils.stringToIntArray(config.boneId()), client).iterator();
-
-					if (!bone.hasNext())
-					{
-						oneTick = false;
-						return;
-					}
-
-					WidgetItem next = bone.next();
-					assignObject();
-
-					executorService.submit(() ->
-					{
-						final String typedText = client.getVar(VarClientStr.CHATBOX_TYPED_TEXT);
-
-						if (!Strings.isNullOrEmpty(typedText))
-						{
-							return;
-						}
-
-						if (getTarget() == null)
-						{
-							return;
-						}
-
-						handleSwitch(next.getCanvasBounds(), true);
-						handleSwitch(target.getCanvasTilePoly().getBounds(), true);
-					});
+					handleBones();
 					break;
 				case ENCHANT_BOLTS:
-					Widget bolts = client.getWidget(WidgetInfo.SPELL_ENCHANT_CROSSBOW_BOLT);
-
-					if (bolts == null)
-					{
-						return;
-					}
-
-					executorService.submit(() ->
-					{
-						if (bolts.isHidden())
-						{
-							flexo.keyPress(TabUtils.getTabHotkey(Tab.MAGIC, client));
-						}
-
-						flexo.keyPress(32);
-						handleSwitch(bolts.getBounds(), true);
-						flexo.keyPress(32);
-					});
+					handleEnchantBolts();
 					break;
 				case KARAMBWAN:
-					Widget inventory = client.getWidget(WidgetInfo.INVENTORY);
-
-					if (inventory == null)
-					{
-						return;
-					}
-
-					Iterator<WidgetItem> itr = karambwans.iterator();
-
-					if (!itr.hasNext())
-					{
-						oneTick = false;
-						executorService.submit(() -> flexo.keyPress(50));
-						return;
-					}
-
-					karam = itr.next();
-					itr.remove();
-					assignObject();
-
-					if (target.getClickbox() == null)
-					{
-						return;
-					}
-
-					executorService.submit(() ->
-					{
-						if (inventory.isHidden())
-						{
-							flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
-						}
-
-						flexo.keyPress(50);
-						handleSwitch(karam.getCanvasBounds(), true);
-						handleSwitch(target.getClickbox().getBounds(), true);
-						flexo.keyPress(50);
-						handleSwitch(itr.next().getCanvasBounds(), false);
-					});
-/*				case KARAMBWAN:
-					Widget inventory = client.getWidget(WidgetInfo.INVENTORY);
-
-					if (inventory == null)
-					{
-						return;
-					}
-
-					karambwans = ExtUtils.getItems(KARAMBWAN, client);
-
-					if (karambwans.isEmpty())
-					{
-						oneTick = false;
-						executorService.submit(() -> flexo.keyPress(50));
-						return;
-					}
-
-					assignObject();
-					assignKaram();
-
-					if (target.getClickbox() == null)
-					{
-						return;
-					}
-
-					executorService.submit(() ->
-					{
-						if (inventory.isHidden())
-						{
-							flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
-						}
-
-						flexo.keyPress(50);
-						handleSwitch(getKaram().getCanvasBounds());
-						handleSwitch(target.getCanvasTilePoly().getBounds());
-						karambwans.removeIf(item -> item.equals(karam));
-						flexo.keyPress(50);
-					});*/
+					handleKarams();
 					break;
 			}
 		}
@@ -416,6 +279,7 @@ public class OneTick extends Plugin
 
 		ObjectDefinition objectDefinition = client.getObjectDefinition(object.getId());
 		String name = objectDefinition.getName();
+
 		if (Strings.isNullOrEmpty(name))
 		{
 			return;
@@ -424,12 +288,163 @@ public class OneTick extends Plugin
 		setObject(name, object);
 	}
 
+	private void handleKarams()
+	{
+		Widget inventory = client.getWidget(WidgetInfo.INVENTORY);
+
+		if (inventory == null)
+		{
+			return;
+		}
+
+		Iterator<WidgetItem> itr = karambwans.iterator();
+
+		if (!itr.hasNext())
+		{
+			oneTick = false;
+			executorService.submit(() -> flexo.keyPress(50));
+			return;
+		}
+
+		karam = itr.next();
+		itr.remove();
+		assignObject();
+
+		if (target.getClickbox() == null)
+		{
+			return;
+		}
+
+		executorService.submit(() ->
+		{
+			if (inventory.isHidden())
+			{
+				flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
+			}
+
+			flexo.keyPress(50);
+			handleSwitch(karam.getCanvasBounds(), true);
+			handleSwitch(target.getClickbox().getBounds(), true);
+			flexo.keyPress(50);
+			handleSwitch(itr.next().getCanvasBounds(), false);
+		});
+	}
+
+	private void handleEnchantBolts()
+	{
+		Widget bolts = client.getWidget(WidgetInfo.SPELL_ENCHANT_CROSSBOW_BOLT);
+
+		if (bolts == null)
+		{
+			return;
+		}
+
+		executorService.submit(() ->
+		{
+			if (client.getVar(VarClientInt.PLAYER_INTERFACE_CONTAINER_OPENED) != 6)
+			{
+				flexo.keyPress(TabUtils.getTabHotkey(Tab.MAGIC, client));
+			}
+
+			flexo.keyPress(32);
+			handleSwitch(bolts.getBounds(), true);
+			flexo.keyPress(32);
+		});
+	}
+
+	private void handleBones()
+	{
+		List<WidgetItem> bones = getItems(stringToIntArray(config.boneId()), client);
+
+		if (bones.isEmpty())
+		{
+			oneTick = false;
+			return;
+		}
+
+		assignObject();
+
+		WidgetItem next = getClosestItem(bones);
+
+		if (next == null)
+		{
+			return;
+		}
+
+		executorService.submit(() ->
+		{
+			final String typedText = client.getVar(VarClientStr.CHATBOX_TYPED_TEXT);
+
+			if (!Strings.isNullOrEmpty(typedText))
+			{
+				return;
+			}
+
+			if (getTarget() == null)
+			{
+				return;
+			}
+
+			handleSwitch(next.getCanvasBounds(), true);
+			handleSwitch(target.getCanvasTilePoly().getBounds(), true);
+		});
+	}
+
+	private void handleMakingBolts()
+	{
+		WidgetItem bolt = getItems(stringToIntArray(config.boltId()), client).iterator().next();
+		WidgetItem feather = getItems(FEATHERS, client).iterator().next();
+
+		executorService.submit(() ->
+		{
+			while (oneTick)
+			{
+				if (!getItems(stringToIntArray(config.boltId()), client).iterator().hasNext()
+					|| !getItems(FEATHERS, client).iterator().hasNext())
+				{
+					oneTick = false;
+				}
+				handleSwitch(bolt.getCanvasBounds(), true);
+				handleSwitch(feather.getCanvasBounds(), true);
+				if (config.boltDelay() > 10)
+				{
+					flexo.delay(config.boltDelay());
+				}
+			}
+		});
+	}
+
+	private WidgetItem getClosestItem(List<WidgetItem> items)
+	{
+		if (target == null)
+		{
+			return null;
+		}
+
+		net.runelite.api.Point tarLoc = target.getCanvasLocation();
+		List<Integer> tmp = new ArrayList<>();
+		for (WidgetItem item : items)
+		{
+			final int distance = item.getCanvasLocation().distanceTo(tarLoc);
+			tmp.add(distance);
+			int lowest = Collections.min(tmp);
+
+			if (distance == lowest)
+			{
+				tmp.clear();
+				return item;
+			}
+		}
+		tmp.clear();
+		return null;
+	}
+
 	private void assignObject()
 	{
-		List<Integer> tmp = new ArrayList<>();
-		objects.forEach(object ->
+		final List<Integer> tmp = new ArrayList<>();
+		for (TileObject object : objects)
 		{
-			final int distance = object.getWorldLocation().distanceTo(client.getLocalPlayer().getWorldArea());
+			int distance = object.getWorldLocation().distanceTo(client.getLocalPlayer().getWorldArea());
 			tmp.add(distance);
 			int lowest = Collections.min(tmp);
 
@@ -437,14 +452,14 @@ public class OneTick extends Plugin
 			{
 				setTarget(object);
 			}
-		});
+		}
 		tmp.clear();
 	}
 
 	private String grabOjbect(int x, int y, int id)
 	{
-		Scene scene = client.getScene();
-		Tile[][][] tiles = scene.getTiles();
+		final Scene scene = client.getScene();
+		final Tile[][][] tiles = scene.getTiles();
 		final int z = client.getPlane();
 		final Tile tile = tiles[z][x][y];
 		final TileObject object = findTileObject(tile, id);
