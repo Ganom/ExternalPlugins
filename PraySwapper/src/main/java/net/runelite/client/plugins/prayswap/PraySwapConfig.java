@@ -369,7 +369,10 @@ public interface PraySwapConfig extends Config
 		PROTECT_MAGE("Protect Mage", Prayer.PROTECT_FROM_MAGIC),
 		AUGURY("Augury", Prayer.AUGURY),
 		RIGOUR("Rigour", Prayer.RIGOUR),
-		PIETY("Piety", Prayer.PIETY);
+		PIETY("Piety", Prayer.PIETY),
+		MYSTIC_MIGHT("Mystic Might", Prayer.MYSTIC_MIGHT),
+		EAGLE_EYE("Eagle Eye", Prayer.EAGLE_EYE),
+		CHIVALRY("Chivalry", Prayer.CHIVALRY);
 
 		private String name;
 		private Prayer prayer;
