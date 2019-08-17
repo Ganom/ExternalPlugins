@@ -24,86 +24,51 @@
  */
 package net.runelite.client.plugins.autoclicker;
 
-import net.runelite.client.config.Config;
-import net.runelite.client.config.ConfigGroup;
-import net.runelite.client.config.ConfigItem;
-import net.runelite.client.config.Keybind;
-import net.runelite.client.config.Range;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import javax.inject.Inject;
+import net.runelite.api.Client;
+import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.ui.overlay.OverlayLayer;
+import net.runelite.client.ui.overlay.OverlayPosition;
 
-@ConfigGroup("autoClickConfig")
-public interface AutoClickConfig extends Config
+class AutoClickOverlay extends Overlay
 {
-	@ConfigItem(
-		keyName = "hotkey",
-		name = "Click hotkey",
-		description = "",
-		position = 0
-	)
-	default Keybind hotkey()
+	private static final Color FLASH_COLOR = new Color(255, 0, 0, 70);
+	private final Client client;
+	private final AutoClick plugin;
+	private final AutoClickConfig config;
+	private int timeout;
+
+	@Inject
+	AutoClickOverlay(Client client, AutoClick plugin, AutoClickConfig config)
 	{
-		return Keybind.NOT_SET;
+		setPosition(OverlayPosition.DYNAMIC);
+		setLayer(OverlayLayer.ALWAYS_ON_TOP);
+		this.client = client;
+		this.plugin = plugin;
+		this.config = config;
 	}
 
-	@ConfigItem(
-		keyName = "delay",
-		name = "Min Delay",
-		description = "",
-		position = 1
-	)
-	default int delayMin()
+	@Override
+	public Dimension render(Graphics2D graphics)
 	{
-		return 200;
+		if (plugin.isFlash() && config.flash())
+		{
+			final Color flash = graphics.getColor();
+			graphics.setColor(FLASH_COLOR);
+			graphics.fill(new Rectangle(client.getCanvas().getSize()));
+			graphics.setColor(flash);
+			timeout++;
+			if (timeout >= 50)
+			{
+				timeout = 0;
+				plugin.setFlash(false);
+			}
+		}
+		return null;
 	}
 
-	@ConfigItem(
-		keyName = "delay",
-		name = "Max Delay",
-		description = "",
-		position = 2
-	)
-	default int delayMax()
-	{
-		return 200;
-	}
-
-	@ConfigItem(
-		keyName = "autoDisable",
-		name = "Auto Disable at low HP",
-		description = "Automatically disables the clicker when you get to low hp.",
-		position = 3
-	)
-	default boolean autoDisable()
-	{
-		return false;
-	}
-
-	@Range(
-		min = 5,
-		max = 98
-	)
-	@ConfigItem(
-		keyName = "hpThreshold",
-		name = "Hp Threshold",
-		description = "The hp in which the plugin will auto disable.",
-		position = 4,
-		hidden = true,
-		unhide = "autoDisable"
-	)
-	default int hpThreshold()
-	{
-		return 200;
-	}
-
-	@ConfigItem(
-		keyName = "flash",
-		name = "Flash on Low HP",
-		description = "Your Screen flashes when you get to low hp.",
-		position = 5,
-		hidden = true,
-		unhide = "autoDisable"
-	)
-	default boolean flash()
-	{
-		return false;
-	}
 }

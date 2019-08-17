@@ -34,14 +34,19 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.Skill;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.HotkeyListener;
 
 @PluginDescriptor(
@@ -57,39 +62,18 @@ public class AutoClick extends Plugin
 	@Inject
 	private AutoClickConfig config;
 	@Inject
+	private AutoClickOverlay overlay;
+	@Inject
+	private OverlayManager overlayManager;
+	@Inject
 	private KeyManager keyManager;
 	private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1,
 		10, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.DiscardPolicy());
 	private boolean run;
-	private HotkeyListener hotkeyListener = new HotkeyListener(() -> config.hotkey())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			run = !run;
-			executorService.submit(() ->
-			{
-				while (run)
-				{
-					if (client.getGameState() != GameState.LOGGED_IN)
-					{
-						run = false;
-						break;
-					}
-					simLeftClick();
-					try
-					{
-						Thread.sleep(randomDelay(config.delay(), config.delay() + 25));
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-				}
-			});
-		}
-	};
+	@Getter(AccessLevel.PACKAGE)
+	@Setter(AccessLevel.PACKAGE)
+	private boolean flash;
 
 	@Provides
 	AutoClickConfig getConfig(ConfigManager configManager)
@@ -100,12 +84,14 @@ public class AutoClick extends Plugin
 	@Override
 	protected void startUp()
 	{
+		overlayManager.add(overlay);
 		keyManager.registerKeyListener(hotkeyListener);
 	}
 
 	@Override
 	protected void shutDown()
 	{
+		overlayManager.remove(overlay);
 		keyManager.unregisterKeyListener(hotkeyListener);
 	}
 
@@ -134,4 +120,43 @@ public class AutoClick extends Plugin
 		}
 		return n;
 	}
+
+	private HotkeyListener hotkeyListener = new HotkeyListener(() -> config.hotkey())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			run = !run;
+			executorService.submit(() ->
+			{
+				while (run)
+				{
+					if (client.getGameState() != GameState.LOGGED_IN)
+					{
+						run = false;
+						break;
+					}
+
+					if (config.autoDisable() && client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.hpThreshold())
+					{
+						run = false;
+						if (config.flash())
+						{
+							setFlash(true);
+						}
+						break;
+					}
+					simLeftClick();
+					try
+					{
+						Thread.sleep(randomDelay(config.delayMin(), config.delayMax()));
+					}
+					catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+	};
 }
