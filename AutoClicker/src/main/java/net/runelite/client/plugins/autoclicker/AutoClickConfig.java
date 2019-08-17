@@ -45,7 +45,7 @@ public interface AutoClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "delay",
+		keyName = "delayMin",
 		name = "Min Delay",
 		description = "",
 		position = 1
@@ -56,7 +56,7 @@ public interface AutoClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "delay",
+		keyName = "delayMax",
 		name = "Max Delay",
 		description = "",
 		position = 2
