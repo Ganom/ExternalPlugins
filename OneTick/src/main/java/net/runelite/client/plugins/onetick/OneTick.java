@@ -50,8 +50,8 @@ import static net.runelite.api.Constants.REGION_SIZE;
 import net.runelite.api.DecorativeObject;
 import net.runelite.api.GameObject;
 import net.runelite.api.GameState;
-import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
+import net.runelite.api.MenuOpcode;
 import net.runelite.api.ObjectDefinition;
 import net.runelite.api.Scene;
 import net.runelite.api.Tile;
@@ -239,7 +239,7 @@ public class OneTick extends Plugin
 
 	private void onMenuEntryAdded(MenuEntryAdded event)
 	{
-		if (event.getType() != MenuAction.EXAMINE_OBJECT.getId())
+		if (event.getType() != MenuOpcode.EXAMINE_OBJECT.getId())
 		{
 			return;
 		}
@@ -252,13 +252,13 @@ public class OneTick extends Plugin
 		menuEntry.setParam0(event.getActionParam0());
 		menuEntry.setParam1(event.getActionParam1());
 		menuEntry.setIdentifier(event.getIdentifier());
-		menuEntry.setType(MenuAction.RUNELITE.getId());
+		menuEntry.setOpcode(MenuOpcode.RUNELITE.getId());
 		client.setMenuEntries(menuEntries);
 	}
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
 	{
-		if (event.getMenuAction() != MenuAction.RUNELITE || (!event.getOption().equals(MARK) && !event.getOption().equals(UNMARK)))
+		if (event.getMenuOpcode() != MenuOpcode.RUNELITE || (!event.getOption().equals(MARK) && !event.getOption().equals(UNMARK)))
 		{
 			return;
 		}
@@ -341,7 +341,7 @@ public class OneTick extends Plugin
 
 		executorService.submit(() ->
 		{
-			if (client.getVar(VarClientInt.PLAYER_INTERFACE_CONTAINER_OPENED) != 6)
+			if (client.getVar(VarClientInt.INTERFACE_TAB) != 6)
 			{
 				flexo.keyPress(TabUtils.getTabHotkey(Tab.MAGIC, client));
 			}
