@@ -178,7 +178,7 @@ public class SpellCaster extends Plugin implements KeyListener
 
 	private void clickSpell(SpellCasterConfig.Standards spell)
 	{
-		if (client.getVar(Varbits.SPELLBOOK_ID) != 0)
+		if (client.getVar(Varbits.SPELLBOOK) != 0)
 		{
 			return;
 		}
@@ -187,7 +187,7 @@ public class SpellCaster extends Plugin implements KeyListener
 
 	private void clickSpell(SpellCasterConfig.Ancients spell)
 	{
-		if (client.getVar(Varbits.SPELLBOOK_ID) != 1)
+		if (client.getVar(Varbits.SPELLBOOK) != 1)
 		{
 			return;
 		}
@@ -196,7 +196,7 @@ public class SpellCaster extends Plugin implements KeyListener
 
 	private void clickSpell(SpellCasterConfig.Lunars spell)
 	{
-		if (client.getVar(Varbits.SPELLBOOK_ID) != 2)
+		if (client.getVar(Varbits.SPELLBOOK) != 2)
 		{
 			return;
 		}
