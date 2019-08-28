@@ -72,7 +72,18 @@ public interface AutoClickConfig extends Config
 		description = "Automatically disables the clicker when you get to low hp.",
 		position = 3
 	)
-	default boolean autoDisable()
+	default boolean autoDisableHp()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "autoDisableInv",
+		name = "Disable when Inv is full",
+		description = "Automatically disables the clicker when your inventory is full..",
+		position = 3
+	)
+	default boolean autoDisableInv()
 	{
 		return false;
 	}

@@ -41,6 +41,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Skill;
+import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
@@ -95,6 +97,66 @@ public class AutoClick extends Plugin
 		keyManager.unregisterKeyListener(hotkeyListener);
 	}
 
+	private HotkeyListener hotkeyListener = new HotkeyListener(() -> config.hotkey())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			run = !run;
+			executorService.submit(() ->
+			{
+				while (run)
+				{
+					if (client.getGameState() != GameState.LOGGED_IN)
+					{
+						run = false;
+						break;
+					}
+
+					if (checkHitpoints() || checkInventory())
+					{
+						run = false;
+						if (config.flash())
+						{
+							setFlash(true);
+						}
+						break;
+					}
+
+					simLeftClick();
+
+					try
+					{
+						Thread.sleep(randomDelay(config.delayMin(), config.delayMax()));
+					}
+					catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			});
+		}
+	};
+
+	private boolean checkHitpoints()
+	{
+		if (!config.autoDisableHp())
+		{
+			return false;
+		}
+		return client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.hpThreshold();
+	}
+
+	private boolean checkInventory()
+	{
+		if (!config.autoDisableInv())
+		{
+			return false;
+		}
+		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
+		return inventoryWidget.getWidgetItems().size() == 28;
+	}
+
 	private void simLeftClick()
 	{
 		try
@@ -120,43 +182,4 @@ public class AutoClick extends Plugin
 		}
 		return n;
 	}
-
-	private HotkeyListener hotkeyListener = new HotkeyListener(() -> config.hotkey())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			run = !run;
-			executorService.submit(() ->
-			{
-				while (run)
-				{
-					if (client.getGameState() != GameState.LOGGED_IN)
-					{
-						run = false;
-						break;
-					}
-
-					if (config.autoDisable() && client.getBoostedSkillLevel(Skill.HITPOINTS) <= config.hpThreshold())
-					{
-						run = false;
-						if (config.flash())
-						{
-							setFlash(true);
-						}
-						break;
-					}
-					simLeftClick();
-					try
-					{
-						Thread.sleep(randomDelay(config.delayMin(), config.delayMax()));
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-				}
-			});
-		}
-	};
 }
