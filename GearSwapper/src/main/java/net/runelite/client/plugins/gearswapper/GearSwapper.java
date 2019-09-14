@@ -32,6 +32,10 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.InventoryID;
+import net.runelite.api.Item;
+import net.runelite.api.ItemContainer;
+import net.runelite.api.events.CommandExecuted;
 import net.runelite.api.events.ConfigChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
@@ -39,15 +43,18 @@ import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.flexo.Flexo;
-import net.runelite.client.game.ItemManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
-import net.runelite.client.plugins.gearswapper.utils.ExtUtils;
+import static net.runelite.client.plugins.gearswapper.utils.ExtUtils.getEquippedItems;
+import static net.runelite.client.plugins.gearswapper.utils.ExtUtils.getItems;
+import static net.runelite.client.plugins.gearswapper.utils.ExtUtils.handleSwitch;
+import static net.runelite.client.plugins.gearswapper.utils.ExtUtils.stringToIntArray;
 import net.runelite.client.plugins.gearswapper.utils.Tab;
 import net.runelite.client.plugins.gearswapper.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
+import net.runelite.client.util.Clipboard;
 import net.runelite.client.util.HotkeyListener;
 
 @PluginDescriptor(
@@ -68,55 +75,13 @@ public class GearSwapper extends Plugin
 	@Inject
 	private KeyManager keyManager;
 	@Inject
-	private ItemManager itemManager;
-	@Inject
 	private EventBus eventBus;
 
-	private BlockingQueue queue = new ArrayBlockingQueue(1);
+	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 2, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
-	private double scalingfactor;
+	private double scalingFactor;
 	private Flexo flexo;
-
-	private final HotkeyListener mage = new HotkeyListener(() -> config.hotkeyMage())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			executorService.submit(() -> executeSwap(ExtUtils.getItems(ExtUtils.stringToIntArray(config.mageSet()), client),
-				ExtUtils.getEquippedItems(ExtUtils.stringToIntArray(config.removeMageSet()), client)));
-			log.info("Mage Hotkey Pressed");
-		}
-	};
-	private final HotkeyListener range = new HotkeyListener(() -> config.hotkeyRange())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			executorService.submit(() -> executeSwap(ExtUtils.getItems(ExtUtils.stringToIntArray(config.rangeSet()), client),
-				ExtUtils.getEquippedItems(ExtUtils.stringToIntArray(config.removeRangeSet()), client)));
-			log.info("Range Hotkey Pressed");
-		}
-	};
-	private final HotkeyListener melee = new HotkeyListener(() -> config.hotkeyMelee())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			executorService.submit(() -> executeSwap(ExtUtils.getItems(ExtUtils.stringToIntArray(config.meleeSet()), client),
-				ExtUtils.getEquippedItems(ExtUtils.stringToIntArray(config.removeMeleeSet()), client)));
-			log.info("Melee Hotkey Pressed");
-		}
-	};
-	private final HotkeyListener util = new HotkeyListener(() -> config.hotkeyUtil())
-	{
-		@Override
-		public void hotkeyPressed()
-		{
-			executorService.submit(() -> equipItem(ExtUtils.getItems(ExtUtils.stringToIntArray(config.util()), client)));
-			log.info("Util Hotkey Pressed");
-		}
-	};
 
 	@Provides
 	GearSwapperConfig getConfig(ConfigManager configManager)
@@ -130,7 +95,7 @@ public class GearSwapper extends Plugin
 		keyManager.registerKeyListener(range);
 		keyManager.registerKeyListener(melee);
 		keyManager.registerKeyListener(util);
-		scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
+		scalingFactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
 		Flexo.client = client;
 		executorService.submit(() -> {
 			flexo = null;
@@ -144,6 +109,7 @@ public class GearSwapper extends Plugin
 			}
 		});
 		eventBus.subscribe(ConfigChanged.class, this, this::onConfigChanged);
+		eventBus.subscribe(CommandExecuted.class, this, this::onCommandExecuted);
 	}
 
 	protected void shutDown()
@@ -160,7 +126,36 @@ public class GearSwapper extends Plugin
 	{
 		if (event.getGroup().equals("stretchedmode"))
 		{
-			scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
+			scalingFactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
+		}
+	}
+
+	private void onCommandExecuted(CommandExecuted commandExecuted)
+	{
+		if ("copy".equals(commandExecuted.getCommand()))
+		{
+			final ItemContainer e = client.getItemContainer(InventoryID.EQUIPMENT);
+
+			if (e == null)
+			{
+				return;
+			}
+
+			final StringBuilder sb = new StringBuilder();
+
+			for (Item item : e.getItems())
+			{
+				if (item.getId() == -1 || item.getId() == 0)
+				{
+					continue;
+				}
+
+				sb.append(item.getId());
+				sb.append(",");
+			}
+
+			final String string = sb.toString();
+			Clipboard.store(string);
 		}
 	}
 
@@ -179,16 +174,9 @@ public class GearSwapper extends Plugin
 
 		for (WidgetItem item : items)
 		{
-			if (item != null)
+			if (item != null && item.getCanvasBounds() != null)
 			{
-				if (itemManager.getItemDefinition(item.getId()) != null)
-				{
-					log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
-				}
-				if (item.getCanvasBounds() != null)
-				{
-					ExtUtils.handleSwitch(item.getCanvasBounds(), config.actionType(), flexo, client, scalingfactor, (int) getMillis());
-				}
+				handleSwitch(item.getCanvasBounds(), config.actionType(), flexo, client, scalingFactor, (int) getMillis());
 			}
 		}
 	}
@@ -208,16 +196,9 @@ public class GearSwapper extends Plugin
 
 		for (Widget item : items)
 		{
-			if (item != null)
+			if (item != null && item.getBounds() != null)
 			{
-				if (itemManager.getItemDefinition(item.getItemId()) != null)
-				{
-					log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
-				}
-				if (item.getBounds() != null)
-				{
-					ExtUtils.handleSwitch(item.getBounds(), config.actionType(), flexo, client, scalingfactor, (int) getMillis());
-				}
+				handleSwitch(item.getBounds(), config.actionType(), flexo, client, scalingFactor, (int) getMillis());
 			}
 		}
 	}
@@ -243,4 +224,43 @@ public class GearSwapper extends Plugin
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
 	}
+
+	private final HotkeyListener mage = new HotkeyListener(() -> config.hotkeyMage())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.mageSet()), client),
+				getEquippedItems(stringToIntArray(config.removeMageSet()), client)));
+		}
+	};
+
+	private final HotkeyListener range = new HotkeyListener(() -> config.hotkeyRange())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.rangeSet()), client),
+				getEquippedItems(stringToIntArray(config.removeRangeSet()), client)));
+		}
+	};
+
+	private final HotkeyListener melee = new HotkeyListener(() -> config.hotkeyMelee())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.meleeSet()), client),
+				getEquippedItems(stringToIntArray(config.removeMeleeSet()), client)));
+		}
+	};
+
+	private final HotkeyListener util = new HotkeyListener(() -> config.hotkeyUtil())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			executorService.submit(() -> equipItem(getItems(stringToIntArray(config.util()), client)));
+		}
+	};
 }
