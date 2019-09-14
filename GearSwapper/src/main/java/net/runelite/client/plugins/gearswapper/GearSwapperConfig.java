@@ -12,6 +12,20 @@ import net.runelite.client.plugins.gearswapper.utils.ActionType;
 public interface GearSwapperConfig extends Config
 {
 	@ConfigItem(
+		keyName = "desc",
+		name = "<html>If you would like to copy your currently" +
+			"<br> equipped gear, type \"::copy\" in chat." +
+			"<br>This will copy your gear to your" +
+			"<br>clipboard for easy copy paste.</html>",
+		description = "",
+		position = 0
+	)
+	default Stub desc()
+	{
+		return new Stub();
+	}
+
+	@ConfigItem(
 		keyName = "swaps",
 		name = "Swaps",
 		description = "",
