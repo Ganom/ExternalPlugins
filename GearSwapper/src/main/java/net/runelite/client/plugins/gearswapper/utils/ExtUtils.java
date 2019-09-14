@@ -1,5 +1,6 @@
 package net.runelite.client.plugins.gearswapper.utils;
 
+import com.google.common.base.Strings;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -18,6 +19,10 @@ public class ExtUtils
 {
 	public static int[] stringToIntArray(String string)
 	{
+		if (Strings.isNullOrEmpty(string))
+		{
+			return new int[]{0};
+		}
 		return Arrays.stream(string.split(",")).map(String::trim).mapToInt(Integer::parseInt).toArray();
 	}
 
