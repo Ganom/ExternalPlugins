@@ -2,9 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.ganom</groupId>
+	<groupId>us.runelitepl</groupId>
 	<artifactId>Public-Plugins</artifactId>
 	<version>1.0</version>
+
 	<modules>
 		<module>AutoClicker</module>
 		<module>AutoPrayFlick</module>
@@ -27,23 +28,27 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+
 	<repositories>
 		<repository>
 			<id>RuneLitePlus</id>
 			<name>RuneLitePlus</name>
-			<url>https://nexus.thatgamerblue.com/repository/runeliteplus/</url>
+			<url>https://nexus.thatgamerblue.com/repository/runelite/</url>
 		</repository>
 	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>us.runelitepl</groupId>
 			<artifactId>client</artifactId>
 			<version>1.5.33-20190912.142840-3</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>us.runelitepl</groupId>
 			<artifactId>runelite-api</artifactId>
 			<version>1.5.33-20190912.142913-3</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
