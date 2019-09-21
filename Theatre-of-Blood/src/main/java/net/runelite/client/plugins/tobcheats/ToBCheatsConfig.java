@@ -27,22 +27,23 @@ package net.runelite.client.plugins.tobcheats;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
-import net.runelite.client.config.Stub;
+import net.runelite.client.config.ConfigTitleSection;
+import net.runelite.client.config.Title;
 import net.runelite.client.plugins.tobcheats.utils.ActionType;
 
 @ConfigGroup("tobcheats")
 
 public interface ToBCheatsConfig extends Config
 {
-	@ConfigItem(
+	@ConfigTitleSection(
 		position = 1,
 		keyName = "swappers",
 		name = "Swappers",
 		description = ""
 	)
-	default Stub swappers()
+	default Title swappers()
 	{
-		return new Stub();
+		return new Title();
 	}
 
 	@ConfigItem(
@@ -50,7 +51,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "maidenSwapper",
 		name = "Maiden Swapper",
 		description = "Swaps on nylo spawns",
-		parent = "swappers"
+		titleSection = "swappers"
 	)
 	default boolean maidenSwapper()
 	{
@@ -62,7 +63,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "nyloSwapper",
 		name = "Nylo Swapper",
 		description = "Swaps Pray/Items for you",
-		parent = "swappers"
+		titleSection = "swappers"
 	)
 	default boolean nyloSwapper()
 	{
@@ -74,22 +75,22 @@ public interface ToBCheatsConfig extends Config
 		keyName = "Verzik",
 		name = "Verzik Helper",
 		description = "Swaps Prays on Verzik. EXPERIMENTAL",
-		parent = "swappers"
+		titleSection = "swappers"
 	)
 	default boolean Verzik()
 	{
 		return false;
 	}
 
-	@ConfigItem(
+	@ConfigTitleSection(
 		position = 5,
 		keyName = "configs",
 		name = "Configs",
 		description = ""
 	)
-	default Stub configs()
+	default Title configs()
 	{
-		return new Stub();
+		return new Title();
 	}
 
 	@ConfigItem(
@@ -97,7 +98,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "autoAttack",
 		name = "Auto Attack",
 		description = "Auto Attack after swaps. EXPERIMENTAL",
-		parent = "configs"
+		titleSection = "configs"
 	)
 	default boolean autoAttack()
 	{
@@ -109,7 +110,7 @@ public interface ToBCheatsConfig extends Config
 		name = "Swap back to Inventory",
 		description = "After finishing a sequence, it will swap back to inventory if enabled.",
 		position = 7,
-		parent = "configs"
+		titleSection = "configs"
 	)
 	default boolean backToInventory()
 	{
@@ -121,7 +122,7 @@ public interface ToBCheatsConfig extends Config
 		name = "Test the features",
 		description = "Type in chat 1 for mage swap, 2 for range, 3 for melee, 4 for ice barrage.",
 		position = 10,
-		parent = "configs"
+		titleSection = "configs"
 	)
 	default boolean testing()
 	{
@@ -133,7 +134,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "mage",
 		name = "Mage Gearswap",
 		description = "Mage Gearswap Item Id's",
-		parent = "configs",
+		titleSection = "configs",
 		hidden = true,
 		unhide = "nyloSwapper"
 	)
@@ -147,7 +148,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "range",
 		name = "Range Gearswap",
 		description = "Range Gearswap Item Id's",
-		parent = "configs",
+		titleSection = "configs",
 		hidden = true,
 		unhide = "nyloSwapper"
 	)
@@ -161,7 +162,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "melee",
 		name = "Melee Gearswap",
 		description = "Melee Gearswap Item Id's",
-		parent = "configs",
+		titleSection = "configs",
 		hidden = true,
 		unhide = "nyloSwapper"
 	)
@@ -175,7 +176,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "actionType",
 		name = "Action Type",
 		description = "Flexo is smooth mouse, MouseEvents is ghost mouse",
-		parent = "configs"
+		titleSection = "configs"
 	)
 	default ActionType actionType()
 	{
@@ -187,7 +188,7 @@ public interface ToBCheatsConfig extends Config
 		name = "Minimum Delay",
 		description = "For MouseEvents only.",
 		position = 15,
-		parent = "configs"
+		titleSection = "configs"
 	)
 	default int randLow()
 	{
@@ -199,7 +200,7 @@ public interface ToBCheatsConfig extends Config
 		name = "Maximum Delay",
 		description = "For MouseEvents only.",
 		position = 16,
-		parent = "configs"
+		titleSection = "configs"
 	)
 	default int randHigh()
 	{

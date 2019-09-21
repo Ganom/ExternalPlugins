@@ -24,6 +24,7 @@
 package net.runelite.client.plugins.gearswapper;
 
 import com.google.inject.Provides;
+import java.awt.Rectangle;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -38,6 +39,7 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.events.CommandExecuted;
 import net.runelite.api.events.ConfigChanged;
 import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
@@ -47,9 +49,9 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
+import net.runelite.client.plugins.gearswapper.utils.ExtUtils;
 import static net.runelite.client.plugins.gearswapper.utils.ExtUtils.getEquippedItems;
 import static net.runelite.client.plugins.gearswapper.utils.ExtUtils.getItems;
-import static net.runelite.client.plugins.gearswapper.utils.ExtUtils.handleSwitch;
 import static net.runelite.client.plugins.gearswapper.utils.ExtUtils.stringToIntArray;
 import net.runelite.client.plugins.gearswapper.utils.Tab;
 import net.runelite.client.plugins.gearswapper.utils.TabUtils;
@@ -176,7 +178,7 @@ public class GearSwapper extends Plugin
 		{
 			if (item != null && item.getCanvasBounds() != null)
 			{
-				handleSwitch(item.getCanvasBounds(), config.actionType(), flexo, client, scalingFactor, (int) getMillis());
+				handleSwitch(item.getCanvasBounds());
 			}
 		}
 	}
@@ -198,7 +200,7 @@ public class GearSwapper extends Plugin
 		{
 			if (item != null && item.getBounds() != null)
 			{
-				handleSwitch(item.getBounds(), config.actionType(), flexo, client, scalingFactor, (int) getMillis());
+				handleSwitch(item.getBounds());
 			}
 		}
 	}
@@ -223,6 +225,38 @@ public class GearSwapper extends Plugin
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
+	}
+
+	private void spec()
+	{
+		final Widget specOrb = client.getWidget(WidgetID.MINIMAP_GROUP_ID, 32);
+
+		if (specOrb == null)
+		{
+			return;
+		}
+
+		if (specOrb.getSpriteId() == 1607 || specOrb.getSpriteId() == 1608)
+		{
+			handleSwitch(client.getWidget(WidgetInfo.MINIMAP_SPEC_ORB).getBounds());
+		}
+		else
+		{
+			flexo.keyPress(TabUtils.getTabHotkey(Tab.ATTACK, client));
+			flexo.delay((int) getMillis());
+			Widget specClickbox = client.getWidget(WidgetID.COMBAT_GROUP_ID, 35);
+			if (specClickbox == null)
+			{
+				return;
+			}
+			handleSwitch(specClickbox.getBounds());
+			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
+		}
+	}
+
+	private void handleSwitch(Rectangle rectangle)
+	{
+		ExtUtils.handleSwitch(rectangle, config.actionType(), flexo, client, scalingFactor, (int) getMillis());
 	}
 
 	private final HotkeyListener mage = new HotkeyListener(() -> config.hotkeyMage())
@@ -250,8 +284,18 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.meleeSet()), client),
-				getEquippedItems(stringToIntArray(config.removeMeleeSet()), client)));
+			final List<WidgetItem> items = getItems(stringToIntArray(config.meleeSet()), client);
+			final List<Widget> equipped = getEquippedItems(stringToIntArray(config.removeMeleeSet()), client);
+
+			executorService.submit(() ->
+			{
+				executeSwap(getItems(stringToIntArray(config.meleeSet()), client),
+					getEquippedItems(stringToIntArray(config.removeMeleeSet()), client));
+				if (config.spec())
+				{
+					spec();
+				}
+			});
 		}
 	};
 

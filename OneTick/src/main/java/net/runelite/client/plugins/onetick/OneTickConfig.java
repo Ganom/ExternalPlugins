@@ -3,23 +3,24 @@ package net.runelite.client.plugins.onetick;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigTitleSection;
 import net.runelite.client.config.Keybind;
-import net.runelite.client.config.Stub;
+import net.runelite.client.config.Title;
 import net.runelite.client.plugins.onetick.utils.ActionType;
 import net.runelite.client.plugins.onetick.utils.Method;
 
 @ConfigGroup("OneTick")
 public interface OneTickConfig extends Config
 {
-	@ConfigItem(
+	@ConfigTitleSection(
 		keyName = "config",
 		name = "Config",
 		description = "",
 		position = 0
 	)
-	default Stub config()
+	default Title config()
 	{
-		return new Stub();
+		return new Title();
 	}
 
 	@ConfigItem(
@@ -27,7 +28,7 @@ public interface OneTickConfig extends Config
 		keyName = "oneTick",
 		name = "One Tick",
 		description = "Activates the script below.",
-		parent = "config"
+		titleSection = "config"
 	)
 	default Keybind oneTick()
 	{
@@ -39,7 +40,7 @@ public interface OneTickConfig extends Config
 		keyName = "method",
 		name = "Action Type",
 		description = "Flexo is smooth mouse, MouseEvents is ghost mouse",
-		parent = "config"
+		titleSection = "config"
 	)
 	default Method method()
 	{
@@ -51,7 +52,7 @@ public interface OneTickConfig extends Config
 		name = "Bone ID",
 		description = "to 1 tick",
 		position = 3,
-		parent = "config"
+		titleSection = "config"
 	)
 	default String boneId()
 	{
@@ -63,7 +64,7 @@ public interface OneTickConfig extends Config
 		name = "Bolt ID",
 		description = "to 1 tick",
 		position = 3,
-		parent = "config"
+		titleSection = "config"
 	)
 	default String boltId()
 	{
@@ -75,22 +76,22 @@ public interface OneTickConfig extends Config
 		name = "Bolt Delay",
 		description = "The delay in milliseconds between next bolt combination.",
 		position = 4,
-		parent = "config"
+		titleSection = "config"
 	)
 	default int boltDelay()
 	{
 		return 70;
 	}
 
-	@ConfigItem(
+	@ConfigTitleSection(
 		keyName = "miscConfig",
 		name = "Misc Config",
 		description = "",
 		position = 5
 	)
-	default Stub miscConfig()
+	default Title miscConfig()
 	{
-		return new Stub();
+		return new Title();
 	}
 
 	@ConfigItem(
@@ -98,7 +99,7 @@ public interface OneTickConfig extends Config
 		keyName = "actionType",
 		name = "Action Type",
 		description = "Flexo is smooth mouse, MouseEvents is ghost mouse",
-		parent = "miscConfig"
+		titleSection = "miscConfig"
 	)
 	default ActionType actionType()
 	{
@@ -110,7 +111,7 @@ public interface OneTickConfig extends Config
 		name = "Minimum Delay",
 		description = "For MouseEvents only.",
 		position = 15,
-		parent = "miscConfig"
+		titleSection = "miscConfig"
 	)
 	default int randLow()
 	{
@@ -122,7 +123,7 @@ public interface OneTickConfig extends Config
 		name = "Maximum Delay",
 		description = "For MouseEvents only.",
 		position = 16,
-		parent = "miscConfig"
+		titleSection = "miscConfig"
 	)
 	default int randHigh()
 	{

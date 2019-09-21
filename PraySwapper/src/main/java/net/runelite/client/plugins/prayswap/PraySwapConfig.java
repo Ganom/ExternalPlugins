@@ -30,21 +30,22 @@ import net.runelite.api.Prayer;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
+import net.runelite.client.config.ConfigTitleSection;
 import net.runelite.client.config.Keybind;
-import net.runelite.client.config.Stub;
+import net.runelite.client.config.Title;
 
 @ConfigGroup("PraySwap")
 public interface PraySwapConfig extends Config
 {
-	@ConfigItem(
+	@ConfigTitleSection(
 		position = 0,
 		keyName = "mainConfig",
 		name = "Main Config",
 		description = ""
 	)
-	default Stub mainConfig()
+	default Title mainConfig()
 	{
-		return new Stub();
+		return new Title();
 	}
 
 	@ConfigItem(
@@ -52,7 +53,7 @@ public interface PraySwapConfig extends Config
 		name = "Always protect item",
 		description = "Always be protecting item.",
 		position = 1,
-		parent = "mainConfig"
+		titleSection = "mainConfig"
 	)
 	default boolean protectItem()
 	{
@@ -64,7 +65,7 @@ public interface PraySwapConfig extends Config
 		name = "Enable Low Level Prayers",
 		description = "",
 		position = 2,
-		parent = "mainConfig"
+		titleSection = "mainConfig"
 	)
 	default boolean lowLevel()
 	{
@@ -76,22 +77,22 @@ public interface PraySwapConfig extends Config
 		name = "Swap back to Inventory",
 		description = "After finishing a sequence, it will swap back to inventory if enabled.",
 		position = 3,
-		parent = "mainConfig"
+		titleSection = "mainConfig"
 	)
 	default boolean backToInventory()
 	{
 		return true;
 	}
 
-	@ConfigItem(
+	@ConfigTitleSection(
 		position = 4,
 		keyName = "hotkeys",
 		name = "Hotkeys",
 		description = ""
 	)
-	default Stub hotkeys()
+	default Title hotkeys()
 	{
-		return new Stub();
+		return new Title();
 	}
 
 	@ConfigItem(
@@ -99,7 +100,7 @@ public interface PraySwapConfig extends Config
 		name = "Protect Mage",
 		description = "Mage Pray Swap",
 		position = 5,
-		parent = "hotkeys"
+		titleSection = "hotkeys"
 	)
 	default Keybind hotkeyMage()
 	{
@@ -111,7 +112,7 @@ public interface PraySwapConfig extends Config
 		name = "Protect Missiles",
 		description = "Range Pray Swap",
 		position = 6,
-		parent = "hotkeys"
+		titleSection = "hotkeys"
 	)
 	default Keybind hotkeyRange()
 	{
@@ -123,7 +124,7 @@ public interface PraySwapConfig extends Config
 		name = "Protect Melee",
 		description = "Melee Pray Swap",
 		position = 7,
-		parent = "hotkeys"
+		titleSection = "hotkeys"
 	)
 	default Keybind hotkeyMelee()
 	{
@@ -135,7 +136,7 @@ public interface PraySwapConfig extends Config
 		name = "Augury",
 		description = "Low level -> Mystic Might",
 		position = 8,
-		parent = "hotkeys"
+		titleSection = "hotkeys"
 	)
 	default Keybind hotkeyAugury()
 	{
@@ -147,7 +148,7 @@ public interface PraySwapConfig extends Config
 		name = "Rigour",
 		description = "Low level -> Eagle Eye",
 		position = 9,
-		parent = "hotkeys"
+		titleSection = "hotkeys"
 	)
 	default Keybind hotkeyRigour()
 	{
@@ -159,7 +160,7 @@ public interface PraySwapConfig extends Config
 		name = "Piety",
 		description = "Low level -> Steel Skin, Ultimate Strength, Incredible Reflexs",
 		position = 10,
-		parent = "hotkeys"
+		titleSection = "hotkeys"
 	)
 	default Keybind hotkeyPiety()
 	{
@@ -171,22 +172,22 @@ public interface PraySwapConfig extends Config
 		name = "Smite",
 		description = "Smite Pray Swap",
 		position = 11,
-		parent = "hotkeys"
+		titleSection = "hotkeys"
 	)
 	default Keybind hotkeySmite()
 	{
 		return Keybind.NOT_SET;
 	}
 
-	@ConfigItem(
+	@ConfigTitleSection(
 		position = 12,
 		keyName = "combos",
 		name = "Combos",
 		description = ""
 	)
-	default Stub combos()
+	default Title combos()
 	{
-		return new Stub();
+		return new Title();
 	}
 
 	@ConfigItem(
@@ -194,7 +195,7 @@ public interface PraySwapConfig extends Config
 		name = "Combo One",
 		description = "Press this key to active combo one.",
 		position = 13,
-		parent = "combos"
+		titleSection = "combos"
 	)
 	default Keybind comboOne()
 	{
@@ -206,7 +207,7 @@ public interface PraySwapConfig extends Config
 		name = "Prayer 1",
 		description = "Prayer 1",
 		position = 14,
-		parent = "combos"
+		titleSection = "combos"
 	)
 	default Prayers comboOnePrayerOne()
 	{
@@ -218,7 +219,7 @@ public interface PraySwapConfig extends Config
 		name = "Prayer 2",
 		description = "Prayer 2",
 		position = 15,
-		parent = "combos"
+		titleSection = "combos"
 	)
 	default Prayers comboOnePrayerTwo()
 	{
@@ -230,7 +231,7 @@ public interface PraySwapConfig extends Config
 		name = "Combo Two",
 		description = "Press this key to active combo one.",
 		position = 16,
-		parent = "combos"
+		titleSection = "combos"
 	)
 	default Keybind comboTwo()
 	{
@@ -242,7 +243,7 @@ public interface PraySwapConfig extends Config
 		name = "Prayer 1",
 		description = "Prayer 1",
 		position = 17,
-		parent = "combos"
+		titleSection = "combos"
 	)
 	default Prayers comboTwoPrayerOne()
 	{
@@ -254,7 +255,7 @@ public interface PraySwapConfig extends Config
 		name = "Prayer 2",
 		description = "Prayer 2",
 		position = 18,
-		parent = "combos"
+		titleSection = "combos"
 	)
 	default Prayers comboTwoPrayerTwo()
 	{
@@ -266,7 +267,7 @@ public interface PraySwapConfig extends Config
 		name = "Combo Three",
 		description = "Press this key to active combo one.",
 		position = 19,
-		parent = "combos"
+		titleSection = "combos"
 	)
 	default Keybind comboThree()
 	{
@@ -278,7 +279,7 @@ public interface PraySwapConfig extends Config
 		name = "Prayer 1",
 		description = "Prayer 1",
 		position = 20,
-		parent = "combos"
+		titleSection = "combos"
 	)
 	default Prayers comboThreePrayerOne()
 	{
@@ -290,22 +291,22 @@ public interface PraySwapConfig extends Config
 		name = "Prayer 2",
 		description = "Prayer 2",
 		position = 21,
-		parent = "combos"
+		titleSection = "combos"
 	)
 	default Prayers comboThreePrayerTwo()
 	{
 		return Prayers.AUGURY;
 	}
 
-	@ConfigItem(
+	@ConfigTitleSection(
 		position = 22,
 		keyName = "botConfig",
 		name = "Bot Config",
 		description = ""
 	)
-	default Stub botConfig()
+	default Title botConfig()
 	{
-		return new Stub();
+		return new Title();
 	}
 
 	@ConfigItem(
@@ -313,7 +314,7 @@ public interface PraySwapConfig extends Config
 		keyName = "actionType",
 		name = "Action Type",
 		description = "Flexo is smooth mouse, MouseEvents is ghost mouse.",
-		parent = "botConfig"
+		titleSection = "botConfig"
 	)
 	default ActionType actionType()
 	{
@@ -325,7 +326,7 @@ public interface PraySwapConfig extends Config
 		name = "Minimum Delay",
 		description = "For MouseEvents",
 		position = 39,
-		parent = "botConfig"
+		titleSection = "botConfig"
 	)
 	default int randLow()
 	{
@@ -337,7 +338,7 @@ public interface PraySwapConfig extends Config
 		name = "Maximum Delay",
 		description = "For MouseEvents",
 		position = 40,
-		parent = "botConfig"
+		titleSection = "botConfig"
 	)
 	default int randHigh()
 	{
