@@ -34,7 +34,9 @@ import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.Prayer;
 import net.runelite.api.events.ChatMessage;
-import net.runelite.api.events.ProjectileSpawned;
+import net.runelite.api.events.GameTick;
+import net.runelite.api.events.ProjectileMoved;
+import net.runelite.api.util.Text;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
@@ -47,7 +49,6 @@ import net.runelite.client.plugins.olmswapper.utils.ExtUtils;
 import net.runelite.client.plugins.olmswapper.utils.Tab;
 import net.runelite.client.plugins.olmswapper.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
-import net.runelite.client.util.Text;
 
 
 @PluginDescriptor(
@@ -72,12 +73,14 @@ public class OlmSwapper extends Plugin
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 	private Flexo flexo;
+	private boolean swapMage;
+	private boolean swapRange;
 
 
 	@Provides
-	OlmSwapperConfig getConfig(ConfigManager manager)
+	OlmSwapperConfig getConfig(ConfigManager configManager)
 	{
-		return (OlmSwapperConfig) manager.getConfig(OlmSwapperConfig.class);
+		return configManager.getConfig(OlmSwapperConfig.class);
 	}
 
 	@Override
@@ -108,7 +111,27 @@ public class OlmSwapper extends Plugin
 	private void addSubscriptions()
 	{
 		eventBus.subscribe(ChatMessage.class, this, this::onChatMessage);
-		eventBus.subscribe(ProjectileSpawned.class, this, this::onProjectileSpawned);
+		eventBus.subscribe(ProjectileMoved.class, this, this::onProjectileMoved);
+		eventBus.subscribe(GameTick.class, this, this::onGameTick);
+	}
+
+	private void onGameTick(GameTick event)
+	{
+		if (swapMage)
+		{
+			log.info("Protect Magic Being Activated -- Auto Attack");
+			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MAGIC));
+			swapMage = false;
+		}
+		else if (swapRange)
+		{
+			if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
+			{
+				log.info("Protect Missiles Being Activated -- Auto Attack");
+				executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MISSILES));
+			}
+			swapRange = false;
+		}
 	}
 
 	private void onChatMessage(ChatMessage event)
@@ -147,7 +170,7 @@ public class OlmSwapper extends Plugin
 		}
 	}
 
-	private void onProjectileSpawned(ProjectileSpawned event)
+	private void onProjectileMoved(ProjectileMoved event)
 	{
 		if (!config.swapAutos())
 		{
@@ -161,15 +184,13 @@ public class OlmSwapper extends Plugin
 			case 1339:
 				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
 				{
-					log.info("Protect Magic Being Activated -- Auto Attack");
-					executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MAGIC));
+					swapMage = true;
 				}
 				break;
 			case 1340:
 				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
 				{
-					log.info("Protect Missiles Being Activated -- Auto Attack");
-					executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MISSILES));
+					swapRange = true;
 				}
 				break;
 		}
