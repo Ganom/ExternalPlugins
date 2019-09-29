@@ -26,8 +26,9 @@ package net.runelite.client.plugins.leftclickpk;
 
 import com.google.inject.Provides;
 import java.awt.Color;
+import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
@@ -41,7 +42,10 @@ import net.runelite.api.Player;
 import net.runelite.api.Prayer;
 import net.runelite.api.Skill;
 import net.runelite.api.Varbits;
+import net.runelite.api.WorldType;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ChatMessage;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.LocalPlayerDeath;
 import net.runelite.api.events.MenuEntryAdded;
@@ -57,6 +61,7 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
+import net.runelite.client.plugins.multiindicators.MapLocations;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.PvPUtil;
 
@@ -75,8 +80,8 @@ public class LeftClickPK extends Plugin
 	@Inject
 	private LeftClickConfig config;
 
-	private final Map<Integer, Victim> victimMap = new ConcurrentHashMap<>();
-	private final Map<Integer, Victim> victimMapCache = new ConcurrentHashMap<>();
+	private final Map<Integer, Victim> victimMap = new HashMap<>();
+	private final Map<Integer, Victim> victimMapCache = new HashMap<>();
 
 	private boolean staff;
 	private float hue;
@@ -99,12 +104,18 @@ public class LeftClickPK extends Plugin
 		eventBus.subscribe(PlayerSpawned.class, this, this::onPlayerSpawned);
 		eventBus.subscribe(ChatMessage.class, this, this::onChatMessage);
 		eventBus.subscribe(SpotAnimationChanged.class, this, this::onSpotAnimationChanged);
+		eventBus.subscribe(GameTick.class, this, this::onGameTick);
 	}
 
 	@Override
 	public void shutDown()
 	{
 		eventBus.unregister(this);
+	}
+
+	private void onGameTick(GameTick tickEvent)
+	{
+		victimMap.values().forEach(this::update);
 	}
 
 	private void onMenuEntryAdded(MenuEntryAdded event)
@@ -271,6 +282,39 @@ public class LeftClickPK extends Plugin
 		}
 	}
 
+	private void update(Victim victim)
+	{
+		if (victim.getActor() == null)
+		{
+			return;
+		}
+		victim.timerToImmunity(client.getTickCount());
+		victim.update();
+		if (victim.getTimerMap().containsKey(TimerType.TELEBLOCK))
+		{
+			final WorldPoint actorLoc = victim.getActor().getWorldLocation();
+			final EnumSet<WorldType> worldTypes = client.getWorldType();
+
+			if (!WorldType.isAllPvpWorld(worldTypes) && (actorLoc.getY() < 3525 || PvPUtil.getWildernessLevelFrom(actorLoc) <= 0))
+			{
+				victim.getTimerMap().remove(TimerType.TELEBLOCK);
+				victim.getImmunityMap().put(TimerType.TELEBLOCK, TimerType.TELEBLOCK.getImmunityTime());
+			}
+			else if (WorldType.isPvpWorld(worldTypes) &&
+				MapLocations.getPvpSafeZones(actorLoc.getPlane()).contains(actorLoc.getX(), actorLoc.getY()))
+			{
+				victim.getTimerMap().remove(TimerType.TELEBLOCK);
+				victim.getImmunityMap().put(TimerType.TELEBLOCK, TimerType.TELEBLOCK.getImmunityTime());
+			}
+			else if (WorldType.isDeadmanWorld(worldTypes) &&
+				MapLocations.getDeadmanSafeZones(actorLoc.getPlane()).contains(actorLoc.getX(), actorLoc.getY()))
+			{
+				victim.getTimerMap().remove(TimerType.TELEBLOCK);
+				victim.getImmunityMap().put(TimerType.TELEBLOCK, TimerType.TELEBLOCK.getImmunityTime());
+			}
+		}
+	}
+
 	private void setSpell(Victim victim)
 	{
 		final int spellBookVar = client.getVar(Varbits.SPELLBOOK);
@@ -282,7 +326,7 @@ public class LeftClickPK extends Plugin
 			case 0:
 				if (!config.enableTbEntangle() ||
 					((victim.getTimerMap().containsKey(TimerType.FREEZE) || victim.getTimerMap().containsKey(TimerType.TELEBLOCK)) &&
-					(victim.getImmunityMap().containsKey(TimerType.FREEZE) || victim.getImmunityMap().containsKey(TimerType.TELEBLOCK))))
+						(victim.getImmunityMap().containsKey(TimerType.FREEZE) || victim.getImmunityMap().containsKey(TimerType.TELEBLOCK))))
 				{
 					if (mageLevel >= 95)
 					{
