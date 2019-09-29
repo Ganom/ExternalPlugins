@@ -27,16 +27,16 @@ import java.awt.image.BufferedImage;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.runelite.client.plugins.statustimers.StatusTimers;
+import net.runelite.client.plugins.freezetimers.FreezeTimersPlugin;
 import net.runelite.client.util.ImageUtil;
 
 @AllArgsConstructor
 @Getter(AccessLevel.PACKAGE)
 public enum TimerType
 {
-	FREEZE(5, ImageUtil.getResourceStreamFromClass(StatusTimers.class, "freeze.png"), ImageUtil.getResourceStreamFromClass(StatusTimers.class, "freezeimmune.png")),
-	VENG(-1, ImageUtil.getResourceStreamFromClass(StatusTimers.class, "veng.png"), null),
-	TELEBLOCK(75, ImageUtil.getResourceStreamFromClass(StatusTimers.class, "teleblock.png"), ImageUtil.getResourceStreamFromClass(StatusTimers.class, "teleblockimmune.png")),
+	FREEZE(5, ImageUtil.getResourceStreamFromClass(FreezeTimersPlugin.class, "freeze.png"), ImageUtil.getResourceStreamFromClass(FreezeTimersPlugin.class, "freezeimmune.png")),
+	VENG(-1, ImageUtil.getResourceStreamFromClass(FreezeTimersPlugin.class, "veng.png"), null),
+	TELEBLOCK(75, ImageUtil.getResourceStreamFromClass(FreezeTimersPlugin.class, "teleblock.png"), ImageUtil.getResourceStreamFromClass(FreezeTimersPlugin.class, "teleblockimmune.png")),
 	THIS_SHIT_BROKE(-1, null, null);
 
 	private final int immunityTime;
