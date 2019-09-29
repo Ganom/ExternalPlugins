@@ -20,6 +20,7 @@
 		<module>SpellCaster</module>
 		<module>Theatre-of-Blood</module>
 		<module>Tickeater</module>
+		<module>LeftClickPK</module>
 	</modules>
 	<packaging>pom</packaging>
 
@@ -29,26 +30,15 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>RuneLitePlus</id>
-			<name>RuneLitePlus</name>
-			<url>https://nexus.thatgamerblue.com/repository/runelite/</url>
-		</repository>
-	</repositories>
-
 	<dependencies>
 		<dependency>
-			<groupId>us.runelitepl</groupId>
+			<groupId>com.ganom</groupId>
 			<artifactId>client</artifactId>
-			<version>1.5.33-20190912.142840-3</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>us.runelitepl</groupId>
-			<artifactId>runelite-api</artifactId>
-			<version>1.5.33-20190912.142913-3</version>
-			<scope>provided</scope>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>
+				<!--Your Local Shaded Jar Here-->
+			</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -73,6 +63,31 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<artifactItems>
+						<artifactItem>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>${project.artifactId}</artifactId>
+							<version>${project.version}</version>
+							<type>${project.packaging}</type>
+						</artifactItem>
+					</artifactItems>
+					<outputDirectory>../Output/</outputDirectory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
