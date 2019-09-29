@@ -24,6 +24,7 @@
  */
 package net.runelite.client.plugins.leftclickpk;
 
+import com.google.inject.Provides;
 import java.awt.Color;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,6 +52,7 @@ import net.runelite.api.events.SpotAnimationChanged;
 import net.runelite.api.util.Text;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -70,6 +72,8 @@ public class LeftClickPK extends Plugin
 	private Client client;
 	@Inject
 	private EventBus eventBus;
+	@Inject
+	private LeftClickConfig config;
 
 	private final Map<Integer, Victim> victimMap = new ConcurrentHashMap<>();
 	private final Map<Integer, Victim> victimMapCache = new ConcurrentHashMap<>();
@@ -77,6 +81,12 @@ public class LeftClickPK extends Plugin
 	private boolean staff;
 	private float hue;
 	private boolean reverse;
+
+	@Provides
+	LeftClickConfig getConfig(ConfigManager configManager)
+	{
+		return configManager.getConfig(LeftClickConfig.class);
+	}
 
 	@Override
 	public void startUp()
@@ -270,8 +280,9 @@ public class LeftClickPK extends Plugin
 		switch (spellBookVar)
 		{
 			case 0:
-				if ((victim.getTimerMap().containsKey(TimerType.FREEZE) || victim.getTimerMap().containsKey(TimerType.TELEBLOCK)) &&
-					(victim.getImmunityMap().containsKey(TimerType.FREEZE) || victim.getImmunityMap().containsKey(TimerType.TELEBLOCK)))
+				if (!config.enableTbEntangle() ||
+					((victim.getTimerMap().containsKey(TimerType.FREEZE) || victim.getTimerMap().containsKey(TimerType.TELEBLOCK)) &&
+					(victim.getImmunityMap().containsKey(TimerType.FREEZE) || victim.getImmunityMap().containsKey(TimerType.TELEBLOCK))))
 				{
 					if (mageLevel >= 95)
 					{
@@ -321,7 +332,7 @@ public class LeftClickPK extends Plugin
 				}
 				break;
 			case 1:
-				if (victim.getTimerMap().containsKey(TimerType.FREEZE) || victim.getImmunityMap().containsKey(TimerType.FREEZE))
+				if (config.enableBlood() && (victim.getTimerMap().containsKey(TimerType.FREEZE) || victim.getImmunityMap().containsKey(TimerType.FREEZE)))
 				{
 					if (mageLevel >= 92)
 					{
