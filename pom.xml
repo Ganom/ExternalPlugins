@@ -21,6 +21,7 @@
 		<module>Theatre-of-Blood</module>
 		<module>Tickeater</module>
 		<module>LeftClickPK</module>
+		<module>OneClick</module>
 	</modules>
 	<packaging>pom</packaging>
 
