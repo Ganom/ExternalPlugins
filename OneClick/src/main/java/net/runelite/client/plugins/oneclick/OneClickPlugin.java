@@ -66,6 +66,8 @@ public class OneClickPlugin extends Plugin
 		"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
 		"<col=ffff>Yew birdhouse (empty)", "<col=ffff>Magic birdhouse (empty)", "<col=ffff>Redwood birdhouse (empty)"
 	);
+	private static final Set<Integer> CUTTABLE_FISHES = ImmutableSet.of(ItemID.SACRED_EEL, ItemID.LEAPING_TROUT, ItemID.LEAPING_SALMON, ItemID.LEAPING_STURGEON
+	);
 
 	@Inject
 	private Client client;
@@ -90,6 +92,7 @@ public class OneClickPlugin extends Plugin
 	private boolean bones;
 	private boolean karambwan;
 	private boolean darkEssence;
+	private boolean cutFish;
 
 	@Provides
 	OneClickConfig provideConfig(ConfigManager configManager)
@@ -133,6 +136,7 @@ public class OneClickPlugin extends Plugin
 		bones = config.getBones();
 		karambwan = config.getKarambwan();
 		darkEssence = config.getDarkEssence();
+		cutFish = config.getCutFish();
 	}
 
 	private void onConfigChanged(ConfigChanged event)
@@ -354,6 +358,15 @@ public class OneClickPlugin extends Plugin
 			event.getMenuEntry().setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + event.getMenuEntry().getTarget());
 			event.setWasModified(true);
 		}
+		else if (cutFish && event.getType() == MenuOpcode.ITEM_USE.getId() && CUTTABLE_FISHES.contains(id))
+		{
+			if (findItem(ItemID.KNIFE) == -1)
+			{
+				return;
+			}
+			event.getMenuEntry().setTarget("<col=ff9040>Knife<col=ffffff> -> " + targetMap.get(id));
+			event.setWasModified(true);
+		}
 	}
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
@@ -468,6 +481,14 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemSlot(findItem(ItemID.RAW_KARAMBWAN));
 			client.setSelectedItemID(ItemID.RAW_KARAMBWAN);
 			tick = true;
+		}
+		else if (cutFish && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
+				event.getTarget().contains("<col=ff9040>Knife<col=ffffff> -> "))
+		{
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+			client.setSelectedItemSlot(findItem(ItemID.KNIFE));
+			client.setSelectedItemID(ItemID.KNIFE);
 		}
 	}
 
