@@ -8,9 +8,9 @@ import net.runelite.client.config.ConfigItem;
 public interface OneClickConfig extends Config
 {
 	@ConfigItem(
-            keyName = "darts",
-			name = "Darts",
-			description = "One click fletch dart tips into darts"
+		keyName = "darts",
+		name = "Darts",
+		description = "One click fletch dart tips into darts"
 	)
 	default boolean getDarts()
 	{
@@ -18,9 +18,9 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "logs",
-			name = "Light Logs",
-			description = "One click light logs"
+		keyName = "logs",
+		name = "Light Logs",
+		description = "One click light logs"
 	)
 	default boolean getLightLogs()
 	{
@@ -28,9 +28,9 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "birdhouses",
-			name = "Bird Houses",
-			description = "One click birdhouses"
+		keyName = "birdhouses",
+		name = "Bird Houses",
+		description = "One click birdhouses"
 	)
 	default boolean getBirdHouses()
 	{
@@ -38,9 +38,9 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "herbtar",
-			name = "Herb Tar",
-			description = "One click to make herbs into herb tar"
+		keyName = "herbtar",
+		name = "Herb Tar",
+		description = "One click to make herbs into herb tar"
 	)
 	default boolean getHerbTar()
 	{
@@ -48,9 +48,9 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "earthrune",
-			name = "Earth Rune on Altar",
-			description = "One click to use earth rune on altar"
+		keyName = "earthrune",
+		name = "Earth Rune on Altar",
+		description = "One click to use earth rune on altar"
 	)
 	default boolean getEarthRuneAltar()
 	{
@@ -58,9 +58,9 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "highalch",
-			name = "High Alchemy",
-			description = "One click to cast high alchemy"
+		keyName = "highalch",
+		name = "High Alchemy",
+		description = "One click to cast high alchemy"
 	)
 	default boolean getHighAlch()
 	{
@@ -68,9 +68,9 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "dwarfmulticannon",
-			name = "Dwarf Multicannon",
-			description = "One click to fill the dwarf multicannon (Uses cannonballs on it instead of clicking fire to save a tick)"
+		keyName = "dwarfmulticannon",
+		name = "Dwarf Multicannon",
+		description = "One click to fill the dwarf multicannon (Uses cannonballs on it instead of clicking fire to save a tick)"
 	)
 	default boolean getDwarfMultiCannon()
 	{
@@ -78,9 +78,9 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "bones",
-			name = "Bones",
-			description = "One click to use bones on altar"
+		keyName = "bones",
+		name = "Bones",
+		description = "One click to use bones on altar"
 	)
 	default boolean getBones()
 	{
@@ -88,9 +88,9 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "karambwan",
-			name = "Karambwan",
-			description = "One click to use karambwan on range"
+		keyName = "karambwan",
+		name = "Karambwan",
+		description = "One click to use karambwan on range"
 	)
 	default boolean getKarambwan()
 	{
@@ -108,9 +108,9 @@ public interface OneClickConfig extends Config
 	}*/
 
 	@ConfigItem(
-			keyName = "darkessence",
-			name = "Dark Essence",
-			description = "One click on chisel to automatically chisel dark essence"
+		keyName = "darkessence",
+		name = "Dark Essence",
+		description = "One click on chisel to automatically chisel dark essence"
 	)
 	default boolean getDarkEssence()
 	{
