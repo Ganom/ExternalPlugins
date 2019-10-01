@@ -116,6 +116,15 @@ public interface OneClickConfig extends Config
 	{
 		return false;
 	}
+	@ConfigItem(
+			keyName = "cutfish",
+			name = "Cut Fish",
+			description = "One click to cut Sacred Eels and Barbarian Fishes"
+	)
+	default boolean getCutFish()
+	{
+		return false;
+	}
 
 	@ConfigItem(
 			keyName = "cutfish",
