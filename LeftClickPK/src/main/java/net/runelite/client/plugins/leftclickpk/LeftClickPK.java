@@ -68,7 +68,7 @@ import net.runelite.client.util.PvPUtil;
 @PluginDescriptor(
 	name = "Left Click PK",
 	description = "Who needs to learn pking when you can just left click?",
-	type = PluginType.UTILITY
+	type = PluginType.EXTERNAL
 )
 @Slf4j
 public class LeftClickPK extends Plugin
