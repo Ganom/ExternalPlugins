@@ -116,6 +116,7 @@ public interface OneClickConfig extends Config
 	{
 		return false;
 	}
+
 	@ConfigItem(
 			keyName = "cutfish",
 			name = "Cut Fish",
