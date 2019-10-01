@@ -8,7 +8,7 @@ import net.runelite.client.config.ConfigItem;
 public interface OneClickConfig extends Config
 {
 	@ConfigItem(
-			keyName = "darts",
+            keyName = "darts",
 			name = "Darts",
 			description = "One click fletch dart tips into darts"
 	)
