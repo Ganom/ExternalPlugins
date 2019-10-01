@@ -39,32 +39,34 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 
 @PluginDescriptor(
-	name = "One Click",
-	description = "Osbuddy in runelite+",
-	enabledByDefault = false,
-	type = PluginType.EXTERNAL
+		name = "One Click",
+		description = "Osbuddy in runelite+",
+		enabledByDefault = false,
+		type = PluginType.EXTERNAL
 )
 public class OneClickPlugin extends Plugin
 {
 	private static final Set<Integer> DART_TIPS = ImmutableSet.of(ItemID.BRONZE_DART_TIP, ItemID.IRON_DART_TIP,
-		ItemID.STEEL_DART_TIP, ItemID.MITHRIL_DART_TIP, ItemID.ADAMANT_DART_TIP, ItemID.RUNE_DART_TIP, ItemID.DRAGON_DART_TIP, ItemID.UNFINISHED_BROAD_BOLTS
+			ItemID.STEEL_DART_TIP, ItemID.MITHRIL_DART_TIP, ItemID.ADAMANT_DART_TIP, ItemID.RUNE_DART_TIP, ItemID.DRAGON_DART_TIP, ItemID.UNFINISHED_BROAD_BOLTS
 	);
 	private static final Set<Integer> LOG_ID = ImmutableSet.of(ItemID.LOGS, ItemID.OAK_LOGS, ItemID.WILLOW_LOGS, ItemID.TEAK_LOGS,
-		ItemID.MAPLE_LOGS, ItemID.MAHOGANY_LOGS, ItemID.YEW_LOGS, ItemID.MAGIC_LOGS, ItemID.REDWOOD_LOGS
+			ItemID.MAPLE_LOGS, ItemID.MAHOGANY_LOGS, ItemID.YEW_LOGS, ItemID.MAGIC_LOGS, ItemID.REDWOOD_LOGS
 	);
 	private static final Set<Integer> HOPS_SEED = ImmutableSet.of(ItemID.BARLEY_SEED, ItemID.HAMMERSTONE_SEED,
-		ItemID.ASGARNIAN_SEED, ItemID.JUTE_SEED, ItemID.YANILLIAN_SEED, ItemID.KRANDORIAN_SEED, ItemID.WILDBLOOD_SEED
+			ItemID.ASGARNIAN_SEED, ItemID.JUTE_SEED, ItemID.YANILLIAN_SEED, ItemID.KRANDORIAN_SEED, ItemID.WILDBLOOD_SEED
 	);
 	private static final Set<Integer> HERBS = ImmutableSet.of(ItemID.GUAM_LEAF, ItemID.MARRENTILL, ItemID.TARROMIN, ItemID.HARRALANDER
 	);
 	private static final Set<Integer> BONE_SET = ImmutableSet.of(ItemID.BONES, ItemID.WOLF_BONE, ItemID.BURNT_BONES, ItemID.MONKEY_BONES,
-		ItemID.BAT_BONES, ItemID.JOGRE_BONE, ItemID.BIG_BONES, ItemID.ZOGRE_BONE, ItemID.SHAIKAHAN_BONES, ItemID.BABYDRAGON_BONES,
-		ItemID.WYRM_BONES, ItemID.DRAGON_BONES, ItemID.DRAKE_BONES, ItemID.FAYRG_BONES, ItemID.LAVA_DRAGON_BONES, ItemID.RAURG_BONES,
-		ItemID.HYDRA_BONES, ItemID.DAGANNOTH_BONES, ItemID.OURG_BONES, ItemID.SUPERIOR_DRAGON_BONES, ItemID.WYVERN_BONES
+			ItemID.BAT_BONES, ItemID.JOGRE_BONE, ItemID.BIG_BONES, ItemID.ZOGRE_BONE, ItemID.SHAIKAHAN_BONES, ItemID.BABYDRAGON_BONES,
+			ItemID.WYRM_BONES, ItemID.DRAGON_BONES, ItemID.DRAKE_BONES, ItemID.FAYRG_BONES, ItemID.LAVA_DRAGON_BONES, ItemID.RAURG_BONES,
+			ItemID.HYDRA_BONES, ItemID.DAGANNOTH_BONES, ItemID.OURG_BONES, ItemID.SUPERIOR_DRAGON_BONES, ItemID.WYVERN_BONES
 	);
 	private static final Set<String> BIRD_HOUSES_NAMES = ImmutableSet.of("<col=ffff>Bird house (empty)", "<col=ffff>Oak birdhouse (empty)",
-		"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
-		"<col=ffff>Yew birdhouse (empty)", "<col=ffff>Magic birdhouse (empty)", "<col=ffff>Redwood birdhouse (empty)"
+			"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
+			"<col=ffff>Yew birdhouse (empty)", "<col=ffff>Magic birdhouse (empty)", "<col=ffff>Redwood birdhouse (empty)"
+	);
+	private static final Set<Integer> CUTTABLE_FISHES = ImmutableSet.of(ItemID.SACRED_EEL, ItemID.LEAPING_TROUT, ItemID.LEAPING_SALMON, ItemID.LEAPING_STURGEON
 	);
 
 	@Inject
@@ -90,6 +92,7 @@ public class OneClickPlugin extends Plugin
 	private boolean bones;
 	private boolean karambwan;
 	private boolean darkEssence;
+	private boolean cutFish;
 
 	@Provides
 	OneClickConfig provideConfig(ConfigManager configManager)
@@ -133,6 +136,7 @@ public class OneClickPlugin extends Plugin
 		bones = config.getBones();
 		karambwan = config.getKarambwan();
 		darkEssence = config.getDarkEssence();
+		cutFish = config.getCutFish();
 	}
 
 	private void onConfigChanged(ConfigChanged event)
@@ -157,8 +161,8 @@ public class OneClickPlugin extends Plugin
 		final GameObject gameObject = event.getGameObject();
 		final Player localPlayer = client.getLocalPlayer();
 		if (gameObject.getId() == DWARF_MULTICANNON && cannon == null &&
-			localPlayer.getWorldLocation().distanceTo(gameObject.getWorldLocation()) <= 2 &&
-			localPlayer.getAnimation() == AnimationID.BURYING_BONES)
+				localPlayer.getWorldLocation().distanceTo(gameObject.getWorldLocation()) <= 2 &&
+				localPlayer.getAnimation() == AnimationID.BURYING_BONES)
 		{
 			cannon = gameObject;
 		}
@@ -207,9 +211,9 @@ public class OneClickPlugin extends Plugin
 			}
 
 			if (spell.getSpriteId() != SpriteID.SPELL_HIGH_LEVEL_ALCHEMY ||
-				spell.getSpriteId() == SpriteID.SPELL_HIGH_LEVEL_ALCHEMY_DISABLED ||
-				client.getBoostedSkillLevel(Skill.MAGIC) < 55 ||
-				client.getVar(Varbits.SPELLBOOK) != 0)
+					spell.getSpriteId() == SpriteID.SPELL_HIGH_LEVEL_ALCHEMY_DISABLED ||
+					client.getBoostedSkillLevel(Skill.MAGIC) < 55 ||
+					client.getVar(Varbits.SPELLBOOK) != 0)
 			{
 				alchItem = null;
 				return;
@@ -284,7 +288,7 @@ public class OneClickPlugin extends Plugin
 			event.setWasModified(true);
 		}
 		else if (birdhouses && event.getType() == MenuOpcode.GAME_OBJECT_SECOND_OPTION.getId() &&
-			BIRD_HOUSES_NAMES.contains(event.getTarget()))
+				BIRD_HOUSES_NAMES.contains(event.getTarget()))
 		{
 			if (findItem(HOPS_SEED) == null)
 			{
@@ -305,7 +309,7 @@ public class OneClickPlugin extends Plugin
 			event.setWasModified(true);
 		}
 		else if (earthRuneAltar && event.getType() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			event.getOption().equals("Craft-rune") && event.getTarget().equals("<col=ffff>Altar"))
+				event.getOption().equals("Craft-rune") && event.getTarget().equals("<col=ffff>Altar"))
 		{
 			if (findItem(ItemID.EARTH_RUNE) == -1)
 			{
@@ -316,14 +320,14 @@ public class OneClickPlugin extends Plugin
 			event.setWasModified(true);
 		}
 		else if (highAlch && event.getType() == MenuOpcode.WIDGET_TYPE_2.getId() && alchItem != null &&
-			event.getOption().equals("Cast") && event.getTarget().equals("<col=00ff00>High Level Alchemy</col>"))
+				event.getOption().equals("Cast") && event.getTarget().equals("<col=00ff00>High Level Alchemy</col>"))
 		{
 			event.getMenuEntry().setOption("Cast");
 			event.getMenuEntry().setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> " + alchItem.getName());
 			event.setWasModified(true);
 		}
 		else if (dwarfCannon && cannonFiring && event.getIdentifier() == DWARF_MULTICANNON &&
-			event.getType() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
+				event.getType() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
 		{
 			if (findItem(ItemID.CANNONBALL) == -1)
 			{
@@ -334,7 +338,7 @@ public class OneClickPlugin extends Plugin
 			event.setWasModified(true);
 		}
 		else if (bones && event.getType() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			event.getOption().toLowerCase().contains("pray") && event.getTarget().toLowerCase().contains("altar"))
+				event.getOption().toLowerCase().contains("pray") && event.getTarget().toLowerCase().contains("altar"))
 		{
 			if (findItem(BONE_SET) == null)
 			{
@@ -354,6 +358,15 @@ public class OneClickPlugin extends Plugin
 			event.getMenuEntry().setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + event.getMenuEntry().getTarget());
 			event.setWasModified(true);
 		}
+		else if (cutFish && event.getType() == MenuOpcode.ITEM_USE.getId() && CUTTABLE_FISHES.contains(id))
+		{
+			if (findItem(ItemID.KNIFE) == -1)
+			{
+				return;
+			}
+			event.getMenuEntry().setTarget("<col=ff9040>Knife<col=ffffff> -> " + targetMap.get(id));
+			event.setWasModified(true);
+		}
 	}
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
@@ -364,7 +377,7 @@ public class OneClickPlugin extends Plugin
 			event.consume();
 		}
 		else if (darts && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			event.getTarget().contains("<col=ff9040>Feather<col=ffffff> -> "))
+				event.getTarget().contains("<col=ff9040>Feather<col=ffffff> -> "))
 		{
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
@@ -372,7 +385,7 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemID(ItemID.FEATHER);
 		}
 		else if (lightLogs && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			event.getTarget().contains("<col=ff9040>Tinderbox<col=ffffff> -> "))
+				event.getTarget().contains("<col=ff9040>Tinderbox<col=ffffff> -> "))
 		{
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
@@ -380,7 +393,7 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemID(ItemID.TINDERBOX);
 		}
 		else if (darkEssence && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			event.getTarget().contains("<col=ff9040>Chisel<col=ffffff> ->"))
+				event.getTarget().contains("<col=ff9040>Chisel<col=ffffff> ->"))
 		{
 			if (findItem(ItemID.DARK_ESSENCE_BLOCK) != -1)
 			{
@@ -391,7 +404,7 @@ public class OneClickPlugin extends Plugin
 			}
 		}
 		else if (birdhouses && event.getOpcode() == MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId() &&
-			event.getTarget().contains("<col=ff9040>Hops seed<col=ffffff> -> "))
+				event.getTarget().contains("<col=ff9040>Hops seed<col=ffffff> -> "))
 		{
 			final int[] seedLoc = findItem(HOPS_SEED);
 			if (seedLoc == null || seedLoc.length < 2)
@@ -403,7 +416,7 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemID(seedLoc[1]);
 		}
 		else if (herbTar && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			event.getTarget().contains("<col=ff9040>Swamp tar<col=ffffff> -> "))
+				event.getTarget().contains("<col=ff9040>Swamp tar<col=ffffff> -> "))
 		{
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
@@ -411,7 +424,7 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemID(ItemID.SWAMP_TAR);
 		}
 		else if (earthRuneAltar && event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			event.getTarget().equals("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar"))
+				event.getTarget().equals("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar"))
 		{
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
@@ -419,7 +432,7 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemID(ItemID.EARTH_RUNE);
 		}
 		else if (highAlch && event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() && event.getOption().equals("Cast") &&
-			event.getTarget().contains("<col=00ff00>High Level Alchemy</col><col=ffffff> -> "))
+				event.getTarget().contains("<col=00ff00>High Level Alchemy</col><col=ffffff> -> "))
 		{
 			entry.setIdentifier(alchItem.getId());
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
@@ -438,7 +451,7 @@ public class OneClickPlugin extends Plugin
 			alchItem = new AlchItem(itemName, entry.getIdentifier());
 		}
 		else if (dwarfCannon && cannonFiring && entry.getIdentifier() == DWARF_MULTICANNON &&
-			entry.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
+				entry.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
 		{
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
@@ -446,7 +459,7 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemID(ItemID.CANNONBALL);
 		}
 		else if (bones && entry.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && entry.getTarget().contains("<col=ff9040>Bones<col=ffffff> -> ") &&
-			event.getTarget().toLowerCase().contains("altar"))
+				event.getTarget().toLowerCase().contains("altar"))
 		{
 			final int[] bonesLoc = findItem(BONE_SET);
 
@@ -461,13 +474,21 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemID(bonesLoc[1]);
 		}
 		else if (karambwan && entry.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			entry.getTarget().contains("<col=ff9040>Raw karambwan<col=ffffff> -> "))
+				entry.getTarget().contains("<col=ff9040>Raw karambwan<col=ffffff> -> "))
 		{
 			event.getMenuEntry().setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
 			client.setSelectedItemSlot(findItem(ItemID.RAW_KARAMBWAN));
 			client.setSelectedItemID(ItemID.RAW_KARAMBWAN);
 			tick = true;
+		}
+		else if (cutFish && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
+				event.getTarget().contains("<col=ff9040>Knife<col=ffffff> -> "))
+		{
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+			client.setSelectedItemSlot(findItem(ItemID.KNIFE));
+			client.setSelectedItemID(ItemID.KNIFE);
 		}
 	}
 
