@@ -12,6 +12,7 @@ import net.runelite.api.Client;
 import net.runelite.api.DynamicObject;
 import net.runelite.api.Entity;
 import net.runelite.api.GameObject;
+import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
@@ -26,6 +27,7 @@ import net.runelite.api.Varbits;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.ConfigChanged;
 import net.runelite.api.events.GameObjectSpawned;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOpened;
@@ -66,6 +68,8 @@ public class OneClickPlugin extends Plugin
 		"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
 		"<col=ffff>Yew birdhouse (empty)", "<col=ffff>Magic birdhouse (empty)", "<col=ffff>Redwood birdhouse (empty)"
 	);
+	private static final String MAGIC_IMBUE_EXPIRED_MESSAGE = "Your Magic Imbue charge has ended.";
+	private static final String MAGIC_IMBUE_MESSAGE = "You are charged to combine runes!";
 
 	@Inject
 	private Client client;
@@ -80,16 +84,9 @@ public class OneClickPlugin extends Plugin
 	private GameObject cannon;
 	private boolean cannonFiring = false;
 	private int prevCannonAnimation = 514;
-	private boolean darts;
-	private boolean lightLogs;
-	private boolean birdhouses;
-	private boolean herbTar;
-	private boolean earthRuneAltar;
-	private boolean highAlch;
-	private boolean dwarfCannon;
-	private boolean bones;
-	private boolean karambwan;
-	private boolean darkEssence;
+	private Types type = Types.NONE;
+	private boolean imbue;
+	private boolean enableImbue;
 
 	@Provides
 	OneClickConfig provideConfig(ConfigManager configManager)
@@ -101,7 +98,8 @@ public class OneClickPlugin extends Plugin
 	protected void startUp()
 	{
 		addSubscriptions();
-		updateConfig();
+		type = config.getType();
+		enableImbue = config.isUsingImbue();
 	}
 
 	@Override
@@ -119,36 +117,41 @@ public class OneClickPlugin extends Plugin
 		eventBus.subscribe(MenuOpened.class, this, this::onMenuOpened);
 		eventBus.subscribe(GameObjectSpawned.class, this, this::onGameObjectSpawned);
 		eventBus.subscribe(ChatMessage.class, this, this::onChatMessage);
+		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
 	}
 
-	private void updateConfig()
+	//this prob isn't needed, but just incase.
+	private void onGameStateChanged(GameStateChanged event)
 	{
-		darts = config.getDarts();
-		lightLogs = config.getLightLogs();
-		birdhouses = config.getBirdHouses();
-		herbTar = config.getHerbTar();
-		earthRuneAltar = config.getEarthRuneAltar();
-		highAlch = config.getHighAlch();
-		dwarfCannon = config.getDwarfMultiCannon();
-		bones = config.getBones();
-		karambwan = config.getKarambwan();
-		darkEssence = config.getDarkEssence();
+		if (event.getGameState() == GameState.LOGGED_IN && imbue)
+		{
+			imbue = false;
+		}
 	}
 
 	private void onConfigChanged(ConfigChanged event)
 	{
 		if (event.getGroup().equals("oneclick"))
 		{
-			updateConfig();
+			type = config.getType();
+			enableImbue = config.isUsingImbue();
 		}
 	}
 
 	private void onChatMessage(ChatMessage event)
 	{
-		if (event.getMessage().equals("You pick up the cannon. It's really heavy."))
+		switch (event.getMessage())
 		{
-			cannonFiring = false;
-			cannon = null;
+			case "You pick up the cannon. It's really heavy.":
+				cannonFiring = false;
+				cannon = null;
+				break;
+			case MAGIC_IMBUE_MESSAGE:
+				imbue = true;
+				break;
+			case MAGIC_IMBUE_EXPIRED_MESSAGE:
+				imbue = false;
+				break;
 		}
 	}
 
@@ -197,7 +200,7 @@ public class OneClickPlugin extends Plugin
 
 		final int widgetId = firstEntry.getParam1();
 
-		if (widgetId == WidgetInfo.INVENTORY.getId() && highAlch)
+		if (widgetId == WidgetInfo.INVENTORY.getId() && type == Types.HIGH_ALCH)
 		{
 			final Widget spell = client.getWidget(WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY);
 
@@ -253,105 +256,115 @@ public class OneClickPlugin extends Plugin
 
 	private void onMenuEntryAdded(MenuEntryAdded event)
 	{
+		final MenuEntry entry = event.getMenuEntry();
 		final int id = event.getIdentifier();
+		final int opcode = event.getType();
 		targetMap.put(id, event.getMenuEntry().getTarget());
 
-		if (darts && event.getType() == MenuOpcode.ITEM_USE.getId() && DART_TIPS.contains(id))
+		if (type == Types.DARTS && opcode == MenuOpcode.ITEM_USE.getId() && DART_TIPS.contains(id))
 		{
 			if (findItem(ItemID.FEATHER) == -1)
 			{
 				return;
 			}
-			event.getMenuEntry().setTarget("<col=ff9040>Feather<col=ffffff> -> " + targetMap.get(id));
+			entry.setTarget("<col=ff9040>Feather<col=ffffff> -> " + targetMap.get(id));
 			event.setWasModified(true);
 		}
-		else if (lightLogs && event.getType() == MenuOpcode.ITEM_USE.getId() && LOG_ID.contains(id))
+		else if (type == Types.FIREMAKING && opcode == MenuOpcode.ITEM_USE.getId() && LOG_ID.contains(id))
 		{
 			if (findItem(ItemID.TINDERBOX) == -1)
 			{
 				return;
 			}
-			event.getMenuEntry().setTarget("<col=ff9040>Tinderbox<col=ffffff> -> " + targetMap.get(id));
+			entry.setTarget("<col=ff9040>Tinderbox<col=ffffff> -> " + targetMap.get(id));
 			event.setWasModified(true);
 		}
-		else if (darkEssence && event.getType() == MenuOpcode.ITEM_USE.getId() && id == ItemID.CHISEL)
+		else if (type == Types.DARK_ESSENCE && opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.CHISEL)
 		{
 			if (findItem(ItemID.DARK_ESSENCE_BLOCK) == -1)
 			{
 				return;
 			}
-			event.getMenuEntry().setTarget("<col=ff9040>Chisel<col=ffffff> -> <col=ff9040>Dark essence block");
+			entry.setTarget("<col=ff9040>Chisel<col=ffffff> -> <col=ff9040>Dark essence block");
 			event.setWasModified(true);
 		}
-		else if (birdhouses && event.getType() == MenuOpcode.GAME_OBJECT_SECOND_OPTION.getId() &&
+		else if (type == Types.BIRDHOUSES && opcode == MenuOpcode.GAME_OBJECT_SECOND_OPTION.getId() &&
 			BIRD_HOUSES_NAMES.contains(event.getTarget()))
 		{
 			if (findItem(HOPS_SEED) == null)
 			{
 				return;
 			}
-			event.getMenuEntry().setOption("Use");
-			event.getMenuEntry().setTarget("<col=ff9040>Hops seed<col=ffffff> -> " + targetMap.get(id));
-			event.getMenuEntry().setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+			entry.setOption("Use");
+			entry.setTarget("<col=ff9040>Hops seed<col=ffffff> -> " + targetMap.get(id));
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			event.setWasModified(true);
 		}
-		else if (herbTar && event.getType() == MenuOpcode.ITEM_USE.getId() && HERBS.contains(id))
+		else if (type == Types.HERB_TAR && opcode == MenuOpcode.ITEM_USE.getId() && HERBS.contains(id))
 		{
 			if (findItem(ItemID.SWAMP_TAR) == -1 || findItem(ItemID.PESTLE_AND_MORTAR) == -1)
 			{
 				return;
 			}
-			event.getMenuEntry().setTarget("<col=ff9040>Swamp tar<col=ffffff> -> " + targetMap.get(id));
+			entry.setTarget("<col=ff9040>Swamp tar<col=ffffff> -> " + targetMap.get(id));
 			event.setWasModified(true);
 		}
-		else if (earthRuneAltar && event.getType() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+		else if (type == Types.LAVA_RUNES && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 			event.getOption().equals("Craft-rune") && event.getTarget().equals("<col=ffff>Altar"))
 		{
 			if (findItem(ItemID.EARTH_RUNE) == -1)
 			{
 				return;
 			}
-			event.getMenuEntry().setOption("Use");
-			event.getMenuEntry().setTarget("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar");
+
+			if (!imbue && enableImbue)
+			{
+				entry.setOption("Use");
+				entry.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+				event.setWasModified(true);
+				return;
+			}
+			entry.setOption("Use");
+			entry.setTarget("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar");
 			event.setWasModified(true);
 		}
-		else if (highAlch && event.getType() == MenuOpcode.WIDGET_TYPE_2.getId() && alchItem != null &&
+		else if (type == Types.HIGH_ALCH && opcode == MenuOpcode.WIDGET_TYPE_2.getId() && alchItem != null &&
 			event.getOption().equals("Cast") && event.getTarget().equals("<col=00ff00>High Level Alchemy</col>"))
 		{
-			event.getMenuEntry().setOption("Cast");
-			event.getMenuEntry().setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> " + alchItem.getName());
+			entry.setOption("Cast");
+			entry.setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> " + alchItem.getName());
 			event.setWasModified(true);
 		}
-		else if (dwarfCannon && cannonFiring && event.getIdentifier() == DWARF_MULTICANNON &&
-			event.getType() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
+		else if (type == Types.DWARF_CANNON && cannonFiring && event.getIdentifier() == DWARF_MULTICANNON &&
+			opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
 		{
 			if (findItem(ItemID.CANNONBALL) == -1)
 			{
 				return;
 			}
-			event.getMenuEntry().setOption("Use");
-			event.getMenuEntry().setTarget("<col=ff9040>Cannonball<col=ffffff> -> <col=ffff>Dwarf multicannon");
+			entry.setOption("Use");
+			entry.setTarget("<col=ff9040>Cannonball<col=ffffff> -> <col=ffff>Dwarf multicannon");
 			event.setWasModified(true);
 		}
-		else if (bones && event.getType() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+		else if (type == Types.BONES && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 			event.getOption().toLowerCase().contains("pray") && event.getTarget().toLowerCase().contains("altar"))
 		{
 			if (findItem(BONE_SET) == null)
 			{
 				return;
 			}
-			event.getMenuEntry().setOption("Use");
-			event.getMenuEntry().setTarget("<col=ff9040>Bones<col=ffffff> -> " + event.getTarget());
+			entry.setOption("Use");
+			entry.setTarget("<col=ff9040>Bones<col=ffffff> -> " + event.getTarget());
 			event.setWasModified(true);
 		}
-		else if (karambwan && event.getType() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().equals("Cook"))
+		else if (type == Types.KARAMBWANS && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().equals("Cook"))
 		{
 			if (findItem(ItemID.RAW_KARAMBWAN) == -1)
 			{
 				return;
 			}
-			event.getMenuEntry().setOption("Use");
-			event.getMenuEntry().setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + event.getMenuEntry().getTarget());
+			entry.setOption("Use");
+			entry.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + entry.getTarget());
 			event.setWasModified(true);
 		}
 	}
@@ -359,28 +372,31 @@ public class OneClickPlugin extends Plugin
 	private void onMenuOptionClicked(MenuOptionClicked event)
 	{
 		final MenuEntry entry = event.getMenuEntry();
+		final String target = event.getTarget();
+		final int opcode = event.getOpcode();
+
 		if (tick)
 		{
 			event.consume();
 		}
-		else if (darts && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			event.getTarget().contains("<col=ff9040>Feather<col=ffffff> -> "))
+		else if (type == Types.DARTS && opcode == MenuOpcode.ITEM_USE.getId() &&
+			target.contains("<col=ff9040>Feather<col=ffffff> -> "))
 		{
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
 			client.setSelectedItemSlot(findItem(ItemID.FEATHER));
 			client.setSelectedItemID(ItemID.FEATHER);
 		}
-		else if (lightLogs && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			event.getTarget().contains("<col=ff9040>Tinderbox<col=ffffff> -> "))
+		else if (type == Types.FIREMAKING && opcode == MenuOpcode.ITEM_USE.getId() &&
+			target.contains("<col=ff9040>Tinderbox<col=ffffff> -> "))
 		{
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
 			client.setSelectedItemSlot(findItem(ItemID.TINDERBOX));
 			client.setSelectedItemID(ItemID.TINDERBOX);
 		}
-		else if (darkEssence && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			event.getTarget().contains("<col=ff9040>Chisel<col=ffffff> ->"))
+		else if (type == Types.DARK_ESSENCE && opcode == MenuOpcode.ITEM_USE.getId() &&
+			target.contains("<col=ff9040>Chisel<col=ffffff> ->"))
 		{
 			if (findItem(ItemID.DARK_ESSENCE_BLOCK) != -1)
 			{
@@ -390,8 +406,8 @@ public class OneClickPlugin extends Plugin
 				client.setSelectedItemID(ItemID.DARK_ESSENCE_BLOCK);
 			}
 		}
-		else if (birdhouses && event.getOpcode() == MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId() &&
-			event.getTarget().contains("<col=ff9040>Hops seed<col=ffffff> -> "))
+		else if (type == Types.BIRDHOUSES && opcode == MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId() &&
+			target.contains("<col=ff9040>Hops seed<col=ffffff> -> "))
 		{
 			final int[] seedLoc = findItem(HOPS_SEED);
 			if (seedLoc == null || seedLoc.length < 2)
@@ -402,24 +418,32 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemSlot(seedLoc[0]);
 			client.setSelectedItemID(seedLoc[1]);
 		}
-		else if (herbTar && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			event.getTarget().contains("<col=ff9040>Swamp tar<col=ffffff> -> "))
+		else if (type == Types.HERB_TAR && opcode == MenuOpcode.ITEM_USE.getId() &&
+			target.contains("<col=ff9040>Swamp tar<col=ffffff> -> "))
 		{
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
 			client.setSelectedItemSlot(findItem(ItemID.SWAMP_TAR));
 			client.setSelectedItemID(ItemID.SWAMP_TAR);
 		}
-		else if (earthRuneAltar && event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			event.getTarget().equals("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar"))
+		else if (type == Types.LAVA_RUNES && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+			target.equals("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar"))
 		{
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
 			client.setSelectedItemSlot(findItem(ItemID.EARTH_RUNE));
 			client.setSelectedItemID(ItemID.EARTH_RUNE);
 		}
-		else if (highAlch && event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() && event.getOption().equals("Cast") &&
-			event.getTarget().contains("<col=00ff00>High Level Alchemy</col><col=ffffff> -> "))
+		else if (type == Types.LAVA_RUNES && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+			target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+		{
+			entry.setIdentifier(1);
+			entry.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
+			entry.setParam0(-1);
+			entry.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
+		}
+		else if (type == Types.HIGH_ALCH && opcode == MenuOpcode.WIDGET_TYPE_2.getId() && event.getOption().equals("Cast") &&
+			target.contains("<col=00ff00>High Level Alchemy</col><col=ffffff> -> "))
 		{
 			entry.setIdentifier(alchItem.getId());
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
@@ -428,16 +452,16 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedSpellName("<col=00ff00>High Level Alchemy</col><col=ffffff>");
 			client.setSelectedSpellWidget(WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY.getId());
 		}
-		else if (highAlch && entry.getOpcode() == MenuOpcode.RUNELITE.getId() && entry.getIdentifier() == -1)
+		else if (type == Types.HIGH_ALCH && entry.getOpcode() == MenuOpcode.RUNELITE.getId() && entry.getIdentifier() == -1)
 		{
 			alchItem = null;
 		}
-		else if (highAlch && entry.getOpcode() == MenuOpcode.RUNELITE.getId())
+		else if (type == Types.HIGH_ALCH && entry.getOpcode() == MenuOpcode.RUNELITE.getId())
 		{
 			final String itemName = entry.getTarget().split("<col=00ff00>High Alchemy Item <col=ffffff> -> ")[1];
 			alchItem = new AlchItem(itemName, entry.getIdentifier());
 		}
-		else if (dwarfCannon && cannonFiring && entry.getIdentifier() == DWARF_MULTICANNON &&
+		else if (type == Types.DWARF_CANNON && cannonFiring && entry.getIdentifier() == DWARF_MULTICANNON &&
 			entry.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
 		{
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
@@ -445,25 +469,26 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemSlot(findItem(ItemID.CANNONBALL));
 			client.setSelectedItemID(ItemID.CANNONBALL);
 		}
-		else if (bones && entry.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && entry.getTarget().contains("<col=ff9040>Bones<col=ffffff> -> ") &&
-			event.getTarget().toLowerCase().contains("altar"))
+		else if (type == Types.BONES && entry.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+			entry.getTarget().contains("<col=ff9040>Bones<col=ffffff> -> ") && target.toLowerCase().contains("altar"))
 		{
 			final int[] bonesLoc = findItem(BONE_SET);
 
 			if (bonesLoc == null || bonesLoc.length < 2)
 			{
+				System.out.println("Cant find bones.");
 				return;
 			}
 
-			event.getMenuEntry().setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
 			client.setSelectedItemSlot(bonesLoc[0]);
 			client.setSelectedItemID(bonesLoc[1]);
 		}
-		else if (karambwan && entry.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+		else if (type == Types.KARAMBWANS && entry.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 			entry.getTarget().contains("<col=ff9040>Raw karambwan<col=ffffff> -> "))
 		{
-			event.getMenuEntry().setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
 			client.setSelectedItemSlot(findItem(ItemID.RAW_KARAMBWAN));
 			client.setSelectedItemID(ItemID.RAW_KARAMBWAN);
