@@ -83,7 +83,7 @@ public class LeftClickPK extends Plugin
 	private final Map<Integer, Victim> victimMap = new HashMap<>();
 	private final Map<Integer, Victim> victimMapCache = new HashMap<>();
 
-	private boolean staff;
+	private boolean maging;
 	private float hue;
 	private boolean reverse;
 
@@ -120,7 +120,7 @@ public class LeftClickPK extends Plugin
 
 	private void onMenuEntryAdded(MenuEntryAdded event)
 	{
-		if (event.getOption().equalsIgnoreCase("attack") && victimMap.containsKey(event.getIdentifier()) && staff)
+		if (event.getOption().equalsIgnoreCase("attack") && victimMap.containsKey(event.getIdentifier()) && maging)
 		{
 			final String name = Text.standardize(event.getTarget(), true);
 			final Victim victim = victimMap.getOrDefault(event.getIdentifier(), null);
@@ -157,13 +157,14 @@ public class LeftClickPK extends Plugin
 			return;
 		}
 
-		staff = false;
+		maging = false;
 
 		for (Item item : ic.getItems())
 		{
-			if (client.getItemDefinition(item.getId()).getName().toLowerCase().contains("staff"))
+			final String name = client.getItemDefinition(item.getId()).getName().toLowerCase();
+			if (name.contains("staff") || name.contains("wand"))
 			{
-				staff = true;
+				maging = true;
 				break;
 			}
 		}
