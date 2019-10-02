@@ -116,5 +116,11 @@ public interface OneClickConfig extends Config
 	{
 		return false;
 	}
+	@ConfigItem(
+			keyName = "unfpotion",
+			name = "Unfinished Potion",
+			description = "One click on herb to make unfinished potion"
+	)
+	default boolean getUnfPotion() { return false; }
 
 }

@@ -66,6 +66,9 @@ public class OneClickPlugin extends Plugin
 		"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
 		"<col=ffff>Yew birdhouse (empty)", "<col=ffff>Magic birdhouse (empty)", "<col=ffff>Redwood birdhouse (empty)"
 	);
+	private static final Set<Integer> POTION_HERBS = ImmutableSet.of(ItemID.RANARR_WEED, ItemID.TOADFLAX, ItemID.IRIT_LEAF, ItemID.AVANTOE, ItemID.KWUARM,
+			ItemID.SNAPDRAGON, ItemID.CADANTINE, ItemID.LANTADYME, ItemID.DWARF_WEED, ItemID.TORSTOL
+	);
 
 	@Inject
 	private Client client;
@@ -90,6 +93,7 @@ public class OneClickPlugin extends Plugin
 	private boolean bones;
 	private boolean karambwan;
 	private boolean darkEssence;
+	private boolean unfPotion;
 
 	@Provides
 	OneClickConfig provideConfig(ConfigManager configManager)
@@ -133,6 +137,7 @@ public class OneClickPlugin extends Plugin
 		bones = config.getBones();
 		karambwan = config.getKarambwan();
 		darkEssence = config.getDarkEssence();
+		unfPotion = config.getUnfPotion();
 	}
 
 	private void onConfigChanged(ConfigChanged event)
@@ -354,6 +359,15 @@ public class OneClickPlugin extends Plugin
 			event.getMenuEntry().setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + event.getMenuEntry().getTarget());
 			event.setWasModified(true);
 		}
+		else if (unfPotion && event.getType() == MenuOpcode.ITEM_USE.getId() && POTION_HERBS.contains(id))
+		{
+			if (findItem(ItemID.VIAL_OF_WATER) == -1)
+			{
+				return;
+			}
+			event.getMenuEntry().setTarget("<col=ff9040>Vial of water<col=ffffff> -> " + targetMap.get(id));
+			event.setWasModified(true);
+		}
 	}
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
@@ -468,6 +482,14 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemSlot(findItem(ItemID.RAW_KARAMBWAN));
 			client.setSelectedItemID(ItemID.RAW_KARAMBWAN);
 			tick = true;
+		}
+		else if (unfPotion && event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
+				event.getTarget().contains("<col=ff9040>Vial of water<col=ffffff> -> "))
+		{
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+			client.setSelectedItemSlot(findItem(ItemID.VIAL_OF_WATER));
+			client.setSelectedItemID(ItemID.VIAL_OF_WATER);
 		}
 	}
 
