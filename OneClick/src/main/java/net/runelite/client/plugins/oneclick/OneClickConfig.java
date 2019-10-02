@@ -8,9 +8,9 @@ import net.runelite.client.config.ConfigItem;
 public interface OneClickConfig extends Config
 {
 	@ConfigItem(
-			keyName = "darts",
-			name = "Darts",
-			description = "One click fletch dart tips into darts"
+			keyName = "1 Click Menu",
+			name = "1 Click Menu",
+			description = "Choose from menu your desired 1 click option"
 	)
 	default Types getType()
 	{
