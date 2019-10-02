@@ -8,9 +8,9 @@ import net.runelite.client.config.ConfigItem;
 public interface OneClickConfig extends Config
 {
 	@ConfigItem(
-		keyName = "darts",
-		name = "Darts",
-		description = "One click fletch dart tips into darts"
+			keyName = "darts",
+			name = "Darts",
+			description = "One click fletch dart tips into darts"
 	)
 	default Types getType()
 	{
@@ -18,19 +18,13 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "isUsingImbue",
-		name = "Use Magic Imbue",
-		description = "If you are using lava runes, and want to use magic imbue, enable this."
+			keyName = "isUsingImbue",
+			name = "Use Magic Imbue",
+			description = "If you are using lava runes, and want to use magic imbue, enable this."
 	)
 	default boolean isUsingImbue()
 	{
 		return false;
 	}
-	@ConfigItem(
-			keyName = "unfpotion",
-			name = "Unfinished Potion",
-			description = "One click on herb to make unfinished potion"
-	)
-	default boolean getUnfPotion() { return false; }
 
 }
