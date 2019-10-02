@@ -80,7 +80,7 @@ public class PraySwap extends Plugin implements KeyListener
 	@Provides
 	PraySwapConfig getConfig(ConfigManager manager)
 	{
-		return (PraySwapConfig) manager.getConfig(PraySwapConfig.class);
+		return manager.getConfig(PraySwapConfig.class);
 	}
 
 	protected void startUp()

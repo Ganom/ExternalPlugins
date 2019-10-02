@@ -18,5 +18,5 @@ public enum Tab
 	EMOTES,
 	QUEST,
 	SETTINGS,
-	FRIENDS;
+	FRIENDS
 }

@@ -7,7 +7,8 @@ public class TabUtils
 {
 	private static int[] tabs = new int[Tab.values().length];
 
-	static {
+	static
+	{
 		tabs[Tab.LOGOUT.ordinal()] = 1;
 		tabs[Tab.FRIENDS.ordinal()] = 2;
 		tabs[Tab.IGNORES.ordinal()] = 3;
@@ -33,21 +34,28 @@ public class TabUtils
 		this.client = client;
 	}
 
-	public int getTabHotkey(Tab tab) {
+	public int getTabHotkey(Tab tab)
+	{
 		int keyCode;
-		if ((keyCode = client.getVarps()[doSomething(tab)]) < 0) {
+		if ((keyCode = client.getVarps()[doSomething(tab)]) < 0)
+		{
 			keyCode -= -2147483648;
 		}
 
-		if ((keyCode = keyCode >>> doSomethingElse(tab) & 15) == 0) {
+		if ((keyCode = keyCode >>> doSomethingElse(tab) & 15) == 0)
+		{
 			return -1;
-		} else {
+		}
+		else
+		{
 			return keyCode == 13 ? 27 : 112 + keyCode - 1;
 		}
 	}
 
-	private int doSomething(Tab tab) {
-		switch (tabs[tab.ordinal()]) {
+	private int doSomething(Tab tab)
+	{
+		switch (tabs[tab.ordinal()])
+		{
 			case 2:
 			case 4:
 			case 5:
@@ -69,8 +77,10 @@ public class TabUtils
 		}
 	}
 
-	private int doSomethingElse(Tab tab) {
-		switch (tabs[tab.ordinal()]) {
+	private int doSomethingElse(Tab tab)
+	{
+		switch (tabs[tab.ordinal()])
+		{
 			case 1:
 			case 4:
 			case 11:

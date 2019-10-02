@@ -347,7 +347,7 @@ public interface PraySwapConfig extends Config
 
 	@Getter
 	@AllArgsConstructor
-	public enum ActionType
+	enum ActionType
 	{
 		FLEXO("Flexo"),
 		MOUSEEVENTS("MouseEvents");
@@ -363,7 +363,7 @@ public interface PraySwapConfig extends Config
 
 	@Getter
 	@AllArgsConstructor
-	public enum Prayers
+	enum Prayers
 	{
 		PROTECT_MELEE("Protect Melee", Prayer.PROTECT_FROM_MELEE),
 		PROTECT_RANGE("Protect Range", Prayer.PROTECT_FROM_MISSILES),
