@@ -68,6 +68,7 @@ public class OneClickPlugin extends Plugin
 		"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
 		"<col=ffff>Yew birdhouse (empty)", "<col=ffff>Magic birdhouse (empty)", "<col=ffff>Redwood birdhouse (empty)"
 	);
+
 	private static final String MAGIC_IMBUE_EXPIRED_MESSAGE = "Your Magic Imbue charge has ended.";
 	private static final String MAGIC_IMBUE_MESSAGE = "You are charged to combine runes!";
 
@@ -288,6 +289,15 @@ public class OneClickPlugin extends Plugin
 			entry.setTarget("<col=ff9040>Chisel<col=ffffff> -> <col=ff9040>Dark essence block");
 			event.setWasModified(true);
 		}
+		else if (type == Types.BRUMA_ROOTS && opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.BRUMA_ROOT)
+		{
+			if (findItem(ItemID.KNIFE) == -1)
+			{
+				return;
+			}
+			entry.setTarget("<col=ff9040>Knife<col=ffffff> -> <col=ff9040>Bruma root");
+			event.setWasModified(true);
+		}
 		else if (type == Types.BIRDHOUSES && opcode == MenuOpcode.GAME_OBJECT_SECOND_OPTION.getId() &&
 			BIRD_HOUSES_NAMES.contains(event.getTarget()))
 		{
@@ -405,6 +415,14 @@ public class OneClickPlugin extends Plugin
 				client.setSelectedItemSlot(findItem(ItemID.DARK_ESSENCE_BLOCK));
 				client.setSelectedItemID(ItemID.DARK_ESSENCE_BLOCK);
 			}
+		}
+		else if (type == Types.BRUMA_ROOTS && opcode == MenuOpcode.ITEM_USE.getId() &&
+			target.contains("<col=ff9040>Knife<col=ffffff> ->"))
+		{
+				entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+				client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+				client.setSelectedItemSlot(findItem(ItemID.KNIFE));
+				client.setSelectedItemID(ItemID.KNIFE);
 		}
 		else if (type == Types.BIRDHOUSES && opcode == MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId() &&
 			target.contains("<col=ff9040>Hops seed<col=ffffff> -> "))
