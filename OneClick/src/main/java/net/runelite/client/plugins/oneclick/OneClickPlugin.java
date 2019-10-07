@@ -367,6 +367,15 @@ public class OneClickPlugin extends Plugin
 			entry.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + entry.getTarget());
 			event.setWasModified(true);
 		}
+		else if (type == Types.SACRED_EELS && opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.SACRED_EEL)
+		{
+			if (findItem(ItemID.KNIFE) == -1)
+			{
+				return;
+			}
+			entry.setTarget("<col=ff9040>Knife<col=ffffff> -> <col=ff9040>Sacred eel");
+			event.setWasModified(true);
+		}
 	}
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
@@ -493,6 +502,14 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemSlot(findItem(ItemID.RAW_KARAMBWAN));
 			client.setSelectedItemID(ItemID.RAW_KARAMBWAN);
 			tick = true;
+		}
+		else if (type == Types.SACRED_EELS && opcode == MenuOpcode.ITEM_USE.getId() &&
+				target.contains("<col=ff9040>Knife<col=ffffff> ->"))
+		{
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+			client.setSelectedItemSlot(findItem(ItemID.KNIFE));
+			client.setSelectedItemID(ItemID.KNIFE);
 		}
 	}
 
