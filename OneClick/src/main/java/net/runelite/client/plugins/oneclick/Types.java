@@ -17,6 +17,7 @@ public enum Types
 	BONES("Bones"),
 	KARAMBWANS("Karambwans"),
 	DARK_ESSENCE("Dark Essence"),
+	GUT_FISH("Gut Aerial Fish and Sacred Eels"),
 	NONE("None");
 
 	private String name;

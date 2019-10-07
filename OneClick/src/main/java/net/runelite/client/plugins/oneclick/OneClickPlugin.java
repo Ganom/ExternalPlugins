@@ -68,6 +68,9 @@ public class OneClickPlugin extends Plugin
 		"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
 		"<col=ffff>Yew birdhouse (empty)", "<col=ffff>Magic birdhouse (empty)", "<col=ffff>Redwood birdhouse (empty)"
 	);
+	private static final Set<Integer> GUTTABLE_FISH = ImmutableSet.of(ItemID.BLUEGILL, ItemID.COMMON_TENCH, ItemID.MOTTLED_EEL,
+		ItemID.GREATER_SIREN, ItemID.SACRED_EEL
+	);
 	private static final String MAGIC_IMBUE_EXPIRED_MESSAGE = "Your Magic Imbue charge has ended.";
 	private static final String MAGIC_IMBUE_MESSAGE = "You are charged to combine runes!";
 
@@ -367,6 +370,15 @@ public class OneClickPlugin extends Plugin
 			entry.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + entry.getTarget());
 			event.setWasModified(true);
 		}
+		else if (type == Types.GUT_FISH && opcode == MenuOpcode.ITEM_USE.getId() && GUTTABLE_FISH.contains(id))
+		{
+			if (findItem(ItemID.KNIFE) == -1)
+			{
+				return;
+			}
+			entry.setTarget("<col=ff9040>Knife<col=ffffff> -> " + targetMap.get(id));
+			event.setWasModified(true);
+		}
 	}
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
@@ -493,6 +505,14 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemSlot(findItem(ItemID.RAW_KARAMBWAN));
 			client.setSelectedItemID(ItemID.RAW_KARAMBWAN);
 			tick = true;
+		}
+		else if (type == Types.GUT_FISH && opcode == MenuOpcode.ITEM_USE.getId() &&
+				target.contains("<col=ff9040>Knife<col=ffffff> -> "))
+		{
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+			client.setSelectedItemSlot(findItem(ItemID.KNIFE));
+			client.setSelectedItemID(ItemID.KNIFE);
 		}
 	}
 
