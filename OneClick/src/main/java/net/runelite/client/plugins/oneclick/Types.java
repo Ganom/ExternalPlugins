@@ -17,6 +17,7 @@ public enum Types
 	BONES("Bones"),
 	KARAMBWANS("Karambwans"),
 	DARK_ESSENCE("Dark Essence"),
+	INFERNAL_EELS("Infernal Eels"),
 	NONE("None");
 
 	private String name;

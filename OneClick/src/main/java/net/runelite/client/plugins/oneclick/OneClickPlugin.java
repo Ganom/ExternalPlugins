@@ -367,6 +367,15 @@ public class OneClickPlugin extends Plugin
 			entry.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + entry.getTarget());
 			event.setWasModified(true);
 		}
+		else if (type == Types.INFERNAL_EELS && opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.INFERNAL_EEL)
+		{
+			if (findItem(ItemID.HAMMER) == -1)
+			{
+				return;
+			}
+			entry.setTarget("<col=ff9040>Hammer<col=ffffff> -> <col=ff9040>Infernal eel");
+			event.setWasModified(true);
+		}
 	}
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
@@ -493,6 +502,14 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemSlot(findItem(ItemID.RAW_KARAMBWAN));
 			client.setSelectedItemID(ItemID.RAW_KARAMBWAN);
 			tick = true;
+		}
+		else if (type == Types.INFERNAL_EELS && opcode == MenuOpcode.ITEM_USE.getId() &&
+				target.contains("<col=ff9040>Hammer<col=ffffff> ->"))
+		{
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+			client.setSelectedItemSlot(findItem(ItemID.HAMMER));
+			client.setSelectedItemID(ItemID.HAMMER);
 		}
 	}
 
