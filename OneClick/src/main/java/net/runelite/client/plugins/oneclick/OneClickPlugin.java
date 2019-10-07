@@ -376,6 +376,15 @@ public class OneClickPlugin extends Plugin
 			entry.setTarget("<col=ff9040>Knife<col=ffffff> -> <col=ff9040>Sacred eel");
 			event.setWasModified(true);
 		}
+		else if (type == Types.INFERNAL_EELS && opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.INFERNAL_EEL)
+		{
+			if (findItem(ItemID.HAMMER) == -1)
+			{
+				return;
+			}
+			entry.setTarget("<col=ff9040>Hammer<col=ffffff> -> <col=ff9040>Infernal eel");
+			event.setWasModified(true);
+		}
 	}
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
@@ -510,6 +519,14 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
 			client.setSelectedItemSlot(findItem(ItemID.KNIFE));
 			client.setSelectedItemID(ItemID.KNIFE);
+		}
+		else if (type == Types.INFERNAL_EELS && opcode == MenuOpcode.ITEM_USE.getId() &&
+				target.contains("<col=ff9040>Hammer<col=ffffff> ->"))
+		{
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+			client.setSelectedItemSlot(findItem(ItemID.HAMMER));
+			client.setSelectedItemID(ItemID.HAMMER);
 		}
 	}
 
