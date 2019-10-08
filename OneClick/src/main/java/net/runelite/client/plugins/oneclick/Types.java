@@ -17,6 +17,7 @@ public enum Types
 	BONES("Bones"),
 	KARAMBWANS("Karambwans"),
 	DARK_ESSENCE("Dark Essence"),
+	FLETCH_LOGS("Fletch Logs"),
 	NONE("None");
 
 	private String name;
