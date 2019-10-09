@@ -19,8 +19,6 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
-
-import static net.runelite.api.ObjectID.AIR_RUNE;
 import static net.runelite.api.ObjectID.DWARF_MULTICANNON;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
@@ -66,7 +64,7 @@ public class OneClickPlugin extends Plugin
 		ItemID.WYRM_BONES, ItemID.DRAGON_BONES, ItemID.DRAKE_BONES, ItemID.FAYRG_BONES, ItemID.LAVA_DRAGON_BONES, ItemID.RAURG_BONES,
 		ItemID.HYDRA_BONES, ItemID.DAGANNOTH_BONES, ItemID.OURG_BONES, ItemID.SUPERIOR_DRAGON_BONES, ItemID.WYVERN_BONES
 	);
-	private static final Set<Integer> COMB_RC_RUNES = ImmutableSet.of(ItemID.WATER_RUNE, ItemID.EARTH_RUNE, AIR_RUNE
+	private static final Set<Integer> COMB_RC_RUNES = ImmutableSet.of(ItemID.WATER_RUNE, ItemID.EARTH_RUNE, ItemID.AIR_RUNE
 	);
 	private static final Set<String> BIRD_HOUSES_NAMES = ImmutableSet.of("<col=ffff>Bird house (empty)", "<col=ffff>Oak birdhouse (empty)",
 		"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
