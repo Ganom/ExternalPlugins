@@ -20,7 +20,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 		keyName = "isUsingImbue",
 		name = "Use Magic Imbue",
-		description = "If you are using lava runes, and want to use magic imbue, enable this."
+		description = "If you are using craft combination runes, and want to use magic imbue, enable this."
 	)
 	default boolean isUsingImbue()
 	{

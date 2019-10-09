@@ -19,6 +19,8 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
+
+import static net.runelite.api.ObjectID.AIR_RUNE;
 import static net.runelite.api.ObjectID.DWARF_MULTICANNON;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
@@ -63,6 +65,8 @@ public class OneClickPlugin extends Plugin
 		ItemID.BAT_BONES, ItemID.JOGRE_BONE, ItemID.BIG_BONES, ItemID.ZOGRE_BONE, ItemID.SHAIKAHAN_BONES, ItemID.BABYDRAGON_BONES,
 		ItemID.WYRM_BONES, ItemID.DRAGON_BONES, ItemID.DRAKE_BONES, ItemID.FAYRG_BONES, ItemID.LAVA_DRAGON_BONES, ItemID.RAURG_BONES,
 		ItemID.HYDRA_BONES, ItemID.DAGANNOTH_BONES, ItemID.OURG_BONES, ItemID.SUPERIOR_DRAGON_BONES, ItemID.WYVERN_BONES
+	);
+	private static final Set<Integer> COMB_RC_RUNES = ImmutableSet.of(ItemID.WATER_RUNE, ItemID.EARTH_RUNE, AIR_RUNE
 	);
 	private static final Set<String> BIRD_HOUSES_NAMES = ImmutableSet.of("<col=ffff>Bird house (empty)", "<col=ffff>Oak birdhouse (empty)",
 		"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
@@ -309,10 +313,10 @@ public class OneClickPlugin extends Plugin
 			entry.setTarget("<col=ff9040>Swamp tar<col=ffffff> -> " + targetMap.get(id));
 			event.setWasModified(true);
 		}
-		else if (type == Types.LAVA_RUNES && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+		else if (type == Types.COMBINATION_RUNES && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 			event.getOption().equals("Craft-rune") && event.getTarget().equals("<col=ffff>Altar"))
 		{
-			if (findItem(ItemID.EARTH_RUNE) == -1)
+			if (findItem(COMB_RC_RUNES) == null)
 			{
 				return;
 			}
@@ -325,7 +329,7 @@ public class OneClickPlugin extends Plugin
 				return;
 			}
 			entry.setOption("Use");
-			entry.setTarget("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar");
+			entry.setTarget("<col=ff9040>Rune<col=ffffff> -> <col=ffff>Altar");
 			event.setWasModified(true);
 		}
 		else if (type == Types.HIGH_ALCH && opcode == MenuOpcode.WIDGET_TYPE_2.getId() && alchItem != null &&
@@ -426,15 +430,20 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemSlot(findItem(ItemID.SWAMP_TAR));
 			client.setSelectedItemID(ItemID.SWAMP_TAR);
 		}
-		else if (type == Types.LAVA_RUNES && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			target.equals("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar"))
+		else if (type == Types.COMBINATION_RUNES && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+			target.equals("<col=ff9040>Rune<col=ffffff> -> <col=ffff>Altar"))
 		{
+			final int[] combrcLoc = findItem(COMB_RC_RUNES);
+			if (combrcLoc == null || combrcLoc.length < 2)
+			{
+				return;
+			}
 			entry.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
-			client.setSelectedItemSlot(findItem(ItemID.EARTH_RUNE));
-			client.setSelectedItemID(ItemID.EARTH_RUNE);
+			client.setSelectedItemSlot(combrcLoc[0]);
+			client.setSelectedItemID(combrcLoc[1]);
 		}
-		else if (type == Types.LAVA_RUNES && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+		else if (type == Types.COMBINATION_RUNES && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 			target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
 		{
 			entry.setIdentifier(1);
