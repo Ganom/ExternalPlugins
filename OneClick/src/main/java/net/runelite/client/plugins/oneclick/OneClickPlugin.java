@@ -64,6 +64,31 @@ public class OneClickPlugin extends Plugin
 		ItemID.WYRM_BONES, ItemID.DRAGON_BONES, ItemID.DRAKE_BONES, ItemID.FAYRG_BONES, ItemID.LAVA_DRAGON_BONES, ItemID.RAURG_BONES,
 		ItemID.HYDRA_BONES, ItemID.DAGANNOTH_BONES, ItemID.OURG_BONES, ItemID.SUPERIOR_DRAGON_BONES, ItemID.WYVERN_BONES
 	);
+	private static final Set<Integer> POTION_VIAL = ImmutableSet.of(ItemID.VIAL_OF_WATER, ItemID.COCONUT_MILK, ItemID.VIAL_OF_BLOOD
+	);
+	private static final Set<Integer> POTION_HERBS = ImmutableSet.of(ItemID.GUAM_LEAF, ItemID.MARRENTILL, ItemID.TARROMIN, ItemID.HARRALANDER,
+			ItemID.RANARR_WEED, ItemID.TOADFLAX, ItemID.IRIT_LEAF, ItemID.AVANTOE, ItemID.KWUARM, ItemID.SNAPDRAGON, ItemID.CADANTINE,
+			ItemID.LANTADYME, ItemID.DWARF_WEED, ItemID.TORSTOL, ItemID.CACTUS_SPINE, ItemID.CAVE_NIGHTSHADE
+	);
+	private static final Set<Integer> POTION_INGREDIENT = ImmutableSet.of(ItemID.EYE_OF_NEWT, ItemID.LIMPWURT_ROOT,
+			ItemID.WHITE_BERRIES, ItemID.POTATO_CACTUS, ItemID.WINE_OF_ZAMORAK, ItemID.GOAT_HORN_DUST, ItemID.DRAGON_SCALE_DUST,
+			ItemID.JANGERBERRIES, ItemID.CRUSHED_NEST, ItemID.RED_SPIDERS_EGGS, ItemID.CHOCOLATE_DUST, ItemID.SNAPE_GRASS,
+			ItemID.MORT_MYRE_FUNGUS, ItemID.UNICORN_HORN_DUST, ItemID.YEW_ROOTS, ItemID.MAGIC_ROOTS, ItemID.TOADS_LEGS,
+			ItemID.KEBBIT_TEETH_DUST, ItemID.POISON_IVY_BERRIES, ItemID.VOLCANIC_ASH, ItemID.ASHES, ItemID.TORSTOL,
+			ItemID.LAVA_SCALE_SHARD, ItemID.CRUSHED_SUPERIOR_DRAGON_BONES, ItemID.CRYSTAL_DUST, ItemID.AMYLASE_CRYSTAL,
+			ItemID.ZULRAHS_SCALES
+	);
+	private static final Set<Integer> POTION_UNF_NAMES = ImmutableSet.of(ItemID.GUAM_POTION_UNF, ItemID.MARRENTILL_POTION_UNF,
+			ItemID.TARROMIN_POTION_UNF, ItemID.HARRALANDER_POTION_UNF, ItemID.RANARR_POTION_UNF, ItemID.TOADFLAX_POTION_UNF,
+			ItemID.IRIT_POTION_UNF, ItemID.AVANTOE_POTION_UNF,ItemID.KWUARM_POTION_UNF, ItemID.SNAPDRAGON_POTION_UNF,
+			ItemID.CADANTINE_POTION_UNF, ItemID.CADANTINE_BLOOD_POTION_UNF, ItemID.LANTADYME_POTION_UNF, ItemID.ANTIDOTE_UNF,
+			ItemID.DWARF_WEED_POTION_UNF, ItemID.WEAPON_POISON_UNF, ItemID.TORSTOL_POTION_UNF, ItemID.ANTIDOTE_UNF_5951,
+			ItemID.WEAPON_POISON_UNF_5939, ItemID.REJUVENATION_POTION_UNF
+	);
+	private static final Set<Integer> UPGRADABLE_POTIONS = ImmutableSet.of(ItemID.SUPER_ATTACK4, ItemID.SUPER_DEFENCE4,
+			ItemID.ANTIFIRE_POTION4, ItemID.SUPER_ANTIFIRE_POTION4, ItemID.RANGING_POTION4, ItemID.MAGIC_POTION4,
+			ItemID.SUPER_COMBAT_POTION4, ItemID.SUPER_ENERGY4, ItemID.ANTIDOTE4_5952, ItemID.ANTIVENOM4
+	);
 	private static final Set<String> BIRD_HOUSES_NAMES = ImmutableSet.of("<col=ffff>Bird house (empty)", "<col=ffff>Oak birdhouse (empty)",
 		"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
 		"<col=ffff>Yew birdhouse (empty)", "<col=ffff>Magic birdhouse (empty)", "<col=ffff>Redwood birdhouse (empty)"
@@ -367,6 +392,33 @@ public class OneClickPlugin extends Plugin
 			entry.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + entry.getTarget());
 			event.setWasModified(true);
 		}
+		else if (type == Types.MIX_UNF_POTION && opcode == MenuOpcode.ITEM_USE.getId() && POTION_HERBS.contains(id))
+		{
+			if (findItem(POTION_VIAL) == null)
+			{
+				return;
+			}
+			entry.setTarget("<col=ff9040>Vial of liquid<col=ffffff> -> " + targetMap.get(id));
+			event.setWasModified(true);
+		}
+		else if (type == Types.FINISHED_POTION && opcode == MenuOpcode.ITEM_USE.getId() && POTION_UNF_NAMES.contains(id))
+		{
+			if (findItem(POTION_INGREDIENT) == null)
+			{
+				return;
+			}
+			entry.setTarget("<col=ff9040>Potion Ingredient<col=ffffff> -> " + targetMap.get(id));
+			event.setWasModified(true);
+		}
+		else if (type == Types.POTION_UPGRADES && opcode == MenuOpcode.ITEM_USE.getId() && POTION_INGREDIENT.contains(id))
+		{
+			if (findItem(UPGRADABLE_POTIONS) == null)
+			{
+				return;
+			}
+			entry.setTarget("<col=ff9040>Upgrade Potion");
+			event.setWasModified(true);
+		}
 	}
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
@@ -493,6 +545,51 @@ public class OneClickPlugin extends Plugin
 			client.setSelectedItemSlot(findItem(ItemID.RAW_KARAMBWAN));
 			client.setSelectedItemID(ItemID.RAW_KARAMBWAN);
 			tick = true;
+		}
+		else if (type == Types.MIX_UNF_POTION && opcode == MenuOpcode.ITEM_USE.getId() &&
+				target.contains("<col=ff9040>Vial of liquid<col=ffffff> -> "))
+		{
+			final int[] potherbsLoc = findItem(POTION_VIAL);
+
+			if (potherbsLoc == null || potherbsLoc.length < 2)
+			{
+				return;
+			}
+
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+			client.setSelectedItemSlot(potherbsLoc[0]);
+			client.setSelectedItemID(potherbsLoc[1]);
+		}
+		else if (type == Types.FINISHED_POTION && opcode == MenuOpcode.ITEM_USE.getId() &&
+				target.contains("<col=ff9040>Potion Ingredient<col=ffffff> -> "))
+		{
+			final int[] finpotLoc = findItem(POTION_INGREDIENT);
+
+			if (finpotLoc == null || finpotLoc.length < 2)
+			{
+				return;
+			}
+
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+			client.setSelectedItemSlot(finpotLoc[0]);
+			client.setSelectedItemID(finpotLoc[1]);
+		}
+		else if (type == Types.POTION_UPGRADES && opcode == MenuOpcode.ITEM_USE.getId() &&
+				target.contains("<col=ff9040>Upgrade Potion"))
+		{
+			final int[] upgradepotLoc = findItem(UPGRADABLE_POTIONS);
+
+			if (upgradepotLoc == null || upgradepotLoc.length < 2)
+			{
+				return;
+			}
+
+			entry.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			client.setSelectedItemWidget(WidgetInfo.INVENTORY.getId());
+			client.setSelectedItemSlot(upgradepotLoc[0]);
+			client.setSelectedItemID(upgradepotLoc[1]);
 		}
 	}
 

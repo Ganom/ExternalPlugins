@@ -17,6 +17,9 @@ public enum Types
 	BONES("Bones"),
 	KARAMBWANS("Karambwans"),
 	DARK_ESSENCE("Dark Essence"),
+	MIX_UNF_POTION("Mix Unfinished Potions"),
+	FINISHED_POTION("Mix Finished Potions"),
+	POTION_UPGRADES("Mix Potion Upgrades"),
 	NONE("None");
 
 	private String name;
