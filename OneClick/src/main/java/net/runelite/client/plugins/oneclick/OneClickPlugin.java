@@ -64,12 +64,12 @@ public class OneClickPlugin extends Plugin
 		ItemID.WYRM_BONES, ItemID.DRAGON_BONES, ItemID.DRAKE_BONES, ItemID.FAYRG_BONES, ItemID.LAVA_DRAGON_BONES, ItemID.RAURG_BONES,
 		ItemID.HYDRA_BONES, ItemID.DAGANNOTH_BONES, ItemID.OURG_BONES, ItemID.SUPERIOR_DRAGON_BONES, ItemID.WYVERN_BONES
 	);
+	private static final Set<Integer> LOG_FLETCH = ImmutableSet.of(ItemID.LOGS, ItemID.ACHEY_TREE_LOGS, ItemID.OAK_LOGS, ItemID.WILLOW_LOGS,
+			ItemID.TEAK_LOGS, ItemID.MAPLE_LOGS, ItemID.YEW_LOGS, ItemID.MAGIC_LOGS, ItemID.REDWOOD_LOGS, ItemID.BRUMA_ROOT
+	);
 	private static final Set<String> BIRD_HOUSES_NAMES = ImmutableSet.of("<col=ffff>Bird house (empty)", "<col=ffff>Oak birdhouse (empty)",
 		"<col=ffff>Willow birdhouse (empty)", "<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
 		"<col=ffff>Yew birdhouse (empty)", "<col=ffff>Magic birdhouse (empty)", "<col=ffff>Redwood birdhouse (empty)"
-	);
-	private static final Set<Integer> LOG_FLETCH = ImmutableSet.of(ItemID.LOGS, ItemID.ACHEY_TREE_LOGS, ItemID.OAK_LOGS, ItemID.WILLOW_LOGS,
-			ItemID.TEAK_LOGS, ItemID.MAPLE_LOGS, ItemID.YEW_LOGS, ItemID.MAGIC_LOGS, ItemID.REDWOOD_LOGS, ItemID.BRUMA_ROOT
 	);
 	private static final String MAGIC_IMBUE_EXPIRED_MESSAGE = "Your Magic Imbue charge has ended.";
 	private static final String MAGIC_IMBUE_MESSAGE = "You are charged to combine runes!";
