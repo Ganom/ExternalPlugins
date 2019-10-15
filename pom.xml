@@ -14,7 +14,6 @@
 		<module>ItemDropper</module>
 		<module>NeverLog</module>
 		<module>OlmSwapper</module>
-		<module>OneTick</module>
 		<module>PraySwapper</module>
 		<module>Scaler</module>
 		<module>SpellCaster</module>
@@ -38,7 +37,7 @@
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>
-				<!--Your Local Shaded Jar Here-->
+				G:/WorkBench/openosrs/clean/runelite-client/build/libs/client-1.5.35-SNAPSHOT-shaded.jar
 			</systemPath>
 		</dependency>
 		<dependency>
@@ -49,6 +48,7 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<finalName>${project.name}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
