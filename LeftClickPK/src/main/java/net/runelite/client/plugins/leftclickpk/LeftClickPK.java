@@ -125,16 +125,16 @@ public class LeftClickPK extends Plugin
 			final String name = Text.standardize(event.getTarget(), true);
 			final Victim victim = victimMap.getOrDefault(event.getIdentifier(), null);
 
-			if (victim == null || !PvPUtil.isAttackable(client, (Player) victim.getActor())
-				|| client.isFriended(name, false) || client.isClanMember(name))
+			if (client.getVar(Varbits.LMS_IN_GAME) == 0 && (victim == null || client.isFriended(name, false) ||
+				client.isClanMember(name) || (!PvPUtil.isAttackable(client, (Player) victim.getActor()))))
 			{
 				return;
 			}
 
-			event.setWasModified(true);
+			event.setModified(true);
 			setSpell(victim);
 			final String rainbow = rainbow(Text.removeTags(client.getSelectedSpellName()));
-			event.getMenuEntry().setOption("Left Click " + rainbow + " -> ");
+			event.setOption("Left Click " + rainbow + " -> ");
 		}
 	}
 
@@ -142,9 +142,9 @@ public class LeftClickPK extends Plugin
 	{
 		if (event.getOption().contains("Left Click"))
 		{
-			event.getMenuEntry().setOpcode(15);
-			event.getMenuEntry().setParam0(0);
-			event.getMenuEntry().setParam1(0);
+			event.setOpcode(15);
+			event.setParam0(0);
+			event.setParam1(0);
 		}
 	}
 

@@ -239,7 +239,7 @@ public class OneTick extends Plugin
 
 	private void onMenuEntryAdded(MenuEntryAdded event)
 	{
-		if (event.getType() != MenuOpcode.EXAMINE_OBJECT.getId())
+		if (event.getOpcode() != MenuOpcode.EXAMINE_OBJECT.getId())
 		{
 			return;
 		}
@@ -247,10 +247,10 @@ public class OneTick extends Plugin
 		MenuEntry[] menuEntries = client.getMenuEntries();
 		menuEntries = Arrays.copyOf(menuEntries, menuEntries.length + 1);
 		MenuEntry menuEntry = menuEntries[menuEntries.length - 1] = new MenuEntry();
-		menuEntry.setOption(grabOjbect(event.getActionParam0(), event.getActionParam1(), event.getIdentifier()));
+		menuEntry.setOption(grabOjbect(event.getParam0(), event.getParam1(), event.getIdentifier()));
 		menuEntry.setTarget(event.getTarget());
-		menuEntry.setParam0(event.getActionParam0());
-		menuEntry.setParam1(event.getActionParam1());
+		menuEntry.setParam0(event.getParam0());
+		menuEntry.setParam1(event.getParam1());
 		menuEntry.setIdentifier(event.getIdentifier());
 		menuEntry.setOpcode(MenuOpcode.RUNELITE.getId());
 		client.setMenuEntries(menuEntries);
@@ -265,8 +265,8 @@ public class OneTick extends Plugin
 
 		Scene scene = client.getScene();
 		Tile[][][] tiles = scene.getTiles();
-		final int x = event.getActionParam0();
-		final int y = event.getActionParam1();
+		final int x = event.getParam0();
+		final int y = event.getParam1();
 		final int z = client.getPlane();
 		final Tile tile = tiles[z][x][y];
 
