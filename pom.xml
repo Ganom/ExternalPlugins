@@ -37,7 +37,7 @@
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>
-				G:/WorkBench/openosrs/clean/runelite-client/build/libs/client-1.5.35-SNAPSHOT-shaded.jar
+				<!--Your Local Shaded Jar Here-->
 			</systemPath>
 		</dependency>
 		<dependency>
