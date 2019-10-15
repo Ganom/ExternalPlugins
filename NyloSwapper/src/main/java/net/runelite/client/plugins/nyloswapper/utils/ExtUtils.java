@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.tobcheats.utils;
+package net.runelite.client.plugins.nyloswapper.utils;
 
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;

@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.tobcheats.utils;
+package net.runelite.client.plugins.nyloswapper.utils;
 
 public enum Tab
 {

@@ -21,7 +21,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.runelite.client.plugins.tobcheats;
+package net.runelite.client.plugins.nyloswapper;
 
 import com.google.inject.Provides;
 import java.awt.Rectangle;
@@ -38,15 +38,10 @@ import net.runelite.api.GameState;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
 import net.runelite.api.Prayer;
-import net.runelite.api.Projectile;
 import net.runelite.api.Skill;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.GameTick;
 import net.runelite.api.events.NpcDefinitionChanged;
-import net.runelite.api.events.NpcDespawned;
-import net.runelite.api.events.NpcSpawned;
-import net.runelite.api.events.ProjectileMoved;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
@@ -57,26 +52,26 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
+import net.runelite.client.plugins.nyloswapper.utils.ExtUtils;
+import net.runelite.client.plugins.nyloswapper.utils.Tab;
+import net.runelite.client.plugins.nyloswapper.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
-import net.runelite.client.plugins.tobcheats.utils.ExtUtils;
-import net.runelite.client.plugins.tobcheats.utils.Tab;
-import net.runelite.client.plugins.tobcheats.utils.TabUtils;
 
 @PluginDescriptor(
-	name = "ToB Cheats",
-	description = "ToB Cheats",
+	name = "Nylo Swapper",
+	description = "Nylo Swapper",
 	tags = {"tob", "theatre", "blood", "cheats"},
 	enabledByDefault = false,
 	type = PluginType.EXTERNAL
 )
 
 @Slf4j
-public class ToBCheats extends Plugin
+public class NyloSwapper extends Plugin
 {
 	@Inject
 	private Client client;
 	@Inject
-	private ToBCheatsConfig config;
+	private NyloSwapperConfig config;
 	@Inject
 	private ConfigManager configManager;
 	@Inject
@@ -87,16 +82,12 @@ public class ToBCheats extends Plugin
 	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 2, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
-	private NPC maiden;
 	private NPC nylo;
-	private boolean lock1;
-	private boolean lock2;
-	private boolean lock3;
 
 	@Provides
-	ToBCheatsConfig getConfig(ConfigManager configManager)
+	NyloSwapperConfig getConfig(ConfigManager configManager)
 	{
-		return configManager.getConfig(ToBCheatsConfig.class);
+		return configManager.getConfig(NyloSwapperConfig.class);
 	}
 
 	private List<WidgetItem> getMage()
@@ -120,7 +111,8 @@ public class ToBCheats extends Plugin
 		addSubscriptions();
 		reset();
 		Flexo.client = client;
-		executorService.submit(() -> {
+		executorService.submit(() ->
+		{
 			flexo = null;
 			try
 			{
@@ -142,12 +134,8 @@ public class ToBCheats extends Plugin
 
 	private void addSubscriptions()
 	{
-		eventBus.subscribe(NpcSpawned.class, this, this::onNpcSpawned);
 		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
-		eventBus.subscribe(NpcDespawned.class, this, this::onNpcDespawned);
-		eventBus.subscribe(ProjectileMoved.class, this, this::onProjectileMoved);
 		eventBus.subscribe(NpcDefinitionChanged.class, this, this::onNpcDefinitionChanged);
-		eventBus.subscribe(GameTick.class, this, this::onGameTick);
 		eventBus.subscribe(ChatMessage.class, this, this::onChatMessage);
 	}
 
@@ -159,139 +147,35 @@ public class ToBCheats extends Plugin
 		}
 	}
 
-	private void onNpcSpawned(NpcSpawned event)
-	{
-		final NPC npc = event.getNpc();
-
-		switch (npc.getId())
-		{
-			case NpcID.NYLOCAS_VASILIAS:
-			case NpcID.NYLOCAS_VASILIAS_8355:
-			case NpcID.NYLOCAS_VASILIAS_8356:
-			case NpcID.NYLOCAS_VASILIAS_8357:
-				nylo = npc;
-				log.info("Nylo Detected");
-				break;
-			case NpcID.THE_MAIDEN_OF_SUGADINTI:
-				maiden = npc;
-				break;
-		}
-	}
-
-	private void onNpcDespawned(NpcDespawned event)
-	{
-		final NPC npc = event.getNpc();
-
-		switch (npc.getId())
-		{
-			case NpcID.NYLOCAS_VASILIAS:
-				nylo = null;
-				break;
-			case NpcID.THE_MAIDEN_OF_SUGADINTI:
-				maiden = null;
-				break;
-		}
-	}
-
-	private void onProjectileMoved(ProjectileMoved event)
-	{
-		Projectile projectile = event.getProjectile();
-
-		if (config.Verzik())
-		{
-			switch (projectile.getId())
-			{
-				case 1591:
-				case 1594:
-					if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
-					{
-						executorService.submit(() -> clickWidget(Prayer.PROTECT_FROM_MAGIC.getWidgetInfo(), Tab.PRAYER));
-					}
-					break;
-				case 1593:
-					if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
-					{
-						executorService.submit(() -> clickWidget(Prayer.PROTECT_FROM_MISSILES.getWidgetInfo(), Tab.PRAYER));
-					}
-					break;
-			}
-		}
-	}
-
-	private void onGameTick(GameTick event)
-	{
-		if (config.maidenSwapper())
-		{
-			if (maiden != null)
-			{
-				boolean maidenswap70 = false;
-				boolean maidenswap50 = false;
-				boolean maidenswap30 = false;
-				final float hpPercent = 100 * ((float) maiden.getHealthRatio() / (float) maiden.getHealth());
-				if (hpPercent > -1)
-				{
-					return;
-				}
-				if (hpPercent <= 70.5 && hpPercent >= 69)
-				{
-					log.info("Maiden Swap 70 reached.");
-					maidenswap70 = true;
-				}
-				if (hpPercent <= 50.5 && hpPercent >= 49)
-				{
-					log.info("Maiden Swap 50 reached.");
-					maidenswap50 = true;
-				}
-				if (hpPercent <= 30.5 && hpPercent >= 29)
-				{
-					log.info("Maiden Swap 30 reached.");
-					maidenswap30 = true;
-				}
-				if (maidenswap70 && !lock1)
-				{
-					handleBarrage("Maiden Swap 70 locked.");
-					lock1 = true;
-				}
-				if (maidenswap50 && !lock2)
-				{
-					handleBarrage("Maiden Swap 50 locked.");
-					lock2 = true;
-				}
-				if (maidenswap30 && !lock3)
-				{
-					handleBarrage("Maiden Swap 30 locked.");
-					lock3 = true;
-				}
-			}
-		}
-	}
-
 	private void onNpcDefinitionChanged(NpcDefinitionChanged event)
 	{
 		final NPC npc = event.getNpc();
 
 		if (nylo == null)
 		{
-			log.error("Nylo is null, and is trying to be reached in Definition Change Event");
 			return;
 		}
 
-		if (npc == nylo)
+		switch (npc.getId())
 		{
-			Rectangle bounds = nylo.getConvexHull().getBounds();
-
-			switch (npc.getId())
+			case NpcID.NYLOCAS_VASILIAS_8355:
 			{
-				case NpcID.NYLOCAS_VASILIAS_8355:
-					executorService.submit(() -> handleNylo(getMelee(), Prayer.PROTECT_FROM_MELEE, Prayer.PIETY, bounds, "Melee Nylo Detected"));
-					break;
-				case NpcID.NYLOCAS_VASILIAS_8356:
-					executorService.submit(() -> handleNylo(getRange(), Prayer.PROTECT_FROM_MISSILES, Prayer.RIGOUR, bounds, "Ranged Nylo Detected"));
-					break;
-				case NpcID.NYLOCAS_VASILIAS_8357:
-					executorService.submit(() -> handleNylo(getMage(), Prayer.PROTECT_FROM_MAGIC, Prayer.AUGURY, bounds, "Mage Nylo Detected"));
-					break;
+				final Rectangle bounds = npc.getConvexHull().getBounds();
+				executorService.submit(() -> handleNylo(getMelee(), Prayer.PROTECT_FROM_MELEE, Prayer.PIETY, bounds, "Melee Nylo Detected"));
 			}
+			break;
+			case NpcID.NYLOCAS_VASILIAS_8356:
+			{
+				final Rectangle bounds = npc.getConvexHull().getBounds();
+				executorService.submit(() -> handleNylo(getRange(), Prayer.PROTECT_FROM_MISSILES, Prayer.RIGOUR, bounds, "Ranged Nylo Detected"));
+			}
+			break;
+			case NpcID.NYLOCAS_VASILIAS_8357:
+			{
+				final Rectangle bounds = npc.getConvexHull().getBounds();
+				executorService.submit(() -> handleNylo(getMage(), Prayer.PROTECT_FROM_MAGIC, Prayer.AUGURY, bounds, "Mage Nylo Detected"));
+			}
+			break;
 		}
 	}
 
@@ -395,11 +279,7 @@ public class ToBCheats extends Plugin
 
 	private void reset()
 	{
-		lock1 = false;
-		lock2 = false;
-		lock3 = false;
 		flexo = null;
-		maiden = null;
 		nylo = null;
 	}
 

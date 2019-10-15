@@ -22,68 +22,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package net.runelite.client.plugins.tobcheats;
+package net.runelite.client.plugins.nyloswapper;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigTitleSection;
 import net.runelite.client.config.Title;
-import net.runelite.client.plugins.tobcheats.utils.ActionType;
+import net.runelite.client.plugins.nyloswapper.utils.ActionType;
 
-@ConfigGroup("tobcheats")
+@ConfigGroup("nyloSwapper")
 
-public interface ToBCheatsConfig extends Config
+public interface NyloSwapperConfig extends Config
 {
 	@ConfigTitleSection(
-		position = 1,
-		keyName = "swappers",
-		name = "Swappers",
-		description = ""
-	)
-	default Title swappers()
-	{
-		return new Title();
-	}
-
-	@ConfigItem(
-		position = 2,
-		keyName = "maidenSwapper",
-		name = "Maiden Swapper",
-		description = "Swaps on nylo spawns",
-		titleSection = "swappers"
-	)
-	default boolean maidenSwapper()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		position = 3,
-		keyName = "nyloSwapper",
-		name = "Nylo Swapper",
-		description = "Swaps Pray/Items for you",
-		titleSection = "swappers"
-	)
-	default boolean nyloSwapper()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		position = 4,
-		keyName = "Verzik",
-		name = "Verzik Helper",
-		description = "Swaps Prays on Verzik. EXPERIMENTAL",
-		titleSection = "swappers"
-	)
-	default boolean Verzik()
-	{
-		return false;
-	}
-
-	@ConfigTitleSection(
-		position = 5,
+		position = 0,
 		keyName = "configs",
 		name = "Configs",
 		description = ""
@@ -94,7 +47,7 @@ public interface ToBCheatsConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 6,
+		position = 1,
 		keyName = "autoAttack",
 		name = "Auto Attack",
 		description = "Auto Attack after swaps. EXPERIMENTAL",
@@ -109,7 +62,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "backToInventory",
 		name = "Swap back to Inventory",
 		description = "After finishing a sequence, it will swap back to inventory if enabled.",
-		position = 7,
+		position = 2,
 		titleSection = "configs"
 	)
 	default boolean backToInventory()
@@ -121,7 +74,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "testing",
 		name = "Test the features",
 		description = "Type in chat 1 for mage swap, 2 for range, 3 for melee, 4 for ice barrage.",
-		position = 10,
+		position = 3,
 		titleSection = "configs"
 	)
 	default boolean testing()
@@ -130,7 +83,7 @@ public interface ToBCheatsConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 11,
+		position = 4,
 		keyName = "mage",
 		name = "Mage Gearswap",
 		description = "Mage Gearswap Item Id's",
@@ -144,7 +97,7 @@ public interface ToBCheatsConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 12,
+		position = 5,
 		keyName = "range",
 		name = "Range Gearswap",
 		description = "Range Gearswap Item Id's",
@@ -158,7 +111,7 @@ public interface ToBCheatsConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 13,
+		position = 6,
 		keyName = "melee",
 		name = "Melee Gearswap",
 		description = "Melee Gearswap Item Id's",
@@ -172,7 +125,7 @@ public interface ToBCheatsConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 14,
+		position = 7,
 		keyName = "actionType",
 		name = "Action Type",
 		description = "Flexo is smooth mouse, MouseEvents is ghost mouse",
@@ -187,7 +140,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "randLow",
 		name = "Minimum Delay",
 		description = "For MouseEvents only.",
-		position = 15,
+		position = 8,
 		titleSection = "configs"
 	)
 	default int randLow()
@@ -199,7 +152,7 @@ public interface ToBCheatsConfig extends Config
 		keyName = "randLower",
 		name = "Maximum Delay",
 		description = "For MouseEvents only.",
-		position = 16,
+		position = 9,
 		titleSection = "configs"
 	)
 	default int randHigh()
