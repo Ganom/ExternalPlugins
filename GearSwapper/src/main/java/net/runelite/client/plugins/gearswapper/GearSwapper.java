@@ -25,6 +25,7 @@ package net.runelite.client.plugins.gearswapper;
 
 import com.google.inject.Provides;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -36,10 +37,11 @@ import net.runelite.api.Client;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.VarClientInt;
 import net.runelite.api.events.CommandExecuted;
 import net.runelite.api.events.ConfigChanged;
+import net.runelite.api.vars.InterfaceTab;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
@@ -80,7 +82,7 @@ public class GearSwapper extends Plugin
 	private EventBus eventBus;
 
 	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
-	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 2, TimeUnit.SECONDS, queue,
+	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(2, 2, 2, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 	private double scalingFactor;
 	private Flexo flexo;
@@ -99,7 +101,8 @@ public class GearSwapper extends Plugin
 		keyManager.registerKeyListener(util);
 		scalingFactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
 		Flexo.client = client;
-		executorService.submit(() -> {
+		executorService.submit(() ->
+		{
 			flexo = null;
 			try
 			{
@@ -161,97 +164,84 @@ public class GearSwapper extends Plugin
 		}
 	}
 
-	private void equipItem(List<WidgetItem> items)
+	private void handleItem(List<Rectangle> items, InterfaceTab tab)
 	{
 		if (items.isEmpty())
 		{
 			return;
 		}
 
-		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+		switch (tab)
 		{
-			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
-			flexo.delay(25);
+			case INVENTORY:
+				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.INVENTORY.getId())
+				{
+					flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
+					flexo.delay(25);
+				}
+				break;
+			case EQUIPMENT:
+				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.EQUIPMENT.getId())
+				{
+					flexo.keyPress(TabUtils.getTabHotkey(Tab.EQUIPMENT, client));
+					flexo.delay(25);
+				}
+				break;
 		}
 
-		for (WidgetItem item : items)
+		for (Rectangle item : items)
 		{
-			if (item != null && item.getCanvasBounds() != null)
-			{
-				handleSwitch(item.getCanvasBounds());
-			}
-		}
-	}
-
-	private void removeItem(List<Widget> items)
-	{
-		if (items.isEmpty())
-		{
-			return;
-		}
-
-		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden())
-		{
-			flexo.keyPress(TabUtils.getTabHotkey(Tab.EQUIPMENT, client));
-			flexo.delay(35);
-		}
-
-		for (Widget item : items)
-		{
-			if (item != null && item.getBounds() != null)
-			{
-				handleSwitch(item.getBounds());
-			}
+			handleSwitch(item);
 		}
 	}
 
-	private void executeSwap(List<WidgetItem> equip, List<Widget> remove)
+	private void executeSwap(List<Rectangle> equip, List<Rectangle> remove)
 	{
-		equipItem(equip);
+		handleItem(equip, InterfaceTab.INVENTORY);
 
 		if (client.getWidget(WidgetInfo.EQUIPMENT).isHidden() && remove.size() > 0)
 		{
 			flexo.keyPress(TabUtils.getTabHotkey(Tab.EQUIPMENT, client));
 		}
 
-		removeItem(remove);
+		handleItem(remove, InterfaceTab.EQUIPMENT);
 
-		if (client.getWidget(WidgetInfo.INVENTORY).isHidden())
+		if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.INVENTORY.getId())
 		{
 			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
+			flexo.delay(25);
 		}
+	}
+
+	private void executeSwap(String equip, String remove)
+	{
+		final List<Rectangle> eqBounds = new ArrayList<>();
+		final List<Rectangle> invBounds = new ArrayList<>();
+
+		for (WidgetItem item : getItems(stringToIntArray(equip), client))
+		{
+			if (item == null)
+			{
+				continue;
+			}
+			invBounds.add(item.getCanvasBounds());
+		}
+
+		for (Widget widget : getEquippedItems(stringToIntArray(remove), client))
+		{
+			if (widget == null)
+			{
+				continue;
+			}
+			eqBounds.add(widget.getBounds());
+		}
+
+		executorService.submit(() -> executeSwap(invBounds, eqBounds));
 	}
 
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
-	}
-
-	private void spec()
-	{
-		final Widget specOrb = client.getWidget(WidgetID.MINIMAP_GROUP_ID, 32);
-
-		if (specOrb == null)
-		{
-			return;
-		}
-
-		if (specOrb.getSpriteId() == 1607 || specOrb.getSpriteId() == 1608)
-		{
-			handleSwitch(client.getWidget(WidgetInfo.MINIMAP_SPEC_ORB).getBounds());
-		}
-		else
-		{
-			flexo.keyPress(TabUtils.getTabHotkey(Tab.ATTACK, client));
-			flexo.delay((int) getMillis());
-			Widget specClickbox = client.getWidget(WidgetID.COMBAT_GROUP_ID, 35);
-			if (specClickbox == null)
-			{
-				return;
-			}
-			handleSwitch(specClickbox.getBounds());
-			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
-		}
 	}
 
 	private void handleSwitch(Rectangle rectangle)
@@ -264,8 +254,7 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.mageSet()), client),
-				getEquippedItems(stringToIntArray(config.removeMageSet()), client)));
+			executeSwap(config.mageSet(), config.removeMageSet());
 		}
 	};
 
@@ -274,8 +263,7 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executorService.submit(() -> executeSwap(getItems(stringToIntArray(config.rangeSet()), client),
-				getEquippedItems(stringToIntArray(config.removeRangeSet()), client)));
+			executeSwap(config.rangeSet(), config.removeRangeSet());
 		}
 	};
 
@@ -284,18 +272,7 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			final List<WidgetItem> items = getItems(stringToIntArray(config.meleeSet()), client);
-			final List<Widget> equipped = getEquippedItems(stringToIntArray(config.removeMeleeSet()), client);
-
-			executorService.submit(() ->
-			{
-				executeSwap(getItems(stringToIntArray(config.meleeSet()), client),
-					getEquippedItems(stringToIntArray(config.removeMeleeSet()), client));
-				if (config.spec())
-				{
-					spec();
-				}
-			});
+			executeSwap(config.meleeSet(), config.removeMeleeSet());
 		}
 	};
 
@@ -304,7 +281,18 @@ public class GearSwapper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			executorService.submit(() -> equipItem(getItems(stringToIntArray(config.util()), client)));
+			final List<Rectangle> invBounds = new ArrayList<>();
+
+			for (WidgetItem item : getItems(stringToIntArray(config.util()), client))
+			{
+				if (item == null)
+				{
+					continue;
+				}
+				invBounds.add(item.getCanvasBounds());
+			}
+
+			executorService.submit(() -> handleItem(invBounds, InterfaceTab.INVENTORY));
 		}
 	};
 }
