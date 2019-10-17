@@ -24,6 +24,7 @@
 package net.runelite.client.plugins.olmswapper;
 
 import com.google.inject.Provides;
+import java.awt.Rectangle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -33,12 +34,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.Prayer;
+import net.runelite.api.VarClientInt;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ProjectileMoved;
 import net.runelite.api.util.Text;
+import net.runelite.api.vars.InterfaceTab;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.flexo.Flexo;
@@ -69,7 +71,7 @@ public class OlmSwapper extends Plugin
 	private ConfigManager configManager;
 	@Inject
 	private EventBus eventBus;
-	private BlockingQueue queue = new ArrayBlockingQueue(1);
+	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 	private Flexo flexo;
@@ -88,7 +90,8 @@ public class OlmSwapper extends Plugin
 	{
 		addSubscriptions();
 		Flexo.client = client;
-		executorService.submit(() -> {
+		executorService.submit(() ->
+		{
 			flexo = null;
 			try
 			{
@@ -119,17 +122,12 @@ public class OlmSwapper extends Plugin
 	{
 		if (swapMage)
 		{
-			log.info("Protect Magic Being Activated -- Auto Attack");
-			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MAGIC));
+			clickPrayer(Prayer.PROTECT_FROM_MAGIC);
 			swapMage = false;
 		}
 		else if (swapRange)
 		{
-			if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
-			{
-				log.info("Protect Missiles Being Activated -- Auto Attack");
-				executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MISSILES));
-			}
+			clickPrayer(Prayer.PROTECT_FROM_MISSILES);
 			swapRange = false;
 		}
 	}
@@ -145,27 +143,15 @@ public class OlmSwapper extends Plugin
 		{
 			case "the great olm fires a sphere of aggression your way. your prayers have been sapped.":
 			case "the great olm fires a sphere of aggression your way.":
-				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MELEE))
-				{
-					log.info("Protect Melee Being Activated");
-					executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MELEE));
-				}
+				clickPrayer(Prayer.PROTECT_FROM_MELEE);
 				break;
 			case "the great olm fires a sphere of magical power your way. your prayers have been sapped.":
 			case "the great olm fires a sphere of magical power your way.":
-				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
-				{
-					log.info("Protect Magic Being Activated");
-					executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MAGIC));
-				}
+				clickPrayer(Prayer.PROTECT_FROM_MAGIC);
 				break;
 			case "the great olm fires a sphere of accuracy and dexterity your way. your prayers have been sapped.":
 			case "the great olm fires a sphere of accuracy and dexterity your way.":
-				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
-				{
-					log.info("Protect Missiles Being Activated");
-					executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MISSILES));
-				}
+				clickPrayer(Prayer.PROTECT_FROM_MISSILES);
 				break;
 		}
 	}
@@ -198,29 +184,34 @@ public class OlmSwapper extends Plugin
 
 	private void clickPrayer(Prayer prayer)
 	{
-		if (prayer == null)
+		if (client.isPrayerActive(prayer))
 		{
 			return;
 		}
 
-		if (client.getWidget(WidgetInfo.PRAYER_PROTECT_FROM_MELEE).isHidden())
-		{
-			flexo.keyPress(TabUtils.getTabHotkey(Tab.PRAYER, client));
-		}
-
-		Widget widget = client.getWidget(prayer.getWidgetInfo());
+		final Widget widget = client.getWidget(prayer.getWidgetInfo());
 
 		if (widget == null)
 		{
 			return;
 		}
 
-		ExtUtils.handleSwitch(widget.getBounds(), config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis());
+		final Rectangle bounds = widget.getBounds();
 
-		if (client.isPrayerActive(prayer))
+		executorService.submit(() ->
 		{
-			flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
-		}
+			if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.PRAYER.getId())
+			{
+				flexo.keyPress(TabUtils.getTabHotkey(Tab.PRAYER, client));
+			}
+
+			ExtUtils.handleSwitch(bounds, config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis());
+
+			if (client.isPrayerActive(prayer))
+			{
+				flexo.keyPress(TabUtils.getTabHotkey(Tab.INVENTORY, client));
+			}
+		});
 	}
 
 	private long getMillis()
