@@ -25,24 +25,30 @@
 package net.runelite.client.plugins.prayswap;
 
 import com.google.inject.Provides;
+import java.awt.AWTException;
 import java.awt.Rectangle;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.Point;
 import net.runelite.api.Prayer;
-import net.runelite.api.Skill;
-import net.runelite.api.events.GameTick;
+import static net.runelite.api.Prayer.*;
+import net.runelite.api.VarClientInt;
+import net.runelite.api.events.GameStateChanged;
+import net.runelite.api.vars.InterfaceTab;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.flexo.Flexo;
-import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -50,6 +56,7 @@ import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.prayswap.utils.Tab;
 import net.runelite.client.plugins.prayswap.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
+import net.runelite.client.util.HotkeyListener;
 
 @PluginDescriptor(
 	name = "PraySwap",
@@ -58,7 +65,7 @@ import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 	type = PluginType.EXTERNAL
 )
 
-public class PraySwap extends Plugin implements KeyListener
+public class PraySwap extends Plugin
 {
 	@Inject
 	private Client client;
@@ -69,12 +76,11 @@ public class PraySwap extends Plugin implements KeyListener
 	@Inject
 	private ConfigManager configManager;
 	@Inject
-	private TabUtils tabUtils;
-	@Inject
 	private EventBus eventBus;
-	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
-	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 1, TimeUnit.SECONDS, queue,
-		new ThreadPoolExecutor.DiscardPolicy());
+	@Inject
+	private TabUtils tabUtils;
+	private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
+	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(2, 2, 2, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.DiscardPolicy());
 	private Flexo flexo;
 
 	@Provides
@@ -83,153 +89,97 @@ public class PraySwap extends Plugin implements KeyListener
 		return manager.getConfig(PraySwapConfig.class);
 	}
 
+	@Override
 	protected void startUp()
 	{
-		eventBus.subscribe(GameTick.class, this, this::onGameTick);
-		keyManager.registerKeyListener(this);
 		Flexo.client = client;
-		executorService.submit(() -> {
-			flexo = null;
+		executorService.submit(() ->
+		{
 			try
 			{
 				flexo = new Flexo();
 			}
-			catch (Exception e)
+			catch (AWTException e)
 			{
 				e.printStackTrace();
 			}
 		});
+		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
 	}
 
+	@Override
 	protected void shutDown()
 	{
-		keyManager.unregisterKeyListener(this);
 		eventBus.unregister(this);
 	}
 
-
-	private void onGameTick(GameTick event)
+	private void onGameStateChanged(GameStateChanged event)
 	{
-		if (shouldProtPray())
+		if (event.getGameState() != GameState.LOGGED_IN)
 		{
-			clickPrayer(Prayer.PROTECT_ITEM, true);
+			keyManager.unregisterKeyListener(melee);
+			keyManager.unregisterKeyListener(range);
+			keyManager.unregisterKeyListener(mage);
+			keyManager.unregisterKeyListener(augury);
+			keyManager.unregisterKeyListener(rigour);
+			keyManager.unregisterKeyListener(piety);
+			keyManager.unregisterKeyListener(smite);
+			keyManager.unregisterKeyListener(comboOne);
+			keyManager.unregisterKeyListener(comboTwo);
+			keyManager.unregisterKeyListener(comboThree);
+			return;
 		}
+		keyManager.registerKeyListener(melee);
+		keyManager.registerKeyListener(range);
+		keyManager.registerKeyListener(mage);
+		keyManager.registerKeyListener(augury);
+		keyManager.registerKeyListener(rigour);
+		keyManager.registerKeyListener(piety);
+		keyManager.registerKeyListener(smite);
+		keyManager.registerKeyListener(comboOne);
+		keyManager.registerKeyListener(comboTwo);
+		keyManager.registerKeyListener(comboThree);
 	}
 
-	@Override
-	public void keyTyped(KeyEvent e)
+	private void clickPrayer(List<Prayer> prayers)
 	{
+		final List<Rectangle> toClick = new ArrayList<>();
+
+		for (Prayer p : prayers)
+		{
+			final Widget widget = client.getWidget(p.getWidgetInfo());
+
+			if (widget == null)
+			{
+				continue;
+			}
+
+			toClick.add(widget.getBounds());
+		}
+
+		if (toClick.isEmpty())
+		{
+			return;
+		}
+
+		executorService.submit(() ->
+		{
+			for (Rectangle rectangle : toClick)
+			{
+				System.out.println("Clicking Rectangle.");
+				handleSwitch(rectangle);
+			}
+		});
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e)
+	private void handleSwitch(Rectangle rectangle)
 	{
-		if (e.getKeyCode() == config.hotkeyMage().getKeyCode())
+		if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.PRAYER.getId())
 		{
-			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MAGIC, true));
+			flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
+			flexo.delay(25);
 		}
-		if (e.getKeyCode() == config.hotkeyRange().getKeyCode())
-		{
-			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MISSILES, true));
-		}
-		if (e.getKeyCode() == config.hotkeyMelee().getKeyCode())
-		{
-			executorService.submit(() -> clickPrayer(Prayer.PROTECT_FROM_MELEE, true));
-		}
-		if (e.getKeyCode() == config.hotkeyAugury().getKeyCode())
-		{
-			if (config.lowLevel())
-			{
-				executorService.submit(() -> clickPrayer(Prayer.MYSTIC_MIGHT, true));
-			}
-			else
-			{
-				executorService.submit(() -> clickPrayer(Prayer.AUGURY, true));
-			}
-		}
-		if (e.getKeyCode() == config.hotkeyRigour().getKeyCode())
-		{
-			if (config.lowLevel())
-			{
-				executorService.submit(() -> clickPrayer(Prayer.EAGLE_EYE, true));
-			}
-			else
-			{
-				executorService.submit(() -> clickPrayer(Prayer.RIGOUR, true));
-			}
-		}
-		if (e.getKeyCode() == config.hotkeyPiety().getKeyCode())
-		{
-			if (config.lowLevel())
-			{
-				executorService.submit(() -> {
-					clickPrayer(Prayer.STEEL_SKIN, false);
-					clickPrayer(Prayer.ULTIMATE_STRENGTH, false);
-					clickPrayer(Prayer.INCREDIBLE_REFLEXES, true);
-				});
-			}
-			else
-			{
-				executorService.submit(() -> clickPrayer(Prayer.PIETY, true));
-			}
-		}
-		if (e.getKeyCode() == config.hotkeySmite().getKeyCode())
-		{
-			executorService.submit(() -> clickPrayer(Prayer.SMITE, true));
-		}
-		if (e.getKeyCode() == config.comboOne().getKeyCode())
-		{
-			executorService.submit(() -> {
-				clickPrayer(config.comboOnePrayerOne().getPrayer(), false);
-				clickPrayer(config.comboOnePrayerTwo().getPrayer(), true);
-			});
-		}
-		if (e.getKeyCode() == config.comboTwo().getKeyCode())
-		{
-			executorService.submit(() -> {
-				clickPrayer(config.comboTwoPrayerOne().getPrayer(), false);
-				clickPrayer(config.comboTwoPrayerTwo().getPrayer(), true);
-			});
-		}
-		if (e.getKeyCode() == config.comboThree().getKeyCode())
-		{
-			executorService.submit(() -> {
-				clickPrayer(config.comboThreePrayerOne().getPrayer(), false);
-				clickPrayer(config.comboThreePrayerTwo().getPrayer(), true);
-			});
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e)
-	{
-	}
-
-	private boolean shouldProtPray()
-	{
-		return config.protectItem() && !client.isPrayerActive(Prayer.PROTECT_ITEM) && client.getBoostedSkillLevel(Skill.PRAYER) >= 1;
-	}
-
-	private void clickPrayer(Prayer prayer, boolean swapBack)
-	{
-		if (prayer != null)
-		{
-			Widget widget = client.getWidget(prayer.getWidgetInfo());
-
-			if (widget != null)
-			{
-				if (widget.isHidden())
-				{
-					flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
-				}
-				handleSwitch(widget.getBounds(), swapBack);
-			}
-		}
-	}
-
-	private void handleSwitch(Rectangle rectangle, boolean swapBack)
-	{
-		Point cp = getClickPoint(rectangle);
+		final Point cp = getClickPoint(rectangle);
 		if (cp.getX() >= 1 && cp.getY() >= 1)
 		{
 			switch (config.actionType())
@@ -238,10 +188,6 @@ public class PraySwap extends Plugin implements KeyListener
 					flexo.mouseMove(cp.getX(), cp.getY());
 					flexo.mousePressAndRelease(1);
 					flexo.delay(10);
-					if (swapBack && config.backToInventory())
-					{
-						flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
-					}
 					break;
 				case MOUSEEVENTS:
 					leftClick(cp.getX(), cp.getY());
@@ -252,10 +198,6 @@ public class PraySwap extends Plugin implements KeyListener
 					catch (InterruptedException e)
 					{
 						e.printStackTrace();
-					}
-					if (swapBack && config.backToInventory())
-					{
-						flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
 					}
 					break;
 			}
@@ -317,13 +259,13 @@ public class PraySwap extends Plugin implements KeyListener
 
 	private Point getClickPoint(Rectangle rect)
 	{
-		double scalingfactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
+		double scalingFactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
 
 		int rand = (Math.random() <= 0.5) ? 1 : 2;
 		int x = (int) (rect.getX() + (rand * 3) + rect.getWidth() / 2);
 		int y = (int) (rect.getY() + (rand * 3) + rect.getHeight() / 2);
 
-		double scale = 1 + (scalingfactor / 100);
+		double scale = 1 + (scalingFactor / 100);
 
 		if (client.isStretchedEnabled())
 		{
@@ -332,4 +274,104 @@ public class PraySwap extends Plugin implements KeyListener
 
 		return new Point(x, y);
 	}
+
+	private final HotkeyListener melee = new HotkeyListener(() -> config.hotkeyMelee())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			clickPrayer(Collections.singletonList(PROTECT_FROM_MELEE));
+		}
+	};
+
+	private final HotkeyListener range = new HotkeyListener(() -> config.hotkeyRange())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			clickPrayer(Collections.singletonList(PROTECT_FROM_MISSILES));
+		}
+	};
+	private final HotkeyListener mage = new HotkeyListener(() -> config.hotkeyMage())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			clickPrayer(Collections.singletonList(PROTECT_FROM_MAGIC));
+		}
+	};
+	private final HotkeyListener augury = new HotkeyListener(() -> config.hotkeyAugury())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			if (config.lowLevel())
+			{
+				clickPrayer(Collections.singletonList(MYSTIC_MIGHT));
+				return;
+			}
+			clickPrayer(Collections.singletonList(AUGURY));
+		}
+	};
+	private final HotkeyListener rigour = new HotkeyListener(() -> config.hotkeyRigour())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			if (config.lowLevel())
+			{
+				clickPrayer(Collections.singletonList(EAGLE_EYE));
+				return;
+			}
+			clickPrayer(Collections.singletonList(RIGOUR));
+		}
+	};
+	private final HotkeyListener piety = new HotkeyListener(() -> config.hotkeyPiety())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			if (config.lowLevel())
+			{
+				clickPrayer(Arrays.asList(STEEL_SKIN, ULTIMATE_STRENGTH, INCREDIBLE_REFLEXES));
+				return;
+			}
+			clickPrayer(Collections.singletonList(PIETY));
+		}
+	};
+	private final HotkeyListener smite = new HotkeyListener(() -> config.hotkeySmite())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			clickPrayer(Collections.singletonList(SMITE));
+		}
+	};
+	private final HotkeyListener comboOne = new HotkeyListener(() -> config.comboOne())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			clickPrayer(Arrays.asList
+				(config.comboOnePrayerOne().getPrayer(), config.comboOnePrayerTwo().getPrayer())
+			);
+		}
+	};
+	private final HotkeyListener comboTwo = new HotkeyListener(() -> config.comboTwo())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			clickPrayer(Arrays.asList(config.comboTwoPrayerOne().getPrayer(), config.comboTwoPrayerTwo().getPrayer()));
+		}
+	};
+	private final HotkeyListener comboThree = new HotkeyListener(() -> config.comboThree())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			clickPrayer(Arrays.asList(config.comboThreePrayerOne().getPrayer(), config.comboThreePrayerTwo().getPrayer()));
+		}
+	};
+
 }
