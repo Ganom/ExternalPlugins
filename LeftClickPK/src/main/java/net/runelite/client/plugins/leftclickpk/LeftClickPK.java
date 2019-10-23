@@ -187,7 +187,6 @@ public class LeftClickPK extends Plugin
 
 			event.setModified(true);
 			setSpell(victim);
-			System.out.println(client.getSelectedSpellName());
 			final String rainbow = config.enableRainbow() ? rainbow(Text.removeTags(client.getSelectedSpellName())) : client.getSelectedSpellName();
 			event.setOption("Left Click " + rainbow + " -> ");
 		}
