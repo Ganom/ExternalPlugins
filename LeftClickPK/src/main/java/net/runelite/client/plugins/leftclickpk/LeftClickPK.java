@@ -34,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
@@ -45,6 +46,7 @@ import net.runelite.api.Varbits;
 import net.runelite.api.WorldType;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.ChatMessage;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.LocalPlayerDeath;
@@ -58,11 +60,13 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.multiindicators.MapLocations;
 import net.runelite.client.util.ColorUtil;
+import net.runelite.client.util.HotkeyListener;
 import net.runelite.client.util.PvPUtil;
 
 @PluginDescriptor(
@@ -79,6 +83,8 @@ public class LeftClickPK extends Plugin
 	private EventBus eventBus;
 	@Inject
 	private LeftClickConfig config;
+	@Inject
+	private KeyManager keyManager;
 
 	private final Map<Integer, Victim> victimMap = new HashMap<>();
 	private final Map<Integer, Victim> victimMapCache = new HashMap<>();
@@ -86,6 +92,34 @@ public class LeftClickPK extends Plugin
 	private boolean maging;
 	private float hue;
 	private boolean reverse;
+	private Spells currentSpell = Spells.ICE_BARRAGE;
+
+	private final HotkeyListener spellOneSwap = new HotkeyListener(() -> config.spellOneSwap())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			currentSpell = config.spellOne();
+		}
+	};
+
+	private final HotkeyListener spellTwoSwap = new HotkeyListener(() -> config.spellTwoSwap())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			currentSpell = config.spellTwo();
+		}
+	};
+
+	private final HotkeyListener spellThreeSwap = new HotkeyListener(() -> config.spellThreeSwap())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			currentSpell = config.spellThree();
+		}
+	};
 
 	@Provides
 	LeftClickConfig getConfig(ConfigManager configManager)
@@ -96,6 +130,17 @@ public class LeftClickPK extends Plugin
 	@Override
 	public void startUp()
 	{
+		addSubscriptions();
+	}
+
+	@Override
+	public void shutDown()
+	{
+		eventBus.unregister(this);
+	}
+
+	private void addSubscriptions()
+	{
 		eventBus.subscribe(MenuOptionClicked.class, this, this::onMenuOptionClicked);
 		eventBus.subscribe(ItemContainerChanged.class, this, this::onItemContainerChanged);
 		eventBus.subscribe(MenuEntryAdded.class, this, this::onMenuEntryAdded);
@@ -105,12 +150,21 @@ public class LeftClickPK extends Plugin
 		eventBus.subscribe(ChatMessage.class, this, this::onChatMessage);
 		eventBus.subscribe(SpotAnimationChanged.class, this, this::onSpotAnimationChanged);
 		eventBus.subscribe(GameTick.class, this, this::onGameTick);
+		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
 	}
 
-	@Override
-	public void shutDown()
+	private void onGameStateChanged(GameStateChanged event)
 	{
-		eventBus.unregister(this);
+		if (event.getGameState() != GameState.LOGGED_IN)
+		{
+			keyManager.unregisterKeyListener(spellOneSwap);
+			keyManager.unregisterKeyListener(spellTwoSwap);
+			keyManager.unregisterKeyListener(spellThreeSwap);
+			return;
+		}
+		keyManager.registerKeyListener(spellOneSwap);
+		keyManager.registerKeyListener(spellTwoSwap);
+		keyManager.registerKeyListener(spellThreeSwap);
 	}
 
 	private void onGameTick(GameTick tickEvent)
@@ -133,7 +187,8 @@ public class LeftClickPK extends Plugin
 
 			event.setModified(true);
 			setSpell(victim);
-			final String rainbow = rainbow(Text.removeTags(client.getSelectedSpellName()));
+			System.out.println(client.getSelectedSpellName());
+			final String rainbow = config.enableRainbow() ? rainbow(Text.removeTags(client.getSelectedSpellName())) : client.getSelectedSpellName();
 			event.setOption("Left Click " + rainbow + " -> ");
 		}
 	}
@@ -322,6 +377,12 @@ public class LeftClickPK extends Plugin
 		final int mageLevel = client.getBoostedSkillLevel(Skill.MAGIC);
 		final String spell = client.getSelectedSpellName() == null ? "null" : client.getSelectedSpellName();
 
+		if (config.customSpells() && currentSpell != null)
+		{
+			setSelectSpell(currentSpell.getSpell());
+			return;
+		}
+
 		switch (spellBookVar)
 		{
 			case 0:
@@ -419,15 +480,15 @@ public class LeftClickPK extends Plugin
 
 	private void setSelectSpell(WidgetInfo info)
 	{
-		Widget widget = client.getWidget(info);
-		client.setSelectedSpellName(widget.getName());
+		final Widget widget = client.getWidget(info);
+		client.setSelectedSpellName("<col=00ff00>" + widget.getName() + "</col>");
 		client.setSelectedSpellWidget(widget.getId());
 		client.setSelectedSpellChildIndex(-1);
 	}
 
 	private String rainbow(String string)
 	{
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < string.length(); i++)
 		{
 			String post = String.valueOf(string.charAt(i));
