@@ -80,7 +80,7 @@ public class PraySwap extends Plugin
 	@Inject
 	private TabUtils tabUtils;
 	private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
-	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(2, 2, 2, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.DiscardPolicy());
+	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 1, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.DiscardPolicy());
 	private Flexo flexo;
 
 	@Provides
@@ -166,8 +166,13 @@ public class PraySwap extends Plugin
 		{
 			for (Rectangle rectangle : toClick)
 			{
-				System.out.println("Clicking Rectangle.");
 				handleSwitch(rectangle);
+			}
+
+			if (config.backToInventory() && client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.INVENTORY.getId())
+			{
+				flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+				flexo.delay(25);
 			}
 		});
 	}
@@ -179,7 +184,9 @@ public class PraySwap extends Plugin
 			flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
 			flexo.delay(25);
 		}
+
 		final Point cp = getClickPoint(rectangle);
+
 		if (cp.getX() >= 1 && cp.getY() >= 1)
 		{
 			switch (config.actionType())
@@ -187,7 +194,7 @@ public class PraySwap extends Plugin
 				case FLEXO:
 					flexo.mouseMove(cp.getX(), cp.getY());
 					flexo.mousePressAndRelease(1);
-					flexo.delay(10);
+					flexo.delay((int) getMillis());
 					break;
 				case MOUSEEVENTS:
 					leftClick(cp.getX(), cp.getY());

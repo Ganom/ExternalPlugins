@@ -239,7 +239,7 @@ public interface PraySwapConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "comboOnePrayerOne",
+		keyName = "comboTwoPrayerOne",
 		name = "Prayer 1",
 		description = "Prayer 1",
 		position = 17,
