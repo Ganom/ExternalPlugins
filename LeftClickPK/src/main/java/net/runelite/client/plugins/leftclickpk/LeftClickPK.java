@@ -38,6 +38,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.MenuOpcode;
 import net.runelite.api.NPC;
 import net.runelite.api.Player;
 import net.runelite.api.Prayer;
@@ -174,13 +175,13 @@ public class LeftClickPK extends Plugin
 
 	private void onMenuEntryAdded(MenuEntryAdded event)
 	{
-		if (event.getOption().equalsIgnoreCase("attack") && victimMap.containsKey(event.getIdentifier()) && maging)
+		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && victimMap.containsKey(event.getIdentifier()) && maging)
 		{
 			final String name = Text.standardize(event.getTarget(), true);
 			final Victim victim = victimMap.getOrDefault(event.getIdentifier(), null);
 
-			if (client.getVar(Varbits.LMS_IN_GAME) == 0 && (victim == null || client.isFriended(name, false) ||
-				client.isClanMember(name) || (!PvPUtil.isAttackable(client, (Player) victim.getActor()))))
+			if (!config.disableFriendlyRegionChecks() && (client.getVar(Varbits.LMS_IN_GAME) == 0 && (victim == null || client.isFriended(name, false) ||
+				client.isClanMember(name) || (!PvPUtil.isAttackable(client, (Player) victim.getActor())))))
 			{
 				return;
 			}

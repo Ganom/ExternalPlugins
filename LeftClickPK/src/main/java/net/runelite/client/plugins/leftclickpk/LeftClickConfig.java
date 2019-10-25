@@ -66,6 +66,18 @@ public interface LeftClickConfig extends Config
 	)
 	default boolean enableRainbow()
 	{
+		return true;
+	}
+
+	@ConfigItem(
+		position = 5,
+		keyName = "disableFriendlyRegionChecks",
+		name = "Disable Friend/Clan/Lvl Checks",
+		description = "This will make it so you can cast on friends/clan members.",
+		titleSection = "preset"
+	)
+	default boolean disableFriendlyRegionChecks()
+	{
 		return false;
 	}
 
