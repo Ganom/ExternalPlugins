@@ -28,7 +28,6 @@ import static net.runelite.api.ObjectID.DWARF_MULTICANNON;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
 import net.runelite.api.SpriteID;
-import net.runelite.api.VarClientInt;
 import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
 import net.runelite.api.events.ChatMessage;
@@ -39,7 +38,6 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOpened;
 import net.runelite.api.events.MenuOptionClicked;
-import net.runelite.api.vars.InterfaceTab;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
@@ -342,7 +340,7 @@ public class OneClickPlugin extends Plugin
 
 					if (findItem(ItemID.PURE_ESSENCE).getLeft() == -1)
 					{
-						if (pouches().isEmpty() || client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.INVENTORY.getId())
+						if (pouches().isEmpty())
 						{
 							return;
 						}
