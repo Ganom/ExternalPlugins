@@ -284,6 +284,19 @@ public class OneClickPlugin extends Plugin
 
 		switch (type)
 		{
+			case BRUMA_ROOT:
+			{
+				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.BRUMA_ROOT)
+				{
+					if (findItem(ItemID.BRUMA_ROOT).getLeft() == -1)
+					{
+						return;
+					}
+					event.setTarget("<col=ff9040>Knife<col=ffffff> -> " + targetMap.get(id));
+					event.setModified();
+				}
+			}
+			break;
 			case DARTS:
 				if (opcode == MenuOpcode.ITEM_USE.getId() && (DART_TIPS.contains(id) || BOLTS.contains(id)))
 				{
@@ -429,8 +442,18 @@ public class OneClickPlugin extends Plugin
 		{
 			event.consume();
 		}
+
 		switch (type)
 		{
+			case BRUMA_ROOT:
+				if (opcode == MenuOpcode.ITEM_USE.getId() && target.contains("<col=ff9040>Knife<col=ffffff> -> "))
+				{
+					if (updateSelectedItem(ItemID.KNIFE))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+					}
+				}
+				break;
 			case DARTS:
 				if (opcode == MenuOpcode.ITEM_USE.getId() && target.contains("<col=ff9040>Feather<col=ffffff> -> "))
 				{

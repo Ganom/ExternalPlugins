@@ -23,6 +23,7 @@ public enum Types
 	BONES("Bones"),
 	KARAMBWANS("Karambwans"),
 	DARK_ESSENCE("Dark Essence"),
+	BRUMA_ROOT("Bruma Roots"),
 	NONE("None");
 
 	private String name;
