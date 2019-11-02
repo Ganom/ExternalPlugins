@@ -609,7 +609,7 @@ public class OneClickPlugin extends Plugin
 		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
 		final List<WidgetItem> itemList = (List<WidgetItem>) inventoryWidget.getWidgetItems();
 
-		for (int i = itemList.size() - 1; i > 0; i--)
+		for (int i = itemList.size() - 1; i >= 0; i--)
 		{
 			final WidgetItem item = itemList.get(i);
 			if (item.getId() == id)
@@ -624,9 +624,11 @@ public class OneClickPlugin extends Plugin
 	private Pair<Integer, Integer> findItem(Collection<Integer> ids)
 	{
 		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
+		final List<WidgetItem> itemList = (List<WidgetItem>) inventoryWidget.getWidgetItems();
 
-		for (WidgetItem item : inventoryWidget.getWidgetItems())
+		for (int i = itemList.size() - 1; i >= 0; i--)
 		{
+			final WidgetItem item = itemList.get(i);
 			if (ids.contains(item.getId()))
 			{
 				return Pair.of(item.getId(), item.getIndex());
