@@ -441,6 +441,7 @@ public class OneClickPlugin extends Plugin
 		if (tick)
 		{
 			event.consume();
+			return;
 		}
 
 		switch (type)
@@ -562,7 +563,6 @@ public class OneClickPlugin extends Plugin
 					if (updateSelectedItem(ItemID.RAW_KARAMBWAN))
 					{
 						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
-						tick = true;
 					}
 				}
 				break;
@@ -607,10 +607,12 @@ public class OneClickPlugin extends Plugin
 	private Pair<Integer, Integer> findItem(int id)
 	{
 		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
+		final List<WidgetItem> itemList = (List<WidgetItem>) inventoryWidget.getWidgetItems();
 
-		for (WidgetItem item : inventoryWidget.getWidgetItems())
+		for (int i = itemList.size() - 1; i > 0; i--)
 		{
-			if (id == item.getId())
+			final WidgetItem item = itemList.get(i);
+			if (item.getId() == id)
 			{
 				return Pair.of(item.getId(), item.getIndex());
 			}
