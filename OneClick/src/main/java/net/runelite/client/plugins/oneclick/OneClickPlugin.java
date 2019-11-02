@@ -539,6 +539,7 @@ public class OneClickPlugin extends Plugin
 					if (updateSelectedItem(ItemID.RAW_KARAMBWAN))
 					{
 						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+						tick = true;
 					}
 				}
 				break;
