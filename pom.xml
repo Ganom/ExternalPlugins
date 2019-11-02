@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>us.runelitepl</groupId>
 	<artifactId>Public-Plugins</artifactId>
-	<version>1.0</version>
+	<version>1.5.39</version>
 
 	<modules>
 		<module>AutoPrayFlick</module>
@@ -36,7 +36,16 @@
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>
-				<!--Your Local Shaded Jar Here-->
+				${user.home}/.runelite/repository2/runelite-client-${version}-SNAPSHOT.jar
+			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.ganom</groupId>
+			<artifactId>api</artifactId>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>
+				${user.home}/.runelite/repository2/runelite-api-${version}-SNAPSHOT.jar
 			</systemPath>
 		</dependency>
 		<dependency>
