@@ -36,7 +36,7 @@ public class NeverLog extends Plugin
 	private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1,
 		10, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.DiscardPolicy());
-	private Random random;
+	private Random random = new Random();
 	private long randomDelay;
 
 	@Override
@@ -75,7 +75,9 @@ public class NeverLog extends Plugin
 
 	private long randomDelay(int min, int max)
 	{
-		return (long) clamp(Math.round(random.nextGaussian() * 1000 + LOGOUT_WARNING_MILLIS), min, max);
+		return (long) clamp(
+			Math.round(random.nextGaussian() * 1000 + LOGOUT_WARNING_CLIENT_TICKS), min, max
+		);
 	}
 
 	private static double clamp(double val, double min, double max)
