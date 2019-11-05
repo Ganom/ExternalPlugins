@@ -6,6 +6,7 @@
 package net.runelite.client.plugins.neverlog;
 
 import java.awt.event.KeyEvent;
+import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -35,11 +36,14 @@ public class NeverLog extends Plugin
 	private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1,
 		10, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.DiscardPolicy());
+	private Random random;
+	private long randomDelay;
 
 	@Override
 	protected void startUp()
 	{
 		eventBus.subscribe(GameTick.class, this, this::onGameTick);
+		randomDelay = randomDelay(7000, 13000);
 	}
 
 	@Override
@@ -53,6 +57,7 @@ public class NeverLog extends Plugin
 		if (checkIdleLogout())
 		{
 			executorService.submit(this::pressKey);
+			randomDelay = randomDelay(7000, 13000);
 		}
 	}
 
@@ -65,7 +70,17 @@ public class NeverLog extends Plugin
 			idleClientTicks = client.getMouseIdleTicks();
 		}
 
-		return idleClientTicks >= LOGOUT_WARNING_CLIENT_TICKS;
+		return idleClientTicks >= randomDelay;
+	}
+
+	private long randomDelay(int min, int max)
+	{
+		return (long) clamp(Math.round(random.nextGaussian() * 1000 + LOGOUT_WARNING_MILLIS), min, max);
+	}
+
+	private static double clamp(double val, double min, double max)
+	{
+		return Math.max(min, Math.min(max, val));
 	}
 
 	private void pressKey()
