@@ -8,7 +8,6 @@ package net.runelite.client.plugins.oneclick;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,6 @@ import static net.runelite.api.ObjectID.DWARF_MULTICANNON;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
 import net.runelite.api.SpriteID;
-import net.runelite.api.VarPlayer;
 import net.runelite.api.Varbits;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.ConfigChanged;
@@ -351,18 +349,6 @@ public class OneClickPlugin extends Plugin
 						return;
 					}
 
-					if (findItem(ItemID.PURE_ESSENCE).getLeft() == -1)
-					{
-						if (pouches().isEmpty())
-						{
-							return;
-						}
-						event.setOption("Empty");
-						event.setTarget("<col=ff9040>Pouches");
-						event.setModified();
-						return;
-					}
-
 					if (!imbue && enableImbue)
 					{
 						event.setOption("Use");
@@ -505,14 +491,6 @@ public class OneClickPlugin extends Plugin
 					event.setParam0(-1);
 					event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
 				}
-				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && target.equals("<col=ff9040>Pouches") && !pouches().isEmpty())
-				{
-					final Pair<Integer, Integer> pair = pouches().get(0);
-					event.setOpcode(MenuOpcode.ITEM_SECOND_OPTION.getId());
-					event.setIdentifier(pair.getLeft());
-					event.setParam0(pair.getRight());
-					event.setParam1(WidgetInfo.INVENTORY.getId());
-				}
 				break;
 			case HIGH_ALCH:
 				if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() && event.getOption().equals("Cast") && target.contains("<col=00ff00>High Level Alchemy</col><col=ffffff> -> "))
@@ -636,30 +614,5 @@ public class OneClickPlugin extends Plugin
 		}
 
 		return Pair.of(-1, -1);
-	}
-
-	private List<Pair<Integer, Integer>> pouches()
-	{
-		final List<Pair<Integer, Integer>> pouches = new ArrayList<>();
-		final int pouchVar = client.getVar(VarPlayer.POUCH_STATUS);
-
-		if ((pouchVar & 0x1) > 0)
-		{
-			pouches.add(findItem(ItemID.SMALL_POUCH));
-		}
-		if ((pouchVar & 0x2) > 0)
-		{
-			pouches.add(findItem(ItemID.MEDIUM_POUCH));
-		}
-		if ((pouchVar & 0x4) > 0)
-		{
-			pouches.add(findItem(ItemID.LARGE_POUCH));
-		}
-		if ((pouchVar & 0x8) > 0)
-		{
-			pouches.add(findItem(ItemID.GIANT_POUCH));
-		}
-
-		return pouches;
 	}
 }
