@@ -4,12 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <artifactId>GearSwapper</artifactId>
     <packaging>jar</packaging>
-	<version>3.0</version>
 
     <parent>
         <artifactId>Public-Plugins</artifactId>
         <groupId>us.runelitepl</groupId>
-        <version>1.0</version>
+		<version>1.5.40</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
