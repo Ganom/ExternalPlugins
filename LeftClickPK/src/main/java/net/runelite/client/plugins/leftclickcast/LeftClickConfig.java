@@ -27,18 +27,6 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 1,
-		keyName = "customSpells",
-		name = "Use Custom Spells",
-		description = "Rather than preset ice barrage.",
-		titleSection = "preset"
-	)
-	default boolean customSpells()
-	{
-		return false;
-	}
-
-	@ConfigItem(
 		position = 2,
 		keyName = "disableFriendlyRegionChecks",
 		name = "Disable Friend/Clan/Lvl Checks",
