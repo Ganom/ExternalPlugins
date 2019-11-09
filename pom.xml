@@ -18,7 +18,7 @@
 		<module>SpellCaster</module>
 		<module>NyloSwapper</module>
 		<module>Tickeater</module>
-		<module>LeftClickPK</module>
+		<module>LeftClickCast</module>
 		<module>OneClick</module>
 	</modules>
 	<packaging>pom</packaging>

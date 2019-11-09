@@ -14,6 +14,7 @@ import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.MenuOpcode;
+import net.runelite.api.NPC;
 import net.runelite.api.Varbits;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.ItemContainerChanged;
@@ -164,28 +165,54 @@ public class LeftClickCast extends Plugin
 			final String name = Text.standardize(event.getTarget(), true);
 
 			if (!config.disableFriendlyRegionChecks() && (client.getVar(Varbits.LMS_IN_GAME) == 0 && (client.isFriended(name, false) ||
-				client.isClanMember(name) || (!PvPUtil.isAttackable(client, client.getCachedPlayers()[event.getIdentifier()])))))
+				client.isClanMember(name))))
 			{
 				return;
 			}
 
+			if (!config.disableFriendlyRegionChecks())
+			{
+				try
+				{
+					boolean b = (!PvPUtil.isAttackable(client, client.getCachedPlayers()[event.getIdentifier()]));
+				}
+				catch (IndexOutOfBoundsException ex)
+				{
+					return;
+				}
+			}
+
 			event.setModified();
 			setSelectSpell(currentSpell.getSpell());
-			event.setOption("Left Click " + client.getSelectedSpellName() + " -> ");
+			event.setOption("(P)Left Click " + client.getSelectedSpellName() + " -> ");
 		}
 		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && maging)
 		{
+			try
+			{
+				NPC npc = client.getCachedNPCs()[event.getParam0()];
+			}
+			catch (IndexOutOfBoundsException ex)
+			{
+				return;
+			}
 			event.setModified();
 			setSelectSpell(currentSpell.getSpell());
-			event.setOption("Left Click " + client.getSelectedSpellName() + " -> ");
+			event.setOption("(N)Left Click " + client.getSelectedSpellName() + " -> ");
 		}
 	}
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
 	{
-		if (event.getOption().contains("Left Click"))
+		if (event.getOption().contains("(P)"))
 		{
 			event.setOpcode(15);
+			event.setParam0(0);
+			event.setParam1(0);
+		}
+		else if (event.getOption().contains("(N)"))
+		{
+			event.setOpcode(8);
 			event.setParam0(0);
 			event.setParam1(0);
 		}
