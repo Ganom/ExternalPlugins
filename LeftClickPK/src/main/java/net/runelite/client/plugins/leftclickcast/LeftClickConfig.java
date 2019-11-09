@@ -3,7 +3,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.leftclickpk;
+package net.runelite.client.plugins.leftclickcast;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
@@ -28,30 +28,6 @@ public interface LeftClickConfig extends Config
 
 	@ConfigItem(
 		position = 1,
-		keyName = "enableTbEntangle",
-		name = "Enable TB/Entangle",
-		description = "This will cast tb until they're tb'd, then entangle until they're entangled.",
-		titleSection = "preset"
-	)
-	default boolean enableTbEntangle()
-	{
-		return false;
-	}
-
-	@ConfigItem(
-		position = 2,
-		keyName = "enableBlood",
-		name = "Enable Blood Barrage/Blitz",
-		description = "If the player is frozen/immune to freeze it will cast blood barrage/blitz.",
-		titleSection = "preset"
-	)
-	default boolean enableBlood()
-	{
-		return false;
-	}
-
-	@ConfigItem(
-		position = 3,
 		keyName = "customSpells",
 		name = "Use Custom Spells",
 		description = "Rather than preset ice barrage.",
@@ -63,19 +39,7 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 4,
-		keyName = "enableRainbow",
-		name = "Enable Rainbow Text",
-		description = "Just for funsies.",
-		titleSection = "preset"
-	)
-	default boolean enableRainbow()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		position = 5,
+		position = 2,
 		keyName = "disableFriendlyRegionChecks",
 		name = "Disable Friend/Clan/Lvl Checks",
 		description = "This will make it so you can cast on friends/clan members.",
@@ -133,6 +97,42 @@ public interface LeftClickConfig extends Config
 		return Keybind.NOT_SET;
 	}
 
+	@ConfigItem(
+		keyName = "spellFourSwap",
+		name = "Swap to Spell #4",
+		description = "",
+		position = 5,
+		titleSection = "hotkeys"
+	)
+	default Keybind spellFourSwap()
+	{
+		return Keybind.NOT_SET;
+	}
+
+	@ConfigItem(
+		keyName = "spell5Swap",
+		name = "Swap to Spell #5",
+		description = "",
+		position = 6,
+		titleSection = "hotkeys"
+	)
+	default Keybind spellFiveSwap()
+	{
+		return Keybind.NOT_SET;
+	}
+
+	@ConfigItem(
+		keyName = "spellSixSwap",
+		name = "Swap to Spell #6",
+		description = "",
+		position = 7,
+		titleSection = "hotkeys"
+	)
+	default Keybind spellSixSwap()
+	{
+		return Keybind.NOT_SET;
+	}
+
 	@ConfigTitleSection(
 		position = 8,
 		keyName = "spells",
@@ -176,6 +176,42 @@ public interface LeftClickConfig extends Config
 		titleSection = "spells"
 	)
 	default Spells spellThree()
+	{
+		return Spells.ICE_BARRAGE;
+	}
+
+	@ConfigItem(
+		keyName = "spellFour",
+		name = "Spell #4",
+		description = "",
+		position = 9,
+		titleSection = "spells"
+	)
+	default Spells spellFour()
+	{
+		return Spells.ICE_BARRAGE;
+	}
+
+	@ConfigItem(
+		keyName = "spellFive",
+		name = "Spell #5",
+		description = "",
+		position = 10,
+		titleSection = "spells"
+	)
+	default Spells spellFive()
+	{
+		return Spells.ICE_BARRAGE;
+	}
+
+	@ConfigItem(
+		keyName = "spellSix",
+		name = "Spell #6",
+		description = "",
+		position = 11,
+		titleSection = "spells"
+	)
+	default Spells spellSix()
 	{
 		return Spells.ICE_BARRAGE;
 	}

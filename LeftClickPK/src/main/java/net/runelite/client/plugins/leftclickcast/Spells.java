@@ -3,7 +3,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.leftclickpk;
+package net.runelite.client.plugins.leftclickcast;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -42,6 +42,15 @@ public enum Spells
 	WIND_STRIKE("Wind Strike", WidgetInfo.SPELL_WIND_STRIKE),
 	WIND_SURGE("Wind Surge", WidgetInfo.SPELL_WIND_SURGE),
 	WIND_WAVE("Wind Wave", WidgetInfo.SPELL_WIND_WAVE),
+
+	//Curses
+	CHARGE("Charge", WidgetInfo.SPELL_CHARGE),
+	CONFUSE("Confuse", WidgetInfo.SPELL_CONFUSE),
+	CURSE("Curse", WidgetInfo.SPELL_CURSE),
+	ENFEEBLE("Enfeeble", WidgetInfo.SPELL_ENFEEBLE),
+	STUN("Stun", WidgetInfo.SPELL_STUN),
+	VULNERABILITY("Vulnerability", WidgetInfo.SPELL_VULNERABILITY),
+	WEAKEN("Weaken", WidgetInfo.SPELL_WEAKEN),
 
 	//Ancients
 	BLOOD_BARRAGE("Blood Barrage", WidgetInfo.SPELL_BLOOD_BARRAGE),
