@@ -38,9 +38,9 @@ import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
-import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
@@ -430,6 +430,11 @@ public class OneClickPlugin extends Plugin
 			return;
 		}
 
+		if (event.getTarget() == null)
+		{
+			return;
+		}
+
 		switch (type)
 		{
 			case BRUMA_ROOT:
@@ -541,6 +546,7 @@ public class OneClickPlugin extends Plugin
 					if (updateSelectedItem(ItemID.RAW_KARAMBWAN))
 					{
 						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+						tick = true;
 					}
 				}
 				break;

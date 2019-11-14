@@ -116,6 +116,15 @@ public class LeftClickCast extends Plugin
 	public void startUp()
 	{
 		addSubscriptions();
+		if (client.getGameState() == GameState.LOGGED_IN)
+		{
+			keyManager.registerKeyListener(spellOneSwap);
+			keyManager.registerKeyListener(spellTwoSwap);
+			keyManager.registerKeyListener(spellThreeSwap);
+			keyManager.registerKeyListener(spellFourSwap);
+			keyManager.registerKeyListener(spellFiveSwap);
+			keyManager.registerKeyListener(spellSixSwap);
+		}
 	}
 
 	@Override
@@ -184,7 +193,7 @@ public class LeftClickCast extends Plugin
 
 			event.setModified();
 			setSelectSpell(currentSpell.getSpell());
-			event.setOption("(P)Left Click " + client.getSelectedSpellName() + " -> ");
+			event.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ");
 		}
 		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && maging)
 		{
@@ -198,7 +207,7 @@ public class LeftClickCast extends Plugin
 			}
 			event.setModified();
 			setSelectSpell(currentSpell.getSpell());
-			event.setOption("(N)Left Click " + client.getSelectedSpellName() + " -> ");
+			event.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ");
 		}
 	}
 
