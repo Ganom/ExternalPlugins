@@ -8,7 +8,7 @@
     <parent>
         <artifactId>Public-Plugins</artifactId>
         <groupId>us.runelitepl</groupId>
-		<version>1.5.40</version>
+		<version>1.5.41</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
