@@ -78,7 +78,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customSwapFive",
 		name = "Swap Set: Five",
 		description = "",
-		position = 4,
+		position = 5,
 		titleSection = "mainConfig"
 	)
 	default String customSwapFive()
@@ -90,7 +90,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customSwapSix",
 		name = "Swap Set: Six",
 		description = "",
-		position = 4,
+		position = 6,
 		titleSection = "mainConfig"
 	)
 	default String customSwapSix()
@@ -102,7 +102,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customSwapSeven",
 		name = "Swap Set: Seven",
 		description = "",
-		position = 4,
+		position = 7,
 		titleSection = "mainConfig"
 	)
 	default String customSwapSeven()
@@ -114,7 +114,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customSwapEight",
 		name = "Swap Set: Eight",
 		description = "",
-		position = 4,
+		position = 8,
 		titleSection = "mainConfig"
 	)
 	default String customSwapEight()
@@ -124,7 +124,7 @@ public interface CustomSwapperConfig extends Config
 
 
 	@ConfigTitleSection(
-		position = 4,
+		position = 9,
 		keyName = "hotkeys",
 		name = "Hotkeys",
 		description = ""
@@ -138,7 +138,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customOne",
 		name = "Execute One",
 		description = "",
-		position = 5,
+		position = 10,
 		titleSection = "hotkeys"
 	)
 	default Keybind customOne()
@@ -150,7 +150,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customTwo",
 		name = "Execute Two",
 		description = "",
-		position = 6,
+		position = 11,
 		titleSection = "hotkeys"
 	)
 	default Keybind customTwo()
@@ -162,7 +162,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customThree",
 		name = "Execute Three",
 		description = "",
-		position = 7,
+		position = 12,
 		titleSection = "hotkeys"
 	)
 	default Keybind customThree()
@@ -174,7 +174,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customFour",
 		name = "Execute Four",
 		description = "",
-		position = 8,
+		position = 13,
 		titleSection = "hotkeys"
 	)
 	default Keybind customFour()
@@ -186,7 +186,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customFive",
 		name = "Execute Five",
 		description = "",
-		position = 8,
+		position = 14,
 		titleSection = "hotkeys"
 	)
 	default Keybind customFive()
@@ -198,7 +198,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customSix",
 		name = "Execute Six",
 		description = "",
-		position = 8,
+		position = 15,
 		titleSection = "hotkeys"
 	)
 	default Keybind customSix()
@@ -210,7 +210,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customSeven",
 		name = "Execute Seven",
 		description = "",
-		position = 8,
+		position = 16,
 		titleSection = "hotkeys"
 	)
 	default Keybind customSeven()
@@ -222,7 +222,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "customEight",
 		name = "Execute Eight",
 		description = "",
-		position = 8,
+		position = 17,
 		titleSection = "hotkeys"
 	)
 	default Keybind customEight()
@@ -234,7 +234,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "config",
 		name = "Config",
 		description = "",
-		position = 10
+		position = 18
 	)
 	default Title config()
 	{
@@ -243,10 +243,22 @@ public interface CustomSwapperConfig extends Config
 
 	@ConfigItem(
 		keyName = "randLow",
+		name = "Swap back to inventory",
+		description = "Once finished with a swap, should it swap back to inventory?",
+		titleSection = "config",
+		position = 19
+	)
+	default boolean swapBack()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "randLow",
 		name = "Minimum MS Delay",
 		description = "Dont set this too high.",
 		titleSection = "config",
-		position = 11
+		position = 20
 	)
 	default int randLow()
 	{
@@ -258,7 +270,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Maximum MS Delay",
 		description = "Dont set this too high.",
 		titleSection = "config",
-		position = 12
+		position = 21
 	)
 	default int randHigh()
 	{

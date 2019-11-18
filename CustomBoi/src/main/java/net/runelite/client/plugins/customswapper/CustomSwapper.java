@@ -272,6 +272,11 @@ public class CustomSwapper extends Plugin
 			}
 		}
 
+		if (config.swapBack())
+		{
+			rectPairs.add(Pair.of(Tab.INVENTORY, null));
+		}
+
 		executorService.submit(() ->
 		{
 			for (Pair<Tab, Rectangle> pair : rectPairs)
@@ -368,7 +373,13 @@ public class CustomSwapper extends Plugin
 
 	private void handleSwitch(Rectangle rectangle)
 	{
+		if (rectangle == null)
+		{
+			return;
+		}
+
 		final Point cp = getClickPoint(rectangle);
+
 		if (cp.getX() >= 1 && cp.getY() >= 1)
 		{
 			leftClick(cp.getX(), cp.getY());
