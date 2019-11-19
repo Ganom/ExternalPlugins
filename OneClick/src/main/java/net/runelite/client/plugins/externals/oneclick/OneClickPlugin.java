@@ -368,6 +368,54 @@ public class OneClickPlugin extends Plugin
 					event.setModified();
 				}
 				break;
+			case STEAM_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						event.getOption().equals("Craft-rune") &&
+						event.getTarget().equals("<col=ffff>Altar"))
+				{
+					if (findItem(ItemID.WATER_RUNE).getLeft() == -1)
+					{
+						return;
+					}
+
+					if (!imbue && enableImbue)
+					{
+						event.setOption("Use");
+						event.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+						event.setForceLeftClick(true);
+						event.setModified();
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
+					event.setModified();
+				}
+				break;
+			case SMOKE_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						event.getOption().equals("Craft-rune") &&
+						event.getTarget().equals("<col=ffff>Altar"))
+				{
+					if (findItem(ItemID.AIR_RUNE).getLeft() == -1)
+					{
+						return;
+					}
+
+					if (!imbue && enableImbue)
+					{
+						event.setOption("Use");
+						event.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+						event.setForceLeftClick(true);
+						event.setModified();
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
+					event.setModified();
+				}
+				break;
 			case HIGH_ALCH:
 				if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() && alchItem != null && event.getOption().equals("Cast") && event.getTarget().equals("<col=00ff00>High Level Alchemy</col>"))
 				{
@@ -502,6 +550,42 @@ public class OneClickPlugin extends Plugin
 				}
 				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+				{
+					event.setIdentifier(1);
+					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
+					event.setParam0(-1);
+					event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
+				}
+				break;
+			case STEAM_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						target.equals("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar"))
+				{
+					if (updateSelectedItem(ItemID.WATER_RUNE))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+					}
+				}
+				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+				{
+					event.setIdentifier(1);
+					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
+					event.setParam0(-1);
+					event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
+				}
+				break;
+			case SMOKE_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						target.equals("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar"))
+				{
+					if (updateSelectedItem(ItemID.AIR_RUNE))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+					}
+				}
+				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
 				{
 					event.setIdentifier(1);
 					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
