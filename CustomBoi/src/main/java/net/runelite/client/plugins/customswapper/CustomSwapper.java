@@ -259,7 +259,7 @@ public class CustomSwapper extends Plugin
 				break;
 				case "enable":
 				{
-					final Widget widget = client.getWidget(593, 38);
+					final Widget widget = client.getWidget(593, 36);
 
 					if (widget == null)
 					{
