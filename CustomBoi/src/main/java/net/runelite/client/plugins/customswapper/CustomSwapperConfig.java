@@ -242,7 +242,7 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "randLow",
+		keyName = "swapBack",
 		name = "Swap back to inventory",
 		description = "Once finished with a swap, should it swap back to inventory?",
 		titleSection = "config",
