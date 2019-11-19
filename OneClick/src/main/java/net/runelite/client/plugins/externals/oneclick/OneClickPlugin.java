@@ -416,6 +416,21 @@ public class OneClickPlugin extends Plugin
 					event.setModified();
 				}
 				break;
+			case TIARA:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						event.getOption().equals("Craft-rune") &&
+						event.getTarget().equals("<col=ffff>Altar"))
+				{
+					if (findItem(ItemID.TIARA).getLeft() == -1)
+					{
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
+					event.setModified();
+				}
+				break;
 			case HIGH_ALCH:
 				if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() && alchItem != null && event.getOption().equals("Cast") && event.getTarget().equals("<col=00ff00>High Level Alchemy</col>"))
 				{
@@ -591,6 +606,14 @@ public class OneClickPlugin extends Plugin
 					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
 					event.setParam0(-1);
 					event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
+				}
+				break;
+			case TIARA:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						target.equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar"))
+				{
+					updateSelectedItem(ItemID.TIARA);
+					event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 				}
 				break;
 			case HIGH_ALCH:

@@ -26,6 +26,7 @@ public enum Types
 	KARAMBWANS("Karambwans"),
 	DARK_ESSENCE("Dark Essence"),
 	BRUMA_ROOT("Bruma Roots"),
+	TIARA("Tiara"),
 	NONE("None");
 
 	private String name;
