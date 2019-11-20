@@ -3,7 +3,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.customswapper;
+package net.runelite.client.plugins.externals.customswapper;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;

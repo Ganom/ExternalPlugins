@@ -3,7 +3,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.customswapper.utils;
+package net.runelite.client.plugins.externals.customswapper.utils;
 
 import javax.inject.Inject;
 import net.runelite.api.Client;

@@ -3,13 +3,13 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.customswapper;
+package net.runelite.client.plugins.externals.customswapper;
 
 import com.google.common.base.Splitter;
 import com.google.inject.Provides;
 import java.awt.AWTException;
-import java.awt.Canvas;
 import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -41,10 +41,10 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
-import net.runelite.client.plugins.customswapper.utils.PrayerMap;
-import net.runelite.client.plugins.customswapper.utils.Spells;
-import net.runelite.client.plugins.customswapper.utils.Tab;
-import net.runelite.client.plugins.customswapper.utils.TabUtils;
+import net.runelite.client.plugins.externals.customswapper.utils.PrayerMap;
+import net.runelite.client.plugins.externals.customswapper.utils.Spells;
+import net.runelite.client.plugins.externals.customswapper.utils.Tab;
+import net.runelite.client.plugins.externals.customswapper.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 import net.runelite.client.util.Clipboard;
 import net.runelite.client.util.HotkeyListener;
@@ -79,7 +79,7 @@ public class CustomSwapper extends Plugin
 
 	private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 1, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.DiscardPolicy());
-	private Flexo flexo;
+	private Robot robot;
 
 	@Provides
 	CustomSwapperConfig getConfig(ConfigManager manager)
@@ -91,7 +91,7 @@ public class CustomSwapper extends Plugin
 	protected void startUp() throws AWTException
 	{
 		Flexo.client = client;
-		flexo = new Flexo();
+		robot = new Robot();
 		eventBus.subscribe(CommandExecuted.class, this, this::onCommandExecuted);
 		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
 		if (client.getGameState() == GameState.LOGGED_IN)
@@ -272,16 +272,15 @@ public class CustomSwapper extends Plugin
 			}
 		}
 
-		if (config.swapBack())
-		{
-			rectPairs.add(Pair.of(Tab.INVENTORY, null));
-		}
-
 		executorService.submit(() ->
 		{
 			for (Pair<Tab, Rectangle> pair : rectPairs)
 			{
 				executePair(pair);
+			}
+			if (config.swapBack())
+			{
+				robot.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
 			}
 		});
 	}
@@ -293,40 +292,45 @@ public class CustomSwapper extends Plugin
 			case COMBAT:
 				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.COMBAT.getId())
 				{
-					flexo.keyPress(tabUtils.getTabHotkey(pair.getLeft()));
-					flexo.delay(25);
+					robot.delay((int) getMillis());
+					robot.keyPress(tabUtils.getTabHotkey(pair.getLeft()));
+					robot.delay((int) getMillis());
 				}
 				handleSwitch(pair.getRight());
 				break;
 			case EQUIPMENT:
 				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.EQUIPMENT.getId())
 				{
-					flexo.keyPress(tabUtils.getTabHotkey(pair.getLeft()));
-					flexo.delay(25);
+					robot.delay((int) getMillis());
+					robot.keyPress(tabUtils.getTabHotkey(pair.getLeft()));
+					robot.delay((int) getMillis());
 				}
 				handleSwitch(pair.getRight());
 				break;
 			case INVENTORY:
 				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.INVENTORY.getId())
 				{
-					flexo.keyPress(tabUtils.getTabHotkey(pair.getLeft()));
-					flexo.delay(25);
+					robot.delay((int) getMillis());
+					robot.keyPress(tabUtils.getTabHotkey(pair.getLeft()));
+					robot.delay((int) getMillis());
 				}
 				handleSwitch(pair.getRight());
 				break;
 			case PRAYER:
 				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.PRAYER.getId())
 				{
-					flexo.keyPress(tabUtils.getTabHotkey(pair.getLeft()));
-					flexo.delay(25);
+					robot.delay((int) getMillis());
+					robot.keyPress(tabUtils.getTabHotkey(pair.getLeft()));
+					robot.delay((int) getMillis());
 				}
 				handleSwitch(pair.getRight());
 				break;
 			case SPELLBOOK:
 				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.SPELLBOOK.getId())
 				{
-					flexo.keyPress(tabUtils.getTabHotkey(pair.getLeft()));
-					flexo.delay(25);
+					robot.delay((int) getMillis());
+					robot.keyPress(tabUtils.getTabHotkey(pair.getLeft()));
+					robot.delay((int) getMillis());
 				}
 				handleSwitch(pair.getRight());
 				break;
@@ -401,49 +405,51 @@ public class CustomSwapper extends Plugin
 
 	private void leftClick(int x, int y)
 	{
-		final Canvas canvas = client.getCanvas();
-		final long time = System.currentTimeMillis();
-		final Point p = this.client.getMouseCanvasPosition();
 		final double scalingFactor = configManager.getConfig(StretchedModeConfig.class).scalingFactor();
-
 		if (client.isStretchedEnabled())
 		{
-			if (p.getX() != x || p.getY() != y)
+			if (client.getMouseCanvasPosition().getX() != x ||
+				client.getMouseCanvasPosition().getY() != y)
 			{
-				this.moveMouse(x, y);
+				moveMouse(x, y);
 			}
 
 			double scale = 1 + (scalingFactor / 100);
 
-			MouseEvent mousePressed = new MouseEvent(canvas, 501, time, 0, (int) (p.getX() * scale), (int) (p.getY() * scale), 1, false, 1);
-			canvas.dispatchEvent(mousePressed);
-			MouseEvent mouseReleased = new MouseEvent(canvas, 502, time, 0, (int) (p.getX() * scale), (int) (p.getY() * scale), 1, false, 1);
-			canvas.dispatchEvent(mouseReleased);
-			return;
+			MouseEvent mousePressed =
+				new MouseEvent(client.getCanvas(), 501, System.currentTimeMillis(), 0, (int) (client.getMouseCanvasPosition().getX() * scale), (int) (client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
+			client.getCanvas().dispatchEvent(mousePressed);
+			MouseEvent mouseReleased =
+				new MouseEvent(client.getCanvas(), 502, System.currentTimeMillis(), 0, (int) (client.getMouseCanvasPosition().getX() * scale), (int) (client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
+			client.getCanvas().dispatchEvent(mouseReleased);
+			MouseEvent mouseClicked =
+				new MouseEvent(client.getCanvas(), 500, System.currentTimeMillis(), 0, (int) (client.getMouseCanvasPosition().getX() * scale), (int) (client.getMouseCanvasPosition().getY() * scale), 1, false, 1);
+			client.getCanvas().dispatchEvent(mouseClicked);
 		}
-
-		if (p.getX() != x || p.getY() != y)
+		else
 		{
-			this.moveMouse(x, y);
+			if (client.getMouseCanvasPosition().getX() != x ||
+				client.getMouseCanvasPosition().getY() != y)
+			{
+				moveMouse(x, y);
+			}
+			MouseEvent mousePressed = new MouseEvent(client.getCanvas(), 501, System.currentTimeMillis(), 0, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), 1, false, 1);
+			client.getCanvas().dispatchEvent(mousePressed);
+			MouseEvent mouseReleased = new MouseEvent(client.getCanvas(), 502, System.currentTimeMillis(), 0, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), 1, false, 1);
+			client.getCanvas().dispatchEvent(mouseReleased);
+			MouseEvent mouseClicked = new MouseEvent(client.getCanvas(), 500, System.currentTimeMillis(), 0, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY(), 1, false, 1);
+			client.getCanvas().dispatchEvent(mouseClicked);
 		}
-
-		MouseEvent mousePressed = new MouseEvent(canvas, 501, time, 0, p.getX(), p.getY(), 1, false, 1);
-		canvas.dispatchEvent(mousePressed);
-		MouseEvent mouseReleased = new MouseEvent(canvas, 502, time, 0, p.getX(), p.getY(), 1, false, 1);
-		canvas.dispatchEvent(mouseReleased);
 	}
 
 	private void moveMouse(int x, int y)
 	{
-		final Canvas canvas = client.getCanvas();
-		final long time = System.currentTimeMillis();
-
-		MouseEvent mouseEntered = new MouseEvent(canvas, 504, time, 0, x, y, 0, false);
-		canvas.dispatchEvent(mouseEntered);
-		MouseEvent mouseExited = new MouseEvent(canvas, 505, time, 0, x, y, 0, false);
-		canvas.dispatchEvent(mouseExited);
-		MouseEvent mouseMoved = new MouseEvent(canvas, 503, time, 0, x, y, 0, false);
-		canvas.dispatchEvent(mouseMoved);
+		MouseEvent mouseEntered = new MouseEvent(client.getCanvas(), 504, System.currentTimeMillis(), 0, x, y, 0, false);
+		client.getCanvas().dispatchEvent(mouseEntered);
+		MouseEvent mouseExited = new MouseEvent(client.getCanvas(), 505, System.currentTimeMillis(), 0, x, y, 0, false);
+		client.getCanvas().dispatchEvent(mouseExited);
+		MouseEvent mouseMoved = new MouseEvent(client.getCanvas(), 503, System.currentTimeMillis(), 0, x, y, 0, false);
+		client.getCanvas().dispatchEvent(mouseMoved);
 	}
 
 	private Point getClickPoint(Rectangle rect)
