@@ -185,7 +185,14 @@ public class CustomSwapper extends Plugin
 		for (String s : tmp)
 		{
 			String[] split = s.split(":");
-			map.put(split[0], split[1]);
+			try
+			{
+				map.put(split[0], split[1]);
+			}
+			catch (IndexOutOfBoundsException e)
+			{
+				return;
+			}
 		}
 
 		for (Map.Entry<String, String> entry : map.entrySet())
@@ -205,6 +212,21 @@ public class CustomSwapper extends Plugin
 					}
 
 					rectPairs.add(Pair.of(Tab.INVENTORY, rect));
+				}
+				break;
+				case "clean":
+				{
+					final List<Rectangle> rectangleList = listOfBounds(Integer.parseInt(param));
+
+					if (rectangleList.isEmpty())
+					{
+						continue;
+					}
+
+					for (Rectangle rectangle : rectangleList)
+					{
+						rectPairs.add(Pair.of(Tab.INVENTORY, rectangle));
+					}
 				}
 				break;
 				case "remove":
@@ -259,7 +281,7 @@ public class CustomSwapper extends Plugin
 				break;
 				case "enable":
 				{
-					final Widget widget = client.getWidget(593, 36);
+					final Widget widget = client.getWidget(593, 35);
 
 					if (widget == null)
 					{
@@ -350,6 +372,22 @@ public class CustomSwapper extends Plugin
 		}
 
 		return null;
+	}
+
+	private List<Rectangle> listOfBounds(int id)
+	{
+		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
+		final List<Rectangle> bounds = new ArrayList<>();
+
+		for (WidgetItem item : inventoryWidget.getWidgetItems())
+		{
+			if (item.getId() == id)
+			{
+				bounds.add(item.getCanvasBounds());
+			}
+		}
+
+		return bounds;
 	}
 
 	private Rectangle equipBounds(int id)

@@ -20,7 +20,7 @@ public class TabUtils
 
 	public int getTabHotkey(Tab tab)
 	{
-		final int var = client.getVarbitValue(client.getVarps(), tab.getVarbit());
+		final int var = client.getVar(tab.getVarbit());
 		final int offset = 111;
 
 		switch (var)
