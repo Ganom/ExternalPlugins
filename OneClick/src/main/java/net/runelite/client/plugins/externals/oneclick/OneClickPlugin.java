@@ -67,7 +67,8 @@ public class OneClickPlugin extends Plugin
 	private static final Set<Integer> LOG_ID = ImmutableSet.of(
 		ItemID.LOGS, ItemID.OAK_LOGS, ItemID.WILLOW_LOGS, ItemID.TEAK_LOGS,
 		ItemID.MAPLE_LOGS, ItemID.MAHOGANY_LOGS, ItemID.YEW_LOGS, ItemID.MAGIC_LOGS,
-		ItemID.REDWOOD_LOGS
+		ItemID.REDWOOD_LOGS, ItemID.RED_LOGS, ItemID.GREEN_LOGS, ItemID.BLUE_LOGS,
+		ItemID.WHITE_LOGS, ItemID.PURPLE_LOGS
 	);
 	private static final Set<Integer> HOPS_SEED = ImmutableSet.of(
 		ItemID.BARLEY_SEED, ItemID.HAMMERSTONE_SEED, ItemID.ASGARNIAN_SEED,
