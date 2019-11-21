@@ -18,6 +18,8 @@ public enum Types
 	BIRDHOUSES("Birdhouses"),
 	HERB_TAR("Herb Tar"),
 	LAVA_RUNES("Lava Runes"),
+	STEAM_RUNES("Steam Runes"),
+	SMOKE_RUNES("Smoke Runes"),
 	HIGH_ALCH("High Alch"),
 	DWARF_CANNON("Dwarf Cannon"),
 	BONES("Bones"),
