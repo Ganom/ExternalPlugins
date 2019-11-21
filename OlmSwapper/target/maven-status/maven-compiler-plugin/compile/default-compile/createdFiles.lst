@@ -1,0 +1,7 @@
+net\runelite\client\plugins\externals\olmswapper\OlmSwapper.class
+net\runelite\client\plugins\externals\olmswapper\OlmSwapperConfig.class
+net\runelite\client\plugins\externals\olmswapper\utils\Tab.class
+net\runelite\client\plugins\externals\olmswapper\utils\ActionType.class
+net\runelite\client\plugins\externals\olmswapper\utils\ExtUtils.class
+net\runelite\client\plugins\externals\olmswapper\utils\TabUtils.class
+net\runelite\client\plugins\externals\olmswapper\utils\ExtUtils$1.class

@@ -23,6 +23,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
+import static net.runelite.api.MenuOpcode.MENU_ACTION_DEPRIORITIZE_OFFSET;
 import static net.runelite.api.ObjectID.DWARF_MULTICANNON;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
@@ -73,6 +74,9 @@ public class OneClickPlugin extends Plugin
 	private static final Set<Integer> HOPS_SEED = ImmutableSet.of(
 		ItemID.BARLEY_SEED, ItemID.HAMMERSTONE_SEED, ItemID.ASGARNIAN_SEED,
 		ItemID.JUTE_SEED, ItemID.YANILLIAN_SEED, ItemID.KRANDORIAN_SEED, ItemID.WILDBLOOD_SEED
+	);
+	private static final Set<Integer> TITHE_SEED = ImmutableSet.of(
+		ItemID.GOLOVANOVA_SEED, ItemID.BOLOGANO_SEED, ItemID.LOGAVANO_SEED
 	);
 	private static final Set<Integer> HERBS = ImmutableSet.of(
 		ItemID.GUAM_LEAF, ItemID.MARRENTILL, ItemID.TARROMIN, ItemID.HARRALANDER
@@ -231,9 +235,9 @@ public class OneClickPlugin extends Plugin
 			}
 
 			if (spell.getSpriteId() != SpriteID.SPELL_HIGH_LEVEL_ALCHEMY ||
-				spell.getSpriteId() == SpriteID.SPELL_HIGH_LEVEL_ALCHEMY_DISABLED ||
-				client.getBoostedSkillLevel(Skill.MAGIC) < 55 ||
-				client.getVar(Varbits.SPELLBOOK) != 0)
+					spell.getSpriteId() == SpriteID.SPELL_HIGH_LEVEL_ALCHEMY_DISABLED ||
+					client.getBoostedSkillLevel(Skill.MAGIC) < 55 ||
+					client.getVar(Varbits.SPELLBOOK) != 0)
 			{
 				alchItem = null;
 				return;
@@ -348,7 +352,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case LAVA_RUNES:
-				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().equals("Craft-rune") && event.getTarget().equals("<col=ffff>Altar"))
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar"))
 				{
 					if (findItem(ItemID.EARTH_RUNE).getLeft() == -1)
 					{
@@ -371,8 +377,8 @@ public class OneClickPlugin extends Plugin
 				break;
 			case STEAM_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						event.getOption().equals("Craft-rune") &&
-						event.getTarget().equals("<col=ffff>Altar"))
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar"))
 				{
 					if (findItem(ItemID.WATER_RUNE).getLeft() == -1)
 					{
@@ -395,8 +401,8 @@ public class OneClickPlugin extends Plugin
 				break;
 			case SMOKE_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						event.getOption().equals("Craft-rune") &&
-						event.getTarget().equals("<col=ffff>Altar"))
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar"))
 				{
 					if (findItem(ItemID.AIR_RUNE).getLeft() == -1)
 					{
@@ -419,8 +425,8 @@ public class OneClickPlugin extends Plugin
 				break;
 			case TIARA:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						event.getOption().equals("Craft-rune") &&
-						event.getTarget().equals("<col=ffff>Altar"))
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar"))
 				{
 					if (findItem(ItemID.TIARA).getLeft() == -1)
 					{
@@ -490,6 +496,26 @@ public class OneClickPlugin extends Plugin
 					event.setTarget("<col=ff9040>Chisel<col=ffffff> -> <col=ff9040>Dark essence block");
 					event.setForceLeftClick(true);
 					event.setModified();
+				}
+				break;
+			case TITHE_SEED:
+				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() && event.getTarget().toLowerCase().contains("tithe"))
+				{
+					if (findItem(TITHE_SEED).getLeft() == -1)
+					{
+						return;
+					}
+
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Seed<col=ffffff> -> " + event.getTarget());
+					event.setForceLeftClick(true);
+					event.setModified();
+				}
+				if (event.getOpcode() == MenuOpcode.WALK.getId())
+				{
+					MenuEntry menuEntry = client.getLeftClickMenuEntry();
+					menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
+					client.setLeftClickMenuEntry(menuEntry);
 				}
 				break;
 		}
@@ -565,7 +591,7 @@ public class OneClickPlugin extends Plugin
 					}
 				}
 				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+						target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
 				{
 					event.setIdentifier(1);
 					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
@@ -575,7 +601,7 @@ public class OneClickPlugin extends Plugin
 				break;
 			case STEAM_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						target.equals("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar"))
+					target.equals("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar"))
 				{
 					if (updateSelectedItem(ItemID.WATER_RUNE))
 					{
@@ -593,7 +619,7 @@ public class OneClickPlugin extends Plugin
 				break;
 			case SMOKE_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						target.equals("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar"))
+					target.equals("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar"))
 				{
 					if (updateSelectedItem(ItemID.AIR_RUNE))
 					{
@@ -611,7 +637,7 @@ public class OneClickPlugin extends Plugin
 				break;
 			case TIARA:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						target.equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar"))
+					target.equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar"))
 				{
 					updateSelectedItem(ItemID.TIARA);
 					event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
@@ -676,6 +702,16 @@ public class OneClickPlugin extends Plugin
 					if (updateSelectedItem(ItemID.DARK_ESSENCE_BLOCK))
 					{
 						event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+					}
+				}
+				break;
+			case TITHE_SEED:
+				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
+					event.getTarget().contains("<col=ff9040>Seed<col=ffffff> -> ") && target.toLowerCase().contains("tithe"))
+				{
+					if (updateSelectedItem(TITHE_SEED))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 					}
 				}
 				break;
