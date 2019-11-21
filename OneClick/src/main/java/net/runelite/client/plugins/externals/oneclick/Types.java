@@ -4,7 +4,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.oneclick;
+package net.runelite.client.plugins.externals.oneclick;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
