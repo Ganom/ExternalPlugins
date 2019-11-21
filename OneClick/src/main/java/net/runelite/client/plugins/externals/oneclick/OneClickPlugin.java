@@ -4,7 +4,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.oneclick;
+package net.runelite.client.plugins.externals.oneclick;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
@@ -23,8 +23,6 @@ import net.runelite.api.GameState;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
-
-import static net.runelite.api.MenuOpcode.MENU_ACTION_DEPRIORITIZE_OFFSET;
 import static net.runelite.api.ObjectID.DWARF_MULTICANNON;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
@@ -88,7 +86,6 @@ public class OneClickPlugin extends Plugin
 	private static final Set<Integer> SEED_SET = ImmutableSet.of(
 			ItemID.GOLOVANOVA_SEED, ItemID.BOLOGANO_SEED, ItemID.LOGAVANO_SEED
 	);
-
 	private static final Set<String> BIRD_HOUSES_NAMES = ImmutableSet.of(
 		"<col=ffff>Bird house (empty)", "<col=ffff>Oak birdhouse (empty)", "<col=ffff>Willow birdhouse (empty)",
 		"<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
@@ -297,6 +294,7 @@ public class OneClickPlugin extends Plugin
 						return;
 					}
 					event.setTarget("<col=ff9040>Knife<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 			}
@@ -309,6 +307,7 @@ public class OneClickPlugin extends Plugin
 						return;
 					}
 					event.setTarget("<col=ff9040>Feather<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 				break;
@@ -320,6 +319,7 @@ public class OneClickPlugin extends Plugin
 						return;
 					}
 					event.setTarget("<col=ff9040>Tinderbox<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 				break;
@@ -333,6 +333,7 @@ public class OneClickPlugin extends Plugin
 					event.setOption("Use");
 					event.setTarget("<col=ff9040>Hops seed<col=ffffff> -> " + targetMap.get(id));
 					event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 				break;
@@ -344,6 +345,7 @@ public class OneClickPlugin extends Plugin
 						return;
 					}
 					event.setTarget("<col=ff9040>Swamp tar<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 				break;
@@ -359,11 +361,61 @@ public class OneClickPlugin extends Plugin
 					{
 						event.setOption("Use");
 						event.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+						event.setForceLeftClick(true);
 						event.setModified();
 						return;
 					}
 					event.setOption("Use");
 					event.setTarget("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
+					event.setModified();
+				}
+				break;
+			case STEAM_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						event.getOption().equals("Craft-rune") &&
+						event.getTarget().equals("<col=ffff>Altar"))
+				{
+					if (findItem(ItemID.WATER_RUNE).getLeft() == -1)
+					{
+						return;
+					}
+
+					if (!imbue && enableImbue)
+					{
+						event.setOption("Use");
+						event.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+						event.setForceLeftClick(true);
+						event.setModified();
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
+					event.setModified();
+				}
+				break;
+			case SMOKE_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						event.getOption().equals("Craft-rune") &&
+						event.getTarget().equals("<col=ffff>Altar"))
+				{
+					if (findItem(ItemID.AIR_RUNE).getLeft() == -1)
+					{
+						return;
+					}
+
+					if (!imbue && enableImbue)
+					{
+						event.setOption("Use");
+						event.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+						event.setForceLeftClick(true);
+						event.setModified();
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 				break;
@@ -372,6 +424,7 @@ public class OneClickPlugin extends Plugin
 				{
 					event.setOption("Cast");
 					event.setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> " + alchItem.getName());
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 				break;
@@ -384,6 +437,7 @@ public class OneClickPlugin extends Plugin
 					}
 					event.setOption("Use");
 					event.setTarget("<col=ff9040>Cannonball<col=ffffff> -> <col=ffff>Dwarf multicannon");
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 				break;
@@ -396,6 +450,7 @@ public class OneClickPlugin extends Plugin
 					}
 					event.setOption("Use");
 					event.setTarget("<col=ff9040>Bones<col=ffffff> -> " + event.getTarget());
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 				break;
@@ -428,6 +483,7 @@ public class OneClickPlugin extends Plugin
 					}
 					event.setOption("Use");
 					event.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + event.getTarget());
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 				break;
@@ -439,6 +495,7 @@ public class OneClickPlugin extends Plugin
 						return;
 					}
 					event.setTarget("<col=ff9040>Chisel<col=ffffff> -> <col=ff9040>Dark essence block");
+					event.setForceLeftClick(true);
 					event.setModified();
 				}
 				break;
@@ -516,6 +573,42 @@ public class OneClickPlugin extends Plugin
 				}
 				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+				{
+					event.setIdentifier(1);
+					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
+					event.setParam0(-1);
+					event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
+				}
+				break;
+			case STEAM_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						target.equals("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar"))
+				{
+					if (updateSelectedItem(ItemID.WATER_RUNE))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+					}
+				}
+				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+				{
+					event.setIdentifier(1);
+					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
+					event.setParam0(-1);
+					event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
+				}
+				break;
+			case SMOKE_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						target.equals("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar"))
+				{
+					if (updateSelectedItem(ItemID.AIR_RUNE))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+					}
+				}
+				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
 				{
 					event.setIdentifier(1);
 					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
