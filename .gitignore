@@ -1,3 +1,12 @@
 *.iml
 .idea
 .github.idea\
+/AutoPrayFlick/target/
+/CustomBoi/target/
+/Flexo/target/
+/ItemDropper/target/
+/LeftClickCast/target/
+/NeverLog/target/
+/NyloSwapper/target/
+/OlmSwapper/target/
+/OneClick/target/
