@@ -716,7 +716,6 @@ public class OneClickPlugin extends Plugin
 		}
 		return false;
 	}
-	
 	private Pair<Integer, Integer> findItem(int id)
 	{
 		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
