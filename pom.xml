@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>us.runelitepl</groupId>
 	<artifactId>Public-Plugins</artifactId>
-	<version>1.5.41</version>
+	<version>1.5.42</version>
 
 	<modules>
 		<module>AutoPrayFlick</module>
@@ -29,19 +29,19 @@
 		<dependency>
 			<groupId>us.runelitepl</groupId>
 			<artifactId>client</artifactId>
-			<version>1.5.41</version>
+			<version>1.5.42</version>
 			<scope>system</scope>
 			<systemPath>
-				${user.home}/.runelite/repository2/runelite-client-${project.version}.jar
+				${user.home}/.runelite/repository2/runelite-client-${project.version}-SNAPSHOT.jar
 			</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>us.runelitepl</groupId>
 			<artifactId>api</artifactId>
-			<version>1.5.41</version>
+			<version>1.5.42</version>
 			<scope>system</scope>
 			<systemPath>
-				${user.home}/.runelite/repository2/runelite-api-${project.version}.jar
+				${user.home}/.runelite/repository2/runelite-api-${project.version}-SNAPSHOT.jar
 			</systemPath>
 		</dependency>
 		<dependency>

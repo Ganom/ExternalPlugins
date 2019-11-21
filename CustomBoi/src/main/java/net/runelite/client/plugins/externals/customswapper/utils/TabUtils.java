@@ -3,7 +3,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.customswapper.utils;
+package net.runelite.client.plugins.externals.customswapper.utils;
 
 import javax.inject.Inject;
 import net.runelite.api.Client;
@@ -20,7 +20,7 @@ public class TabUtils
 
 	public int getTabHotkey(Tab tab)
 	{
-		final int var = client.getVarbitValue(client.getVarps(), tab.getVarbit());
+		final int var = client.getVar(tab.getVarbit());
 		final int offset = 111;
 
 		switch (var)
