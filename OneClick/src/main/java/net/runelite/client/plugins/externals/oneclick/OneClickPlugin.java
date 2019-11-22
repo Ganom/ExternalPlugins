@@ -23,6 +23,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
+import static net.runelite.api.MenuOpcode.MENU_ACTION_DEPRIORITIZE_OFFSET;
 import static net.runelite.api.ObjectID.DWARF_MULTICANNON;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
