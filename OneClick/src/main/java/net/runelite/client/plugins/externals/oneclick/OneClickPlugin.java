@@ -83,6 +83,9 @@ public class OneClickPlugin extends Plugin
 		ItemID.RAURG_BONES, ItemID.HYDRA_BONES, ItemID.DAGANNOTH_BONES, ItemID.OURG_BONES, ItemID.SUPERIOR_DRAGON_BONES,
 		ItemID.WYVERN_BONES
 	);
+	private static final Set<Integer> SEED_SET = ImmutableSet.of(
+		ItemID.GOLOVANOVA_SEED, ItemID.BOLOGANO_SEED, ItemID.LOGAVANO_SEED
+	);
 	private static final Set<String> BIRD_HOUSES_NAMES = ImmutableSet.of(
 		"<col=ffff>Bird house (empty)", "<col=ffff>Oak birdhouse (empty)", "<col=ffff>Willow birdhouse (empty)",
 		"<col=ffff>Teak birdhouse (empty)", "<col=ffff>Maple birdhouse (empty)", "<col=ffff>Mahogany birdhouse (empty)",
@@ -451,6 +454,26 @@ public class OneClickPlugin extends Plugin
 					event.setModified();
 				}
 				break;
+			case SEED_SET:
+				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() && event.getTarget().toLowerCase().contains("tithe"))
+				{
+					if (findItem(SEED_SET).getLeft() == -1)
+					{
+						return;
+					}
+
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Seed<col=ffffff> -> " + event.getTarget());
+					event.setForceLeftClick(true);
+					event.setModified();
+				}
+				else if (event.getOpcode() == MenuOpcode.WALK.getId())
+				{
+					MenuEntry menuEntry = client.getLeftClickMenuEntry();
+					menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
+					client.setLeftClickMenuEntry(menuEntry);
+				}
+				break;
 			case KARAMBWANS:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().equals("Cook"))
 				{
@@ -636,6 +659,16 @@ public class OneClickPlugin extends Plugin
 					}
 				}
 				break;
+			case SEED_SET:
+				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
+					event.getTarget().contains("<col=ff9040>Seed<col=ffffff> -> ") && target.toLowerCase().contains("tithe"))
+				{
+					if (updateSelectedItem(SEED_SET))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+					}
+				}
+				break;
 			case KARAMBWANS:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getTarget().contains("<col=ff9040>Raw karambwan<col=ffffff> -> "))
 				{
@@ -683,7 +716,6 @@ public class OneClickPlugin extends Plugin
 		}
 		return false;
 	}
-
 	private Pair<Integer, Integer> findItem(int id)
 	{
 		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);

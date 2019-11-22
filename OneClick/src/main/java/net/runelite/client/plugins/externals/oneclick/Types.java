@@ -26,6 +26,7 @@ public enum Types
 	KARAMBWANS("Karambwans"),
 	DARK_ESSENCE("Dark Essence"),
 	BRUMA_ROOT("Bruma Roots"),
+	SEED_SET("Tithe Farm"),
 	NONE("None");
 
 	private String name;
