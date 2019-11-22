@@ -661,7 +661,7 @@ public class OneClickPlugin extends Plugin
 				break;
 			case SEED_SET:
 				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
-						event.getTarget().contains("<col=ff9040>Seed<col=ffffff> -> ") && target.toLowerCase().contains("tithe"))
+					event.getTarget().contains("<col=ff9040>Seed<col=ffffff> -> ") && target.toLowerCase().contains("tithe"))
 				{
 					if (updateSelectedItem(SEED_SET))
 					{
