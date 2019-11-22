@@ -456,6 +456,7 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case SEED_SET:
+				Widget titheWidget = client.getWidget(WidgetInfo.TITHE_FARM);
 				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() && event.getTarget().toLowerCase().contains("tithe"))
 				{
 					if (findItem(SEED_SET).getLeft() == -1)
@@ -468,7 +469,7 @@ public class OneClickPlugin extends Plugin
 					event.setForceLeftClick(true);
 					event.setModified();
 				}
-				else if (event.getOpcode() == MenuOpcode.WALK.getId())
+				else if (titheWidget != null && !titheWidget.isHidden() && event.getOpcode() == MenuOpcode.WALK.getId())
 				{
 					MenuEntry menuEntry = client.getLeftClickMenuEntry();
 					menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
