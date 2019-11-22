@@ -500,6 +500,21 @@ public class OneClickPlugin extends Plugin
 					event.setModified();
 				}
 				break;
+			case TIARA:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						event.getOption().equals("Craft-rune") &&
+						event.getTarget().equals("<col=ffff>Altar"))
+				{
+					if (findItem(ItemID.TIARA).getLeft() == -1)
+					{
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
+					event.setModified();
+				}
+				break;
 		}
 	}
 
@@ -686,6 +701,16 @@ public class OneClickPlugin extends Plugin
 					if (updateSelectedItem(ItemID.DARK_ESSENCE_BLOCK))
 					{
 						event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+					}
+				}
+				break;
+			case TIARA:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+						target.equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar"))
+				{
+					if (updateSelectedItem(ItemID.TIARA))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 					}
 				}
 				break;
