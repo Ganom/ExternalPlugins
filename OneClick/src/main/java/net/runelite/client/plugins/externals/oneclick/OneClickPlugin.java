@@ -23,6 +23,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
+import static net.runelite.api.MenuOpcode.MENU_ACTION_DEPRIORITIZE_OFFSET;
 import static net.runelite.api.ObjectID.DWARF_MULTICANNON;
 import net.runelite.api.Player;
 import net.runelite.api.Skill;
@@ -85,6 +86,10 @@ public class OneClickPlugin extends Plugin
 	);
 	private static final Set<Integer> SEED_SET = ImmutableSet.of(
 		ItemID.GOLOVANOVA_SEED, ItemID.BOLOGANO_SEED, ItemID.LOGAVANO_SEED
+	);
+	private static final Set<Integer> WATERING_CANS = ImmutableSet.of(
+			ItemID.WATERING_CAN, ItemID.WATERING_CAN1, ItemID.WATERING_CAN2, ItemID.WATERING_CAN3, ItemID.WATERING_CAN4,
+			ItemID.WATERING_CAN5, ItemID.WATERING_CAN6, ItemID.WATERING_CAN7, ItemID.GRICOLLERS_CAN
 	);
 	private static final Set<String> BIRD_HOUSES_NAMES = ImmutableSet.of(
 		"<col=ffff>Bird house (empty)", "<col=ffff>Oak birdhouse (empty)", "<col=ffff>Willow birdhouse (empty)",
@@ -467,8 +472,25 @@ public class OneClickPlugin extends Plugin
 					event.setForceLeftClick(true);
 					event.setModified();
 				}
-				else if (event.getOpcode() == MenuOpcode.WALK.getId())
+				else if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() && event.getTarget().toLowerCase().contains("water barrel"))
 				{
+					if (findItem(WATERING_CANS).getLeft() == -1)
+					{
+						return;
+					}
+
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Watering can<col=ffffff> -> " + event.getTarget());
+					event.setForceLeftClick(true);
+					event.setModified();
+				}
+				else if (opcode == MenuOpcode.WALK.getId())
+				{
+					Widget titheWidget = client.getWidget(WidgetInfo.TITHE_FARM);
+					if (titheWidget == null || titheWidget.isHidden())
+					{
+						return;
+					}
 					MenuEntry menuEntry = client.getLeftClickMenuEntry();
 					menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
 					client.setLeftClickMenuEntry(menuEntry);
@@ -679,6 +701,14 @@ public class OneClickPlugin extends Plugin
 					event.getTarget().contains("<col=ff9040>Seed<col=ffffff> -> ") && target.toLowerCase().contains("tithe"))
 				{
 					if (updateSelectedItem(SEED_SET))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+					}
+				}
+				else if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
+						event.getTarget().contains("<col=ff9040>Watering can<col=ffffff> -> ") && target.toLowerCase().contains("water barrel"))
+				{
+					if (updateSelectedItem(WATERING_CANS))
 					{
 						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 					}
