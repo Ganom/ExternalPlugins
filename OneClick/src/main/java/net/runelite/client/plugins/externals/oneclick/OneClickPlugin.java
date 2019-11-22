@@ -84,7 +84,7 @@ public class OneClickPlugin extends Plugin
 		ItemID.WYVERN_BONES
 	);
 	private static final Set<Integer> SEED_SET = ImmutableSet.of(
-			ItemID.GOLOVANOVA_SEED, ItemID.BOLOGANO_SEED, ItemID.LOGAVANO_SEED
+		ItemID.GOLOVANOVA_SEED, ItemID.BOLOGANO_SEED, ItemID.LOGAVANO_SEED
 	);
 	private static final Set<String> BIRD_HOUSES_NAMES = ImmutableSet.of(
 		"<col=ffff>Bird house (empty)", "<col=ffff>Oak birdhouse (empty)", "<col=ffff>Willow birdhouse (empty)",
@@ -467,7 +467,7 @@ public class OneClickPlugin extends Plugin
 					event.setForceLeftClick(true);
 					event.setModified();
 				}
-				if (event.getOpcode() == MenuOpcode.WALK.getId())
+				else if (event.getOpcode() == MenuOpcode.WALK.getId())
 				{
 					MenuEntry menuEntry = client.getLeftClickMenuEntry();
 					menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
