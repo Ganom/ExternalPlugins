@@ -707,8 +707,10 @@ public class OneClickPlugin extends Plugin
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 						target.equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar"))
 				{
-					updateSelectedItem(ItemID.TIARA);
-					event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+					if (updateSelectedItem(ItemID.TIARA))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+					}
 				}
 				break;
 		}
