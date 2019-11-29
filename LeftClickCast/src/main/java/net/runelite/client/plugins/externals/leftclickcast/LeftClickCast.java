@@ -213,6 +213,45 @@ public class LeftClickCast extends Plugin
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
 	{
+		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && maging)
+		{
+			final String name = Text.standardize(event.getTarget(), true);
+
+			if (!config.disableFriendlyRegionChecks() && (client.getVar(Varbits.LMS_IN_GAME) == 0 && (client.isFriended(name, false) ||
+				client.isClanMember(name))))
+			{
+				return;
+			}
+
+			if (!config.disableFriendlyRegionChecks())
+			{
+				try
+				{
+					boolean b = (!PvPUtil.isAttackable(client, client.getCachedPlayers()[event.getIdentifier()]));
+				}
+				catch (IndexOutOfBoundsException ex)
+				{
+					return;
+				}
+			}
+
+			setSelectSpell(currentSpell.getSpell());
+			event.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ");
+		}
+		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && maging)
+		{
+			try
+			{
+				NPC npc = client.getCachedNPCs()[event.getParam0()];
+			}
+			catch (IndexOutOfBoundsException ex)
+			{
+				return;
+			}
+			setSelectSpell(currentSpell.getSpell());
+			event.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ");
+		}
+
 		if (event.getOption().contains("(P)"))
 		{
 			event.setOpcode(15);
