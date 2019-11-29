@@ -13,6 +13,7 @@ import lombok.Getter;
 @Getter
 public enum Types
 {
+	COMPOST("Compost"),
 	DARTS("Darts"),
 	FIREMAKING("Firemaking"),
 	BIRDHOUSES("Birdhouses"),

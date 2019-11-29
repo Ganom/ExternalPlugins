@@ -74,7 +74,6 @@ import net.runelite.client.ui.overlay.OverlayManager;
 public class FlexoPlugin extends Plugin
 {
 	private Flexo flexo;
-
 	{
 		try
 		{
@@ -276,7 +275,7 @@ public class FlexoPlugin extends Plugin
 		DefaultSpeedManager manager = new DefaultSpeedManager(flows);
 		//TODO:Add options for custom Deviation Provider and Noise Provider
 		factory.setDeviationProvider(new SinusoidalDeviationProvider(this.getDeviationSlope));
-		factory.setNoiseProvider(new DefaultNoiseProvider(Double.valueOf(this.getNoisinessDivider)));
+		factory.setNoiseProvider(new DefaultNoiseProvider(Double.parseDouble(this.getNoisinessDivider)));
 		factory.getNature().setReactionTimeVariationMs(this.getReactionTimeVariation);
 		manager.setMouseMovementBaseTimeMs(this.getMouseDragSpeed);
 

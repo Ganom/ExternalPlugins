@@ -15,10 +15,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -77,8 +75,7 @@ public class CustomSwapper extends Plugin
 	@Inject
 	private TabUtils tabUtils;
 
-	private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
-	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 1, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.DiscardPolicy());
+	private ExecutorService executor;
 	private Robot robot;
 
 	@Provides
@@ -90,6 +87,7 @@ public class CustomSwapper extends Plugin
 	@Override
 	protected void startUp() throws AWTException
 	{
+		executor = Executors.newFixedThreadPool(1);
 		Flexo.client = client;
 		robot = new Robot();
 		eventBus.subscribe(CommandExecuted.class, this, this::onCommandExecuted);
@@ -110,6 +108,7 @@ public class CustomSwapper extends Plugin
 	@Override
 	protected void shutDown()
 	{
+		executor.shutdown();
 		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(one);
 		keyManager.unregisterKeyListener(two);
@@ -294,7 +293,7 @@ public class CustomSwapper extends Plugin
 			}
 		}
 
-		executorService.submit(() ->
+		executor.submit(() ->
 		{
 			for (Pair<Tab, Rectangle> pair : rectPairs)
 			{

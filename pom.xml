@@ -32,7 +32,7 @@
 			<version>1.5.42</version>
 			<scope>system</scope>
 			<systemPath>
-				${user.home}/.runelite/repository2/runelite-client-${project.version}-SNAPSHOT.jar
+				${user.home}/.runelite/repository2/runelite-client-${project.version}.jar
 			</systemPath>
 		</dependency>
 		<dependency>
@@ -41,7 +41,7 @@
 			<version>1.5.42</version>
 			<scope>system</scope>
 			<systemPath>
-				${user.home}/.runelite/repository2/runelite-api-${project.version}-SNAPSHOT.jar
+				${user.home}/.runelite/repository2/runelite-api-${project.version}.jar
 			</systemPath>
 		</dependency>
 		<dependency>

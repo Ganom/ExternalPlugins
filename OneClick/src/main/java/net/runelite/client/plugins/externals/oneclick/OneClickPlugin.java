@@ -6,8 +6,10 @@
  */
 package net.runelite.client.plugins.externals.oneclick;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -88,8 +90,8 @@ public class OneClickPlugin extends Plugin
 		ItemID.GOLOVANOVA_SEED, ItemID.BOLOGANO_SEED, ItemID.LOGAVANO_SEED
 	);
 	private static final Set<Integer> WATERING_CANS = ImmutableSet.of(
-			ItemID.WATERING_CAN, ItemID.WATERING_CAN1, ItemID.WATERING_CAN2, ItemID.WATERING_CAN3, ItemID.WATERING_CAN4,
-			ItemID.WATERING_CAN5, ItemID.WATERING_CAN6, ItemID.WATERING_CAN7, ItemID.GRICOLLERS_CAN
+		ItemID.WATERING_CAN, ItemID.WATERING_CAN1, ItemID.WATERING_CAN2, ItemID.WATERING_CAN3, ItemID.WATERING_CAN4,
+		ItemID.WATERING_CAN5, ItemID.WATERING_CAN6, ItemID.WATERING_CAN7, ItemID.GRICOLLERS_CAN
 	);
 	private static final Set<String> BIRD_HOUSES_NAMES = ImmutableSet.of(
 		"<col=ffff>Bird house (empty)", "<col=ffff>Oak birdhouse (empty)", "<col=ffff>Willow birdhouse (empty)",
@@ -99,6 +101,11 @@ public class OneClickPlugin extends Plugin
 	private static final String MAGIC_IMBUE_EXPIRED_MESSAGE = "Your Magic Imbue charge has ended.";
 	private static final String MAGIC_IMBUE_MESSAGE = "You are charged to combine runes!";
 
+	private static final Splitter NEWLINE_SPLITTER = Splitter
+		.on("\n")
+		.omitEmptyStrings()
+		.trimResults();
+
 	@Inject
 	private Client client;
 	@Inject
@@ -107,6 +114,7 @@ public class OneClickPlugin extends Plugin
 	private EventBus eventBus;
 
 	private final Map<Integer, String> targetMap = new HashMap<>();
+	private final Map<Integer, List<Integer>> customClickMap = new HashMap<>();
 
 	private AlchItem alchItem;
 	private GameObject cannon;
@@ -129,6 +137,7 @@ public class OneClickPlugin extends Plugin
 		addSubscriptions();
 		type = config.getType();
 		enableImbue = config.isUsingImbue();
+		updateMap();
 	}
 
 	@Override
@@ -163,6 +172,7 @@ public class OneClickPlugin extends Plugin
 		{
 			type = config.getType();
 			enableImbue = config.isUsingImbue();
+			updateMap();
 		}
 	}
 
@@ -288,8 +298,39 @@ public class OneClickPlugin extends Plugin
 		final int opcode = event.getOpcode();
 		targetMap.put(id, event.getTarget());
 
+		if (config.customInvSwap() && customClickMap.getOrDefault(id, null) != null)
+		{
+			if (opcode == MenuOpcode.ITEM_USE.getId() && customClickMap.containsKey(id))
+			{
+				int item = findItem(customClickMap.get(id)).getLeft();
+				if (item == -1)
+				{
+					return;
+				}
+				final String name = client.getItemDefinition(item).getName();
+				event.setTarget("<col=ff9040>" + name + "<col=ffffff> -> " + targetMap.get(id));
+				event.setForceLeftClick(true);
+				event.setModified();
+				return;
+			}
+		}
+
 		switch (type)
 		{
+			case COMPOST:
+			{
+				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.COMPOST)
+				{
+					if (findItem(ItemID.COMPOST).getLeft() == -1)
+					{
+						return;
+					}
+					event.setTarget("<col=ff9040>Saltpetre<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
+					event.setModified();
+				}
+			}
+			break;
 			case BRUMA_ROOT:
 			{
 				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.BRUMA_ROOT)
@@ -378,8 +419,8 @@ public class OneClickPlugin extends Plugin
 				break;
 			case STEAM_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						event.getOption().equals("Craft-rune") &&
-						event.getTarget().equals("<col=ffff>Altar"))
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar"))
 				{
 					if (findItem(ItemID.WATER_RUNE).getLeft() == -1)
 					{
@@ -402,8 +443,8 @@ public class OneClickPlugin extends Plugin
 				break;
 			case SMOKE_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						event.getOption().equals("Craft-rune") &&
-						event.getTarget().equals("<col=ffff>Altar"))
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar"))
 				{
 					if (findItem(ItemID.AIR_RUNE).getLeft() == -1)
 					{
@@ -523,8 +564,8 @@ public class OneClickPlugin extends Plugin
 				break;
 			case TIARA:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						event.getOption().equals("Craft-rune") &&
-						event.getTarget().equals("<col=ffff>Altar"))
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar"))
 				{
 					if (findItem(ItemID.TIARA).getLeft() == -1)
 					{
@@ -541,8 +582,9 @@ public class OneClickPlugin extends Plugin
 
 	private void onMenuOptionClicked(MenuOptionClicked event)
 	{
-		final String target = event.getTarget();
-		final int opcode = event.getOpcode();
+		String target = event.getTarget();
+		int opcode = event.getOpcode();
+		int id = event.getIdentifier();
 
 		if (tick)
 		{
@@ -557,6 +599,277 @@ public class OneClickPlugin extends Plugin
 
 		switch (type)
 		{
+			case COMPOST:
+			{
+				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.COMPOST)
+				{
+					if (findItem(ItemID.COMPOST).getLeft() == -1)
+					{
+						return;
+					}
+					event.setTarget("<col=ff9040>Saltpetre<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
+				}
+			}
+			break;
+			case BRUMA_ROOT:
+			{
+				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.BRUMA_ROOT)
+				{
+					if (findItem(ItemID.BRUMA_ROOT).getLeft() == -1)
+					{
+						return;
+					}
+					event.setTarget("<col=ff9040>Knife<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
+				}
+			}
+			break;
+			case DARTS:
+				if (opcode == MenuOpcode.ITEM_USE.getId() && (DART_TIPS.contains(id) || BOLTS.contains(id)))
+				{
+					if (findItem(ItemID.FEATHER).getLeft() == -1)
+					{
+						return;
+					}
+					event.setTarget("<col=ff9040>Feather<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
+				}
+				break;
+			case FIREMAKING:
+				if (opcode == MenuOpcode.ITEM_USE.getId() && LOG_ID.contains(id))
+				{
+					if (findItem(ItemID.TINDERBOX).getLeft() == -1)
+					{
+						return;
+					}
+					event.setTarget("<col=ff9040>Tinderbox<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
+				}
+				break;
+			case BIRDHOUSES:
+				if (opcode == MenuOpcode.GAME_OBJECT_SECOND_OPTION.getId() && BIRD_HOUSES_NAMES.contains(event.getTarget()))
+				{
+					if (findItem(HOPS_SEED).getLeft() == -1)
+					{
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Hops seed<col=ffffff> -> " + targetMap.get(id));
+					event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+					event.setForceLeftClick(true);
+				}
+				break;
+			case HERB_TAR:
+				if (opcode == MenuOpcode.ITEM_USE.getId() && HERBS.contains(id))
+				{
+					if (findItem(ItemID.SWAMP_TAR).getLeft() == -1 || findItem(ItemID.PESTLE_AND_MORTAR).getLeft() == -1)
+					{
+						return;
+					}
+					event.setTarget("<col=ff9040>Swamp tar<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
+				}
+				break;
+			case LAVA_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().equals("Craft-rune") && event.getTarget().equals("<col=ffff>Altar"))
+				{
+					if (findItem(ItemID.EARTH_RUNE).getLeft() == -1)
+					{
+						return;
+					}
+
+					if (!imbue && enableImbue)
+					{
+						event.setOption("Use");
+						event.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+						event.setForceLeftClick(true);
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
+				}
+				break;
+			case STEAM_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar"))
+				{
+					if (findItem(ItemID.WATER_RUNE).getLeft() == -1)
+					{
+						return;
+					}
+
+					if (!imbue && enableImbue)
+					{
+						event.setOption("Use");
+						event.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+						event.setForceLeftClick(true);
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
+				}
+				break;
+			case SMOKE_RUNES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar"))
+				{
+					if (findItem(ItemID.AIR_RUNE).getLeft() == -1)
+					{
+						return;
+					}
+
+					if (!imbue && enableImbue)
+					{
+						event.setOption("Use");
+						event.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+						event.setForceLeftClick(true);
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
+				}
+				break;
+			case HIGH_ALCH:
+				if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() && alchItem != null && event.getOption().equals("Cast") && event.getTarget().equals("<col=00ff00>High Level Alchemy</col>"))
+				{
+					event.setOption("Cast");
+					event.setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> " + alchItem.getName());
+					event.setForceLeftClick(true);
+				}
+				break;
+			case DWARF_CANNON:
+				if (cannonFiring && event.getIdentifier() == DWARF_MULTICANNON && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
+				{
+					if (findItem(ItemID.CANNONBALL).getLeft() == -1)
+					{
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Cannonball<col=ffffff> -> <col=ffff>Dwarf multicannon");
+					event.setForceLeftClick(true);
+				}
+				break;
+			case BONES:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().toLowerCase().contains("pray") && event.getTarget().toLowerCase().contains("altar"))
+				{
+					if (findItem(BONE_SET).getLeft() == -1)
+					{
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Bones<col=ffffff> -> " + event.getTarget());
+					event.setForceLeftClick(true);
+				}
+				break;
+			case SEED_SET:
+				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() && event.getTarget().toLowerCase().contains("tithe"))
+				{
+					if (findItem(SEED_SET).getLeft() == -1)
+					{
+						return;
+					}
+
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Seed<col=ffffff> -> " + event.getTarget());
+					event.setForceLeftClick(true);
+				}
+				else if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() && event.getTarget().toLowerCase().contains("water barrel"))
+				{
+					if (findItem(WATERING_CANS).getLeft() == -1)
+					{
+						return;
+					}
+
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Watering can<col=ffffff> -> " + event.getTarget());
+					event.setForceLeftClick(true);
+				}
+				else if (opcode == MenuOpcode.WALK.getId())
+				{
+					Widget titheWidget = client.getWidget(WidgetInfo.TITHE_FARM);
+					if (titheWidget == null || titheWidget.isHidden())
+					{
+						return;
+					}
+					MenuEntry menuEntry = client.getLeftClickMenuEntry();
+					menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
+					client.setLeftClickMenuEntry(menuEntry);
+				}
+				break;
+			case KARAMBWANS:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().equals("Cook"))
+				{
+					if (findItem(ItemID.RAW_KARAMBWAN).getLeft() == -1)
+					{
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + event.getTarget());
+					event.setForceLeftClick(true);
+				}
+				break;
+			case DARK_ESSENCE:
+				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.CHISEL)
+				{
+					if (findItem(ItemID.DARK_ESSENCE_BLOCK).getLeft() == -1)
+					{
+						return;
+					}
+					event.setTarget("<col=ff9040>Chisel<col=ffffff> -> <col=ff9040>Dark essence block");
+					event.setForceLeftClick(true);
+				}
+				break;
+			case TIARA:
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar"))
+				{
+					if (findItem(ItemID.TIARA).getLeft() == -1)
+					{
+						return;
+					}
+					event.setOption("Use");
+					event.setTarget("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar");
+					event.setForceLeftClick(true);
+				}
+				break;
+		}
+
+		target = event.getTarget();
+		opcode = event.getOpcode();
+		id = event.getIdentifier();
+
+		if (config.customInvSwap())
+		{
+			if (opcode == MenuOpcode.ITEM_USE.getId() && customClickMap.containsKey(id))
+			{
+				if (updateSelectedItem(customClickMap.get(id)))
+				{
+					event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+					return;
+				}
+			}
+		}
+
+		switch (type)
+		{
+			case COMPOST:
+			{
+				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.COMPOST)
+				{
+					if (updateSelectedItem(ItemID.SALTPETRE))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+					}
+				}
+			}
+			break;
 			case BRUMA_ROOT:
 				if (opcode == MenuOpcode.ITEM_USE.getId() && target.contains("<col=ff9040>Knife<col=ffffff> -> "))
 				{
@@ -619,7 +932,7 @@ public class OneClickPlugin extends Plugin
 				break;
 			case STEAM_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						target.equals("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar"))
+					target.equals("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar"))
 				{
 					if (updateSelectedItem(ItemID.WATER_RUNE))
 					{
@@ -627,7 +940,7 @@ public class OneClickPlugin extends Plugin
 					}
 				}
 				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
 				{
 					event.setIdentifier(1);
 					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
@@ -637,7 +950,7 @@ public class OneClickPlugin extends Plugin
 				break;
 			case SMOKE_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						target.equals("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar"))
+					target.equals("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar"))
 				{
 					if (updateSelectedItem(ItemID.AIR_RUNE))
 					{
@@ -645,7 +958,7 @@ public class OneClickPlugin extends Plugin
 					}
 				}
 				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
 				{
 					event.setIdentifier(1);
 					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
@@ -706,7 +1019,7 @@ public class OneClickPlugin extends Plugin
 					}
 				}
 				else if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
-						event.getTarget().contains("<col=ff9040>Watering can<col=ffffff> -> ") && target.toLowerCase().contains("water barrel"))
+					event.getTarget().contains("<col=ff9040>Watering can<col=ffffff> -> ") && target.toLowerCase().contains("water barrel"))
 				{
 					if (updateSelectedItem(WATERING_CANS))
 					{
@@ -735,7 +1048,7 @@ public class OneClickPlugin extends Plugin
 				break;
 			case TIARA:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-						target.equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar"))
+					target.equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar"))
 				{
 					if (updateSelectedItem(ItemID.TIARA))
 					{
@@ -771,6 +1084,7 @@ public class OneClickPlugin extends Plugin
 		}
 		return false;
 	}
+
 	private Pair<Integer, Integer> findItem(int id)
 	{
 		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
@@ -803,5 +1117,36 @@ public class OneClickPlugin extends Plugin
 		}
 
 		return Pair.of(-1, -1);
+	}
+
+	private void updateMap()
+	{
+		final Iterable<String> tmp = NEWLINE_SPLITTER.split(config.swaps());
+
+		for (String s : tmp)
+		{
+			if (s.startsWith("//"))
+			{
+				continue;
+			}
+
+			String[] split = s.split(":");
+
+			try
+			{
+				int oneClickThat = Integer.parseInt(split[0]);
+				int withThis = Integer.parseInt(split[1]);
+				if (customClickMap.containsKey(oneClickThat))
+				{
+					customClickMap.get(oneClickThat).add(withThis);
+					continue;
+				}
+				customClickMap.put(oneClickThat, new ArrayList<>(withThis));
+			}
+			catch (Exception e)
+			{
+				return;
+			}
+		}
 	}
 }
