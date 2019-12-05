@@ -25,6 +25,7 @@ import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Point;
+import net.runelite.api.Prayer;
 import net.runelite.api.VarClientInt;
 import net.runelite.api.events.CommandExecuted;
 import net.runelite.api.events.GameStateChanged;
@@ -243,6 +244,12 @@ public class CustomSwapper extends Plugin
 				case "prayer":
 				{
 					final WidgetInfo info = PrayerMap.getWidget(param);
+					final Prayer p = Prayer.valueOf(param.toUpperCase().replace(" ", "_"));
+
+					if (client.isPrayerActive(p))
+					{
+						continue;
+					}
 
 					if (info == null)
 					{
