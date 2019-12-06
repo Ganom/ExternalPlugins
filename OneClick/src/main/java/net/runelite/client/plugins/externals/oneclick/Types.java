@@ -22,6 +22,7 @@ public enum Types
 	STEAM_RUNES("Steam Runes"),
 	SMOKE_RUNES("Smoke Runes"),
 	HIGH_ALCH("High Alch"),
+	PLANK_MAKE("Plank Make"),
 	DWARF_CANNON("Dwarf Cannon"),
 	BONES("Bones"),
 	KARAMBWANS("Karambwans"),
