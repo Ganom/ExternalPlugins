@@ -4,23 +4,17 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>us.runelitepl</groupId>
 	<artifactId>Public-Plugins</artifactId>
-	<version>1.0</version>
+	<version>1.5.42</version>
 
 	<modules>
-		<module>AutoClicker</module>
 		<module>AutoPrayFlick</module>
 		<module>Flexo</module>
-		<module>GearSwapper</module>
+		<module>CustomBoi</module>
 		<module>ItemDropper</module>
 		<module>NeverLog</module>
 		<module>OlmSwapper</module>
-		<module>OneTick</module>
-		<module>PraySwapper</module>
-		<module>Scaler</module>
-		<module>SpellCaster</module>
-		<module>Theatre-of-Blood</module>
-		<module>Tickeater</module>
-		<module>LeftClickPK</module>
+		<module>NyloSwapper</module>
+		<module>LeftClickCast</module>
 		<module>OneClick</module>
 	</modules>
 	<packaging>pom</packaging>
@@ -33,12 +27,93 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.ganom</groupId>
+			<groupId>us.runelitepl</groupId>
 			<artifactId>client</artifactId>
-			<version>1.0</version>
+			<version>1.5.42</version>
 			<scope>system</scope>
 			<systemPath>
-				<!--Your Local Shaded Jar Here-->
+				${user.home}/.runelite/repository2/runelite-client-${project.version}.jar
+			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>us.runelitepl</groupId>
+			<artifactId>api</artifactId>
+			<version>1.5.42</version>
+			<scope>system</scope>
+			<systemPath>
+				${user.home}/.runelite/repository2/runelite-api-${project.version}.jar
+			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>us.runelitepl</groupId>
+			<artifactId>javax</artifactId>
+			<version>1</version>
+			<scope>system</scope>
+			<systemPath>
+				${user.home}/.runelite/repository2/javax.inject-1.jar
+			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>us.runelitepl</groupId>
+			<artifactId>guava</artifactId>
+			<version>28.1</version>
+			<scope>system</scope>
+			<systemPath>
+				${user.home}/.runelite/repository2/guava-28.1-jre.jar
+			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>us.runelitepl</groupId>
+			<artifactId>guice</artifactId>
+			<version>4.2.2</version>
+			<scope>system</scope>
+			<systemPath>
+				${user.home}/.runelite/repository2/guice-4.2.2-no_aop.jar
+			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>us.runelitepl</groupId>
+			<artifactId>rxjava</artifactId>
+			<version>2.2.13</version>
+			<scope>system</scope>
+			<systemPath>
+				${user.home}/.runelite/repository2/rxjava-2.2.14.jar
+			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>us.runelitepl</groupId>
+			<artifactId>naturalmouse</artifactId>
+			<version>2.0.2</version>
+			<scope>system</scope>
+			<systemPath>
+				${user.home}/.runelite/repository2/naturalmouse-2.0.2.jar
+			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>us.runelitepl</groupId>
+			<artifactId>slf4j</artifactId>
+			<version>1.7.28</version>
+			<scope>system</scope>
+			<systemPath>
+				${user.home}/.runelite/repository2/slf4j-api-1.7.29.jar
+			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>us.runelitepl</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.9</version>
+			<scope>system</scope>
+			<systemPath>
+				${user.home}/.runelite/repository2/commons-lang3-3.9.jar
+			</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>us.runelitepl</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>3.0.2</version>
+			<scope>system</scope>
+			<systemPath>
+				${user.home}/.runelite/repository2/jsr305-3.0.2.jar
 			</systemPath>
 		</dependency>
 		<dependency>
@@ -49,6 +124,7 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<finalName>${project.name}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -64,31 +140,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>3.1.1</version>
-				<executions>
-					<execution>
-						<id>copy</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<artifactItems>
-						<artifactItem>
-							<groupId>${project.groupId}</groupId>
-							<artifactId>${project.artifactId}</artifactId>
-							<version>${project.version}</version>
-							<type>${project.packaging}</type>
-						</artifactItem>
-					</artifactItems>
-					<outputDirectory>../Output/</outputDirectory>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
