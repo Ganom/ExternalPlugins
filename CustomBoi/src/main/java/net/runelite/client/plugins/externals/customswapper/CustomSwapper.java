@@ -103,6 +103,18 @@ public class CustomSwapper extends Plugin
 			keyManager.registerKeyListener(six);
 			keyManager.registerKeyListener(seven);
 			keyManager.registerKeyListener(eight);
+			keyManager.registerKeyListener(nine);
+			keyManager.registerKeyListener(ten);
+			keyManager.registerKeyListener(eleven);
+			keyManager.registerKeyListener(twelve);
+			keyManager.registerKeyListener(thirteen);
+			keyManager.registerKeyListener(fourteen);
+			keyManager.registerKeyListener(fifteen);
+			keyManager.registerKeyListener(sixteen);
+			keyManager.registerKeyListener(seventeen);
+			keyManager.registerKeyListener(eighteen);
+			keyManager.registerKeyListener(nineteen);
+			keyManager.registerKeyListener(twenty);
 		}
 	}
 
@@ -119,6 +131,18 @@ public class CustomSwapper extends Plugin
 		keyManager.unregisterKeyListener(six);
 		keyManager.unregisterKeyListener(seven);
 		keyManager.unregisterKeyListener(eight);
+		keyManager.unregisterKeyListener(nine);
+		keyManager.unregisterKeyListener(ten);
+		keyManager.unregisterKeyListener(eleven);
+		keyManager.unregisterKeyListener(twelve);
+		keyManager.unregisterKeyListener(thirteen);
+		keyManager.unregisterKeyListener(fourteen);
+		keyManager.unregisterKeyListener(fifteen);
+		keyManager.unregisterKeyListener(sixteen);
+		keyManager.unregisterKeyListener(seventeen);
+		keyManager.unregisterKeyListener(eighteen);
+		keyManager.unregisterKeyListener(nineteen);
+		keyManager.unregisterKeyListener(twenty);
 	}
 
 	private void onGameStateChanged(GameStateChanged event)
@@ -133,6 +157,18 @@ public class CustomSwapper extends Plugin
 			keyManager.unregisterKeyListener(six);
 			keyManager.unregisterKeyListener(seven);
 			keyManager.unregisterKeyListener(eight);
+			keyManager.unregisterKeyListener(nine);
+			keyManager.unregisterKeyListener(ten);
+			keyManager.unregisterKeyListener(eleven);
+			keyManager.unregisterKeyListener(twelve);
+			keyManager.unregisterKeyListener(thirteen);
+			keyManager.unregisterKeyListener(fourteen);
+			keyManager.unregisterKeyListener(fifteen);
+			keyManager.unregisterKeyListener(sixteen);
+			keyManager.unregisterKeyListener(seventeen);
+			keyManager.unregisterKeyListener(eighteen);
+			keyManager.unregisterKeyListener(nineteen);
+			keyManager.unregisterKeyListener(twenty);
 			return;
 		}
 		keyManager.registerKeyListener(one);
@@ -143,6 +179,18 @@ public class CustomSwapper extends Plugin
 		keyManager.registerKeyListener(six);
 		keyManager.registerKeyListener(seven);
 		keyManager.registerKeyListener(eight);
+		keyManager.registerKeyListener(nine);
+		keyManager.registerKeyListener(ten);
+		keyManager.registerKeyListener(eleven);
+		keyManager.registerKeyListener(twelve);
+		keyManager.registerKeyListener(thirteen);
+		keyManager.registerKeyListener(fourteen);
+		keyManager.registerKeyListener(fifteen);
+		keyManager.registerKeyListener(sixteen);
+		keyManager.registerKeyListener(seventeen);
+		keyManager.registerKeyListener(eighteen);
+		keyManager.registerKeyListener(nineteen);
+		keyManager.registerKeyListener(twenty);
 	}
 
 	private void onCommandExecuted(CommandExecuted event)
@@ -583,6 +631,114 @@ public class CustomSwapper extends Plugin
 		public void hotkeyPressed()
 		{
 			decode(config.customSwapEight());
+		}
+	};
+
+	private final HotkeyListener nine = new HotkeyListener(() -> config.customNine())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapNine());
+		}
+	};
+
+	private final HotkeyListener ten = new HotkeyListener(() -> config.customTen())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapTen());
+		}
+	};
+
+	private final HotkeyListener eleven = new HotkeyListener(() -> config.customEleven())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapEleven());
+		}
+	};
+
+	private final HotkeyListener twelve = new HotkeyListener(() -> config.customTwelve())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapTwelve());
+		}
+	};
+
+	private final HotkeyListener thirteen = new HotkeyListener(() -> config.customThirteen())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapThirteen());
+		}
+	};
+
+	private final HotkeyListener fourteen = new HotkeyListener(() -> config.customFourteen())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapFourteen());
+		}
+	};
+
+	private final HotkeyListener fifteen = new HotkeyListener(() -> config.customFifteen())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapFifteen());
+		}
+	};
+
+	private final HotkeyListener sixteen = new HotkeyListener(() -> config.customSixteen())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapSixteen());
+		}
+	};
+
+	private final HotkeyListener seventeen = new HotkeyListener(() -> config.customSeventeen())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapSeventeen());
+		}
+	};
+
+	private final HotkeyListener eighteen = new HotkeyListener(() -> config.customEighteen())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapEighteen());
+		}
+	};
+
+	private final HotkeyListener nineteen = new HotkeyListener(() -> config.customNineteen())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapNineteen());
+		}
+	};
+
+	private final HotkeyListener twenty = new HotkeyListener(() -> config.customTwenty())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			decode(config.customSwapTwenty());
 		}
 	};
 }
