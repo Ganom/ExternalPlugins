@@ -62,6 +62,9 @@ public class OneClickPlugin extends Plugin
 		ItemID.MITHRIL_BOLTS_UNF, ItemID.ADAMANT_BOLTSUNF, ItemID.RUNITE_BOLTS_UNF,
 		ItemID.DRAGON_BOLTS_UNF, ItemID.UNFINISHED_BROAD_BOLTS
 	);
+	private static final Set<Integer> CANNONBALLS = ImmutableSet.of(
+		ItemID.CANNONBALL, ItemID.GRANITE_CANNONBALL
+	);
 	private static final Set<Integer> DART_TIPS = ImmutableSet.of(
 		ItemID.BRONZE_DART_TIP, ItemID.IRON_DART_TIP, ItemID.STEEL_DART_TIP,
 		ItemID.MITHRIL_DART_TIP, ItemID.ADAMANT_DART_TIP, ItemID.RUNE_DART_TIP,
@@ -477,7 +480,7 @@ public class OneClickPlugin extends Plugin
 			case DWARF_CANNON:
 				if (cannonFiring && event.getIdentifier() == DWARF_MULTICANNON && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
 				{
-					if (findItem(ItemID.CANNONBALL).getLeft() == -1)
+					if (findItem(CANNONBALLS).getLeft() == -1)
 					{
 						return;
 					}
@@ -746,7 +749,7 @@ public class OneClickPlugin extends Plugin
 			case DWARF_CANNON:
 				if (cannonFiring && event.getIdentifier() == DWARF_MULTICANNON && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
 				{
-					if (findItem(ItemID.CANNONBALL).getLeft() == -1)
+					if (findItem(CANNONBALLS).getLeft() == -1)
 					{
 						return;
 					}
