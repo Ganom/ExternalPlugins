@@ -928,7 +928,7 @@ public class OneClickPlugin extends Plugin
 					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
 				{
 					event.setIdentifier(1);
-					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
+					event.setOpcode(MenuOpcode.CC_OP.getId());
 					event.setParam0(-1);
 					event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
 				}
@@ -946,7 +946,7 @@ public class OneClickPlugin extends Plugin
 					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
 				{
 					event.setIdentifier(1);
-					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
+					event.setOpcode(MenuOpcode.CC_OP.getId());
 					event.setParam0(-1);
 					event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
 				}
@@ -964,7 +964,7 @@ public class OneClickPlugin extends Plugin
 					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
 				{
 					event.setIdentifier(1);
-					event.setOpcode(MenuOpcode.WIDGET_DEFAULT.getId());
+					event.setOpcode(MenuOpcode.CC_OP.getId());
 					event.setParam0(-1);
 					event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
 				}
