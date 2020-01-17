@@ -15,6 +15,7 @@ public enum Types
 {
 	COMPOST("Compost"),
 	DARTS("Darts"),
+	JAVELINS("Javelins"),
 	FIREMAKING("Firemaking"),
 	BIRDHOUSES("Birdhouses"),
 	HERB_TAR("Herb Tar"),
