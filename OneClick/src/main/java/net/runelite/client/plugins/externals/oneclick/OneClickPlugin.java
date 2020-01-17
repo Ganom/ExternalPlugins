@@ -9,6 +9,9 @@ package net.runelite.client.plugins.externals.oneclick;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -69,6 +72,11 @@ public class OneClickPlugin extends Plugin
 		ItemID.BRONZE_DART_TIP, ItemID.IRON_DART_TIP, ItemID.STEEL_DART_TIP,
 		ItemID.MITHRIL_DART_TIP, ItemID.ADAMANT_DART_TIP, ItemID.RUNE_DART_TIP,
 		ItemID.DRAGON_DART_TIP
+	);
+	private static final Set<Integer> JAVELIN_HEADS = ImmutableSet.of(
+			ItemID.BRONZE_JAVELIN_HEADS, ItemID.IRON_JAVELIN_HEADS, ItemID.STEEL_JAVELIN_HEADS,
+			ItemID.MITHRIL_JAVELIN_HEADS, ItemID.ADAMANT_JAVELIN_HEADS, ItemID.RUNE_JAVELIN_HEADS,
+			ItemID.DRAGON_JAVELIN_HEADS
 	);
 	private static final Set<Integer> LOG_ID = ImmutableSet.of(
 		ItemID.LOGS, ItemID.OAK_LOGS, ItemID.WILLOW_LOGS, ItemID.TEAK_LOGS,
@@ -360,6 +368,27 @@ public class OneClickPlugin extends Plugin
 					event.setModified();
 				}
 				break;
+			case JAVELINS:
+				if (opcode == MenuOpcode.ITEM_USE.getId() && (JAVELIN_HEADS.contains(id)))
+				{
+					if (findItem(ItemID.JAVELIN_SHAFT).getLeft() == -1)
+					{
+						return;
+					}
+					event.setTarget("<col=ff9040>Javelin shaft<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
+					try
+					{
+						Robot spaceBar = new Robot();
+						spaceBar.keyPress(KeyEvent.VK_SPACE);
+					}
+					catch (AWTException e)
+					{
+						e.printStackTrace();
+					}
+					event.setModified();
+				}
+				break;
 			case FIREMAKING:
 				if (opcode == MenuOpcode.ITEM_USE.getId() && LOG_ID.contains(id))
 				{
@@ -639,6 +668,26 @@ public class OneClickPlugin extends Plugin
 					event.setForceLeftClick(true);
 				}
 				break;
+			case JAVELINS:
+				if (opcode == MenuOpcode.ITEM_USE.getId() && (JAVELIN_HEADS.contains(id)))
+				{
+					if (findItem(ItemID.JAVELIN_SHAFT).getLeft() == -1)
+					{
+						return;
+					}
+					event.setTarget("<col=ff9040>Javelin shaft<col=ffffff> -> " + targetMap.get(id));
+					event.setForceLeftClick(true);
+					try
+					{
+						Robot spaceBar = new Robot();
+						spaceBar.keyPress(KeyEvent.VK_SPACE);
+					}
+					catch (AWTException e)
+					{
+						e.printStackTrace();
+					}
+				}
+				break;
 			case FIREMAKING:
 				if (opcode == MenuOpcode.ITEM_USE.getId() && LOG_ID.contains(id))
 				{
@@ -886,6 +935,15 @@ public class OneClickPlugin extends Plugin
 				if (opcode == MenuOpcode.ITEM_USE.getId() && target.contains("<col=ff9040>Feather<col=ffffff> -> "))
 				{
 					if (updateSelectedItem(ItemID.FEATHER))
+					{
+						event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+					}
+				}
+				break;
+			case JAVELINS:
+				if (opcode == MenuOpcode.ITEM_USE.getId() && target.contains("<col=ff9040>Javelin shaft<col=ffffff> -> "))
+				{
+					if (updateSelectedItem(ItemID.JAVELIN_SHAFT))
 					{
 						event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 					}
