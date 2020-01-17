@@ -381,6 +381,7 @@ public class OneClickPlugin extends Plugin
 					{
 						Robot spaceBar = new Robot();
 						spaceBar.keyPress(KeyEvent.VK_SPACE);
+						spaceBar.keyRelease(KeyEvent.VK_SPACE);
 					}
 					catch (AWTException e)
 					{
@@ -681,6 +682,7 @@ public class OneClickPlugin extends Plugin
 					{
 						Robot spaceBar = new Robot();
 						spaceBar.keyPress(KeyEvent.VK_SPACE);
+						spaceBar.keyRelease(KeyEvent.VK_SPACE);
 					}
 					catch (AWTException e)
 					{
