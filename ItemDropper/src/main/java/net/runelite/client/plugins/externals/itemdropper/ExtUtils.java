@@ -86,7 +86,7 @@ public class ExtUtils
 		return equipped;
 	}
 
-	public static void handleSwitch(Rectangle rectangle, ActionType actionType, Flexo flexo, Client client, double scalingfactor, int delay)
+	public static void handleSwitch(Rectangle rectangle, ActionType actionType, Flexo flexo, Client client, double scalingfactor)
 	{
 		Point cp = getClickPoint(rectangle, scalingfactor, client.isStretchedEnabled());
 		Point tmp = client.getMouseCanvasPosition();
@@ -109,7 +109,6 @@ public class ExtUtils
 						moveMouse(cp.getX(), cp.getY(), client);
 					}
 					leftClick(cp.getX(), cp.getY(), client, scalingfactor);
-					flexo.delay(delay);
 					break;
 			}
 		}

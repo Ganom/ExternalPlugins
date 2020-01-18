@@ -33,10 +33,9 @@ project.extra["PluginDescription"] = "Drops Items."
 
 dependencies {
     annotationProcessor(Libraries.lombok)
-    annotationProcessor(Libraries.pf4j)
 
-    compileOnly("com.openosrs:runelite-api:$rlVersion")
-    compileOnly("com.openosrs:runelite-client:$rlVersion")
+    implementation("com.openosrs:runelite-api:$rlVersion")
+    implementation("com.openosrs:runelite-client:$rlVersion")
 
     implementation(Libraries.guice)
     implementation(Libraries.javax)

@@ -6,9 +6,12 @@
 package net.runelite.client.plugins.externals.itemdropper;
 
 import com.google.inject.Provides;
+import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -16,11 +19,18 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
+import net.runelite.api.InventoryID;
+import net.runelite.api.Item;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.queries.InventoryWidgetItemQuery;
+import net.runelite.api.util.Text;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.input.KeyManager;
@@ -31,7 +41,6 @@ import net.runelite.client.plugins.PluginType;
 import static net.runelite.client.plugins.externals.itemdropper.ExtUtils.stringToIntArray;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 import net.runelite.client.util.HotkeyListener;
-import org.apache.commons.lang3.tuple.Pair;
 
 @PluginDescriptor(
 	name = "Item Dropper",
@@ -57,6 +66,11 @@ public class ItemDropper extends Plugin
 	private ItemManager itemManager;
 
 	private final List<WidgetItem> items = new ArrayList<>();
+	private final Set<Integer> ids = new HashSet<>();
+	private final Set<String> names = new HashSet<>();
+
+	private boolean iterating;
+	private int iterTicks;
 
 	private Flexo flexo;
 	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
@@ -69,7 +83,7 @@ public class ItemDropper extends Plugin
 		public void hotkeyPressed()
 		{
 			List<WidgetItem> list = new InventoryWidgetItemQuery()
-				.idEquals(stringToIntArray(config.items()))
+				.idEquals(ids)
 				.result(client)
 				.list;
 
@@ -88,18 +102,15 @@ public class ItemDropper extends Plugin
 	{
 		Flexo.client = client;
 		keyManager.registerKeyListener(toggle);
-		executorService.submit(() ->
+		try
 		{
-			flexo = null;
-			try
-			{
-				flexo = new Flexo();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		});
+			flexo = new Flexo();
+		}
+		catch (AWTException e)
+		{
+			e.printStackTrace();
+		}
+		updateConfig();
 	}
 
 	@Override
@@ -110,10 +121,37 @@ public class ItemDropper extends Plugin
 	}
 
 	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		if (!event.getGroup().equals("ItemDropperConfig"))
+		{
+			return;
+		}
+
+		updateConfig();
+	}
+
+	@Subscribe
 	public void onGameTick(GameTick event)
 	{
-		if (!items.isEmpty())
+		if (items.isEmpty())
 		{
+			if (iterating)
+			{
+				iterTicks++;
+				if (iterTicks > 10)
+				{
+					iterating = false;
+					clearNames();
+				}
+			}
+			else
+			{
+				if (iterTicks > 0)
+				{
+					iterTicks = 0;
+				}
+			}
 			return;
 		}
 
@@ -121,51 +159,117 @@ public class ItemDropper extends Plugin
 		items.clear();
 	}
 
+	@Subscribe
+	public void onItemContainerChanged(ItemContainerChanged event)
+	{
+		if (event.getItemContainer() != client.getItemContainer(InventoryID.INVENTORY))
+		{
+			return;
+		}
+
+		int quant = 0;
+
+		for (Item item : event.getItemContainer().getItems())
+		{
+			if (ids.contains(item.getId()))
+			{
+				quant++;
+			}
+		}
+
+		if (iterating && quant == 0)
+		{
+			iterating = false;
+			clearNames();
+		}
+	}
+
+	@Subscribe
+	public void onGameStateChanged(GameStateChanged event)
+	{
+		if (event.getGameState() == GameState.LOGGED_IN)
+		{
+			updateConfig();
+		}
+	}
+
 	private void dropItems(List<WidgetItem> dropList)
 	{
-		List<Pair<Rectangle, String>> pairList = new ArrayList<>();
+		iterating = true;
+
+		for (String name : names)
+		{
+			menuManager.addPriorityEntry("drop", name);
+			menuManager.addPriorityEntry("release", name);
+			menuManager.addPriorityEntry("destroy", name);
+		}
+
+		List<Rectangle> rects = new ArrayList<>();
 
 		for (WidgetItem item : dropList)
 		{
-			final String name = itemManager.getItemDefinition(item.getId()).getName();
-			final Pair<Rectangle, String> pair = Pair.of(item.getCanvasBounds(), name);
-			setEntry(name, false);
-			pairList.add(pair);
+			rects.add(item.getCanvasBounds());
 		}
 
 		executorService.submit(() ->
 		{
-			for (Pair<Rectangle, String> pair : pairList)
+			for (Rectangle rect : rects)
 			{
 				ExtUtils.handleSwitch(
-					pair.getLeft(),
+					rect,
 					config.actionType(),
 					flexo,
 					client,
-					configManager.getConfig(StretchedModeConfig.class).scalingFactor(),
-					(int) getMillis());
+					configManager.getConfig(StretchedModeConfig.class).scalingFactor()
+				);
+
+				try
+				{
+					Thread.sleep((int) getMillis());
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		});
-
-		pairList.forEach(pair -> setEntry(pair.getRight(), true));
-	}
-
-	private void setEntry(String name, boolean remove)
-	{
-		if (remove)
-		{
-			menuManager.removePriorityEntry("drop", name);
-			menuManager.removePriorityEntry("release", name);
-			menuManager.removePriorityEntry("destroy", name);
-			return;
-		}
-		menuManager.addPriorityEntry("drop", name);
-		menuManager.addPriorityEntry("release", name);
-		menuManager.addPriorityEntry("destroy", name);
 	}
 
 	private long getMillis()
 	{
 		return (long) (Math.random() * config.randLow() + config.randHigh());
+	}
+
+	private void updateConfig()
+	{
+		ids.clear();
+
+		for (int i : stringToIntArray(config.items()))
+		{
+			ids.add(i);
+		}
+
+		clearNames();
+
+		if (client.getGameState() == GameState.LOGGED_IN)
+		{
+			names.clear();
+
+			for (int i : ids)
+			{
+				final String name = Text.standardize(itemManager.getItemDefinition(i).getName());
+				names.add(name);
+			}
+		}
+	}
+
+	private void clearNames()
+	{
+		for (String name : names)
+		{
+			menuManager.removePriorityEntry("drop", name);
+			menuManager.removePriorityEntry("release", name);
+			menuManager.removePriorityEntry("destroy", name);
+		}
 	}
 }
