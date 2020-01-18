@@ -48,10 +48,16 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.flexo.Flexo;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @PluginDescriptor(
 	name = "One Click",
@@ -126,6 +132,11 @@ public class OneClickPlugin extends Plugin
 	@Inject
 	private EventBus eventBus;
 
+	private Flexo flexo;
+	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
+	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, queue,
+			new ThreadPoolExecutor.DiscardPolicy());
+
 	private final Map<Integer, String> targetMap = new HashMap<>();
 	private final Map<Integer, List<Integer>> customClickMap = new HashMap<>();
 
@@ -136,6 +147,7 @@ public class OneClickPlugin extends Plugin
 	private boolean enableImbue;
 	private boolean imbue;
 	private boolean tick;
+    private boolean javelinWait;
 	private int prevCannonAnimation = 514;
 
 	@Provides
@@ -150,6 +162,20 @@ public class OneClickPlugin extends Plugin
 		type = config.getType();
 		enableImbue = config.isUsingImbue();
 		updateMap();
+
+		Flexo.client = client;
+		executorService.submit(() ->
+		{
+			flexo = null;
+			try
+			{
+				flexo = new Flexo();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		});
 	}
 
 	@Override
@@ -229,7 +255,24 @@ public class OneClickPlugin extends Plugin
 				prevCannonAnimation = ((DynamicObject) entity).getAnimationID();
 			}
 		}
+		if (type == Types.JAVELINS && javelinWait)
+		{
+			chatMenuAction();
+		}
 		tick = false;
+	}
+
+	private void chatMenuAction()
+	{
+		if (client.getWidget(WidgetInfo.TO_GROUP(17694733), WidgetInfo.TO_CHILD(17694733)).getStaticChildren() == null)
+		{
+			return;
+		}
+		executorService.submit(() ->
+		{
+			flexo.keyPress(KeyEvent.VK_1);
+		});
+		javelinWait = false;
 	}
 
 	@Subscribe
@@ -373,16 +416,6 @@ public class OneClickPlugin extends Plugin
 					}
 					event.setTarget("<col=ff9040>Javelin shaft<col=ffffff> -> " + targetMap.get(id));
 					event.setForceLeftClick(true);
-					try
-					{
-						Robot spaceBar = new Robot();
-						spaceBar.keyPress(KeyEvent.VK_SPACE);
-						spaceBar.keyRelease(KeyEvent.VK_SPACE);
-					}
-					catch (AWTException e)
-					{
-						e.printStackTrace();
-					}
 					event.setModified();
 				}
 				break;
@@ -673,17 +706,8 @@ public class OneClickPlugin extends Plugin
 						return;
 					}
 					event.setTarget("<col=ff9040>Javelin shaft<col=ffffff> -> " + targetMap.get(id));
+					javelinWait = true;
 					event.setForceLeftClick(true);
-					try
-					{
-						Robot spaceBar = new Robot();
-						spaceBar.keyPress(KeyEvent.VK_SPACE);
-						spaceBar.keyRelease(KeyEvent.VK_SPACE);
-					}
-					catch (AWTException e)
-					{
-						e.printStackTrace();
-					}
 				}
 				break;
 			case FIREMAKING:
