@@ -82,20 +82,18 @@ class AutoPrayFlickOverlay extends Overlay
 		orbInnerX -= 3;
 		orbInnerY -= 3;
 
-		if (!plugin.toggleFlick)
+		if (!plugin.isToggleFlick())
 		{
 			graphics.setColor(Color.red);
-			graphics.setStroke(new BasicStroke(2));
 			//graphics.drawOval(66, 59, 30, 30);
-			graphics.drawOval(orbInnerX, orbInnerY, 30, 30);
 		}
 		else
 		{
 			graphics.setColor(Color.cyan);
-			graphics.setStroke(new BasicStroke(2));
 			//graphics.drawOval(66, 59, 30, 30);
-			graphics.drawOval(orbInnerX, orbInnerY, 30, 30);
 		}
+		graphics.setStroke(new BasicStroke(2));
+		graphics.drawOval(orbInnerX, orbInnerY, 30, 30);
 		return null;
 	}
 

@@ -37,6 +37,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Prayer;
@@ -83,6 +85,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 
 	private boolean held;
 	private boolean firstFlick;
+	@Getter(AccessLevel.PACKAGE)
 	private boolean toggleFlick;
 
 	private static int randomDelay(int min, int max)
