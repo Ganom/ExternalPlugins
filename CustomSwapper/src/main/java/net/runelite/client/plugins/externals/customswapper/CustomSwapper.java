@@ -35,6 +35,7 @@ import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
@@ -56,6 +57,7 @@ import org.apache.commons.lang3.tuple.Pair;
 	type = PluginType.EXTERNAL
 )
 @Slf4j
+@SuppressWarnings("unused")
 public class CustomSwapper extends Plugin
 {
 	private static final Splitter NEWLINE_SPLITTER = Splitter
@@ -91,8 +93,6 @@ public class CustomSwapper extends Plugin
 		executor = Executors.newFixedThreadPool(1);
 		Flexo.client = client;
 		robot = new Robot();
-		eventBus.subscribe(CommandExecuted.class, this, this::onCommandExecuted);
-		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
 		if (client.getGameState() == GameState.LOGGED_IN)
 		{
 			keyManager.registerKeyListener(one);
@@ -145,7 +145,8 @@ public class CustomSwapper extends Plugin
 		keyManager.unregisterKeyListener(twenty);
 	}
 
-	private void onGameStateChanged(GameStateChanged event)
+	@Subscribe
+	public void onGameStateChanged(GameStateChanged event)
 	{
 		if (event.getGameState() != GameState.LOGGED_IN)
 		{
@@ -193,7 +194,8 @@ public class CustomSwapper extends Plugin
 		keyManager.registerKeyListener(twenty);
 	}
 
-	private void onCommandExecuted(CommandExecuted event)
+	@Subscribe
+	public void onCommandExecuted(CommandExecuted event)
 	{
 		if (event.getCommand().equalsIgnoreCase("copycs"))
 		{

@@ -6,6 +6,7 @@
 package net.runelite.client.plugins.externals.itemdropper;
 
 import com.google.inject.Provides;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -15,9 +16,11 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
-import net.runelite.api.ItemDefinition;
+import net.runelite.api.events.GameTick;
+import net.runelite.api.queries.InventoryWidgetItemQuery;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.input.KeyManager;
@@ -25,10 +28,10 @@ import net.runelite.client.menus.MenuManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
-import static net.runelite.client.plugins.externals.itemdropper.ExtUtils.getItems;
 import static net.runelite.client.plugins.externals.itemdropper.ExtUtils.stringToIntArray;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 import net.runelite.client.util.HotkeyListener;
+import org.apache.commons.lang3.tuple.Pair;
 
 @PluginDescriptor(
 	name = "Item Dropper",
@@ -37,6 +40,7 @@ import net.runelite.client.util.HotkeyListener;
 	type = PluginType.EXTERNAL
 )
 @Slf4j
+@SuppressWarnings("unused")
 public class ItemDropper extends Plugin
 {
 	@Inject
@@ -51,22 +55,25 @@ public class ItemDropper extends Plugin
 	private MenuManager menuManager;
 	@Inject
 	private ItemManager itemManager;
+
+	private final List<WidgetItem> items = new ArrayList<>();
+
 	private Flexo flexo;
 	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 25, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
+
 	private final HotkeyListener toggle = new HotkeyListener(() -> config.toggle())
 	{
 		@Override
 		public void hotkeyPressed()
 		{
-			List<WidgetItem> items = new ArrayList<>(getItems(stringToIntArray(config.items()), client));
-			if (items.isEmpty())
-			{
-				log.debug("Item list is empty.");
-				return;
-			}
-			dropItems(items);
+			List<WidgetItem> list = new InventoryWidgetItemQuery()
+				.idEquals(stringToIntArray(config.items()))
+				.result(client)
+				.list;
+
+			items.addAll(list);
 		}
 	};
 
@@ -102,19 +109,59 @@ public class ItemDropper extends Plugin
 		flexo = null;
 	}
 
+	@Subscribe
+	public void onGameTick(GameTick event)
+	{
+		if (!items.isEmpty())
+		{
+			return;
+		}
+
+		dropItems(items);
+		items.clear();
+	}
+
 	private void dropItems(List<WidgetItem> dropList)
 	{
+		List<Pair<Rectangle, String>> pairList = new ArrayList<>();
+
+		for (WidgetItem item : dropList)
+		{
+			final String name = itemManager.getItemDefinition(item.getId()).getName();
+			final Pair<Rectangle, String> pair = Pair.of(item.getCanvasBounds(), name);
+			setEntry(name, false);
+			pairList.add(pair);
+		}
+
 		executorService.submit(() ->
 		{
-			for (WidgetItem item : dropList)
+			for (Pair<Rectangle, String> pair : pairList)
 			{
-				ItemDefinition itemDef = itemManager.getItemDefinition(item.getId());
-				final String name = itemDef.getName();
-				menuManager.addPriorityEntry("Drop", name);
-				ExtUtils.handleSwitch(item.getCanvasBounds(), config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis());
-				menuManager.removePriorityEntry("Drop", name);
+				ExtUtils.handleSwitch(
+					pair.getLeft(),
+					config.actionType(),
+					flexo,
+					client,
+					configManager.getConfig(StretchedModeConfig.class).scalingFactor(),
+					(int) getMillis());
 			}
 		});
+
+		pairList.forEach(pair -> setEntry(pair.getRight(), true));
+	}
+
+	private void setEntry(String name, boolean remove)
+	{
+		if (remove)
+		{
+			menuManager.removePriorityEntry("drop", name);
+			menuManager.removePriorityEntry("release", name);
+			menuManager.removePriorityEntry("destroy", name);
+			return;
+		}
+		menuManager.addPriorityEntry("drop", name);
+		menuManager.addPriorityEntry("release", name);
+		menuManager.addPriorityEntry("destroy", name);
 	}
 
 	private long getMillis()

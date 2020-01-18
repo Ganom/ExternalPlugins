@@ -43,6 +43,7 @@ import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -55,6 +56,7 @@ import org.apache.commons.lang3.tuple.Pair;
 	enabledByDefault = false,
 	type = PluginType.EXTERNAL
 )
+@SuppressWarnings("unused")
 public class OneClickPlugin extends Plugin
 {
 	private static final Set<Integer> BOLTS = ImmutableSet.of(
@@ -137,7 +139,6 @@ public class OneClickPlugin extends Plugin
 	@Override
 	protected void startUp()
 	{
-		addSubscriptions();
 		type = config.getType();
 		enableImbue = config.isUsingImbue();
 		updateMap();
@@ -149,19 +150,8 @@ public class OneClickPlugin extends Plugin
 		eventBus.unregister(this);
 	}
 
-	private void addSubscriptions()
-	{
-		eventBus.subscribe(ChatMessage.class, this, this::onChatMessage);
-		eventBus.subscribe(ConfigChanged.class, this, this::onConfigChanged);
-		eventBus.subscribe(GameObjectSpawned.class, this, this::onGameObjectSpawned);
-		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
-		eventBus.subscribe(GameTick.class, this, this::onGameTick);
-		eventBus.subscribe(MenuEntryAdded.class, this, this::onMenuEntryAdded);
-		eventBus.subscribe(MenuOpened.class, this, this::onMenuOpened);
-		eventBus.subscribe(MenuOptionClicked.class, this, this::onMenuOptionClicked);
-	}
-
-	private void onGameStateChanged(GameStateChanged event)
+	@Subscribe
+	public void onGameStateChanged(GameStateChanged event)
 	{
 		if (event.getGameState() == GameState.LOGGED_IN && imbue)
 		{
@@ -169,7 +159,8 @@ public class OneClickPlugin extends Plugin
 		}
 	}
 
-	private void onConfigChanged(ConfigChanged event)
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
 	{
 		if (event.getGroup().equals("oneclick"))
 		{
@@ -179,7 +170,8 @@ public class OneClickPlugin extends Plugin
 		}
 	}
 
-	private void onChatMessage(ChatMessage event)
+	@Subscribe
+	public void onChatMessage(ChatMessage event)
 	{
 		switch (event.getMessage())
 		{
@@ -196,7 +188,8 @@ public class OneClickPlugin extends Plugin
 		}
 	}
 
-	private void onGameObjectSpawned(GameObjectSpawned event)
+	@Subscribe
+	public void onGameObjectSpawned(GameObjectSpawned event)
 	{
 		final GameObject gameObject = event.getGameObject();
 		final Player localPlayer = client.getLocalPlayer();
@@ -208,7 +201,8 @@ public class OneClickPlugin extends Plugin
 		}
 	}
 
-	private void onGameTick(GameTick event)
+	@Subscribe
+	public void onGameTick(GameTick event)
 	{
 		if (cannon != null)
 		{
@@ -230,7 +224,8 @@ public class OneClickPlugin extends Plugin
 		tick = false;
 	}
 
-	private void onMenuOpened(MenuOpened event)
+	@Subscribe
+	public void onMenuOpened(MenuOpened event)
 	{
 		final MenuEntry firstEntry = event.getFirstEntry();
 
@@ -295,7 +290,8 @@ public class OneClickPlugin extends Plugin
 	}
 
 
-	private void onMenuEntryAdded(MenuEntryAdded event)
+	@Subscribe
+	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
 		final int id = event.getIdentifier();
 		final int opcode = event.getOpcode();
@@ -583,9 +579,9 @@ public class OneClickPlugin extends Plugin
 		}
 	}
 
-	private void onMenuOptionClicked(MenuOptionClicked event)
+	@Subscribe
+	public void onMenuOptionClicked(MenuOptionClicked event)
 	{
-		String target = event.getTarget();
 		int opcode = event.getOpcode();
 		int id = event.getIdentifier();
 
@@ -844,7 +840,7 @@ public class OneClickPlugin extends Plugin
 				break;
 		}
 
-		target = event.getTarget();
+		String target = event.getTarget();
 		opcode = event.getOpcode();
 		id = event.getIdentifier();
 

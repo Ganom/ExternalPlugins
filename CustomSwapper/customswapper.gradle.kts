@@ -1,5 +1,8 @@
+import ProjectVersions.rlVersion
+
 /*
  * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
+ * Copyright (c) 2019 Ganom <https://github.com/Ganom>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,24 +26,23 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-description = "CustomSwapper"
-version = "1.5.43"
+version = rlVersion
 
-val deps = configurations.create("deps")
-val mainClass = "net.runelite.client.plugins.externals.customswapper.CustomSwapper"
+project.extra["PluginName"] = "CustomSwapper"
+project.extra["PluginDescription"] = "Use plugin in PvP situations for best results."
 
 dependencies {
     annotationProcessor(Libraries.lombok)
+    annotationProcessor(Libraries.pf4j)
 
-    implementation("open-osrs:runelite-api:1.5.44")
-    implementation("open-osrs:runelite-client:1.5.44")
+    compileOnly("com.openosrs:runelite-api:$rlVersion")
+    compileOnly("com.openosrs:runelite-client:$rlVersion")
 
-    implementation(Libraries.guice)
-    implementation(Libraries.javax)
-    implementation(Libraries.lombok)
-    implementation(Libraries.logback)
-    implementation(Libraries.rxjava)
-    implementation(Libraries.apacheCommonsText)
+    compileOnly(Libraries.guice)
+    compileOnly(Libraries.lombok)
+    compileOnly(Libraries.pf4j)
+    compileOnly(Libraries.okhttp3)
+    compileOnly(Libraries.apacheCommonsText)
 }
 
 tasks {
@@ -48,12 +50,11 @@ tasks {
         manifest {
             attributes(mapOf(
                     "Plugin-Version" to project.version,
-                    "Plugin-Id" to (project.description?.toLowerCase() ?: "blank") + "-plugin",
-                    "Plugin-Class" to mainClass,
-                    "Plugin-Provider" to "Ganom"
+                    "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
+                    "Plugin-Provider" to project.extra["PluginProvider"],
+                    "Plugin-Description" to project.extra["PluginDescription"],
+                    "Plugin-License" to project.extra["PluginLicense"]
             ))
         }
-
-        from(deps.map { if (it.isDirectory()) it else zipTree(it) })
     }
 }

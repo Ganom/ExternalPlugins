@@ -14,14 +14,13 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.NPC;
 import net.runelite.api.NpcID;
 import net.runelite.api.Prayer;
 import net.runelite.api.Skill;
-import net.runelite.api.events.ChatMessage;
+import net.runelite.api.events.CommandExecuted;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.NpcDefinitionChanged;
 import net.runelite.api.widgets.Widget;
@@ -29,6 +28,7 @@ import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
@@ -46,8 +46,8 @@ import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 	enabledByDefault = false,
 	type = PluginType.EXTERNAL
 )
-
 @Slf4j
+@SuppressWarnings("unused")
 public class NyloSwapper extends Plugin
 {
 	@Inject
@@ -93,7 +93,6 @@ public class NyloSwapper extends Plugin
 	@Override
 	protected void startUp()
 	{
-		addSubscriptions();
 		reset();
 		Flexo.client = client;
 		executorService.submit(() ->
@@ -117,14 +116,8 @@ public class NyloSwapper extends Plugin
 		eventBus.unregister(this);
 	}
 
-	private void addSubscriptions()
-	{
-		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
-		eventBus.subscribe(NpcDefinitionChanged.class, this, this::onNpcDefinitionChanged);
-		eventBus.subscribe(ChatMessage.class, this, this::onChatMessage);
-	}
-
-	private void onGameStateChanged(GameStateChanged event)
+	@Subscribe
+	public void onGameStateChanged(GameStateChanged event)
 	{
 		if (event.getGameState() != GameState.LOGGED_IN)
 		{
@@ -132,7 +125,8 @@ public class NyloSwapper extends Plugin
 		}
 	}
 
-	private void onNpcDefinitionChanged(NpcDefinitionChanged event)
+	@Subscribe
+	public void onNpcDefinitionChanged(NpcDefinitionChanged event)
 	{
 		final NPC npc = event.getNpc();
 
@@ -164,28 +158,25 @@ public class NyloSwapper extends Plugin
 		}
 	}
 
-	private void onChatMessage(ChatMessage event)
+	@Subscribe
+	public void onCommandExecuted(CommandExecuted event)
 	{
-		if (config.testing())
+		if (!event.getCommand().equalsIgnoreCase("nylo") || event.getArguments().length < 1)
 		{
-			if (event.getType() == ChatMessageType.PUBLICCHAT)
-			{
-				switch (event.getMessage().toLowerCase())
-				{
-					case "1":
-						executorService.submit(() -> handleNylo(getMage(), Prayer.PROTECT_FROM_MAGIC, Prayer.AUGURY, null, "Mage Nylo Detected"));
-						break;
-					case "2":
-						executorService.submit(() -> handleNylo(getRange(), Prayer.PROTECT_FROM_MISSILES, Prayer.RIGOUR, null, "Ranged Nylo Detected"));
-						break;
-					case "3":
-						executorService.submit(() -> handleNylo(getMelee(), Prayer.PROTECT_FROM_MELEE, Prayer.PIETY, null, "Melee Nylo Detected"));
-						break;
-					case "4":
-						executorService.submit(() -> handleBarrage("Yeet"));
-						break;
-				}
-			}
+			return;
+		}
+
+		switch (event.getArguments()[1])
+		{
+			case "mage":
+				executorService.submit(() -> handleNylo(getMage(), Prayer.PROTECT_FROM_MAGIC, Prayer.AUGURY, null, "Mage Nylo Detected"));
+				break;
+			case "range":
+				executorService.submit(() -> handleNylo(getRange(), Prayer.PROTECT_FROM_MISSILES, Prayer.RIGOUR, null, "Ranged Nylo Detected"));
+				break;
+			case "melee":
+				executorService.submit(() -> handleNylo(getMelee(), Prayer.PROTECT_FROM_MELEE, Prayer.PIETY, null, "Melee Nylo Detected"));
+				break;
 		}
 	}
 
@@ -236,7 +227,6 @@ public class NyloSwapper extends Plugin
 		{
 			if (item != null)
 			{
-				log.info("Grabbing Bounds and CP of: " + itemManager.getItemDefinition(item.getId()).getName());
 				handleSwitch(item.getCanvasBounds());
 			}
 		}

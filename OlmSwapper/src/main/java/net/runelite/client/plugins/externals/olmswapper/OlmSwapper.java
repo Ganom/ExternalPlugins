@@ -25,6 +25,7 @@ import net.runelite.api.vars.InterfaceTab;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.flexo.Flexo;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -41,8 +42,8 @@ import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 	tags = {"prayer", "olm", "bot", "swap"},
 	type = PluginType.EXTERNAL
 )
-
 @Slf4j
+@SuppressWarnings("unused")
 public class OlmSwapper extends Plugin
 {
 	@Inject
@@ -72,7 +73,6 @@ public class OlmSwapper extends Plugin
 	@Override
 	protected void startUp()
 	{
-		addSubscriptions();
 		Flexo.client = client;
 		executorService.submit(() ->
 		{
@@ -95,13 +95,7 @@ public class OlmSwapper extends Plugin
 		eventBus.unregister(this);
 	}
 
-	private void addSubscriptions()
-	{
-		eventBus.subscribe(ChatMessage.class, this, this::onChatMessage);
-		eventBus.subscribe(ProjectileMoved.class, this, this::onProjectileMoved);
-		eventBus.subscribe(GameTick.class, this, this::onGameTick);
-	}
-
+	@Subscribe
 	private void onGameTick(GameTick event)
 	{
 		if (swapMage)
@@ -116,6 +110,7 @@ public class OlmSwapper extends Plugin
 		}
 	}
 
+	@Subscribe
 	private void onChatMessage(ChatMessage event)
 	{
 		if (event.getType() != ChatMessageType.GAMEMESSAGE)
@@ -140,6 +135,7 @@ public class OlmSwapper extends Plugin
 		}
 	}
 
+	@Subscribe
 	private void onProjectileMoved(ProjectileMoved event)
 	{
 		if (!config.swapAutos())

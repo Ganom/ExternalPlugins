@@ -74,6 +74,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 public class FlexoPlugin extends Plugin
 {
 	private Flexo flexo;
+
 	{
 		try
 		{

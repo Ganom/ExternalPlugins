@@ -5,7 +5,6 @@
  */
 package net.runelite.client.plugins.externals.neverlog;
 
-import java.awt.event.KeyEvent;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -25,6 +24,7 @@ import net.runelite.client.plugins.PluginType;
 	description = "Enable this and you will never log out",
 	type = PluginType.EXTERNAL
 )
+@SuppressWarnings("unused")
 public class NeverLog extends Plugin
 {
 	private static final int LOGOUT_WARNING_MILLIS = (4 * 60 + 40) * 1000; // 4 minutes and 40 seconds
@@ -42,8 +42,7 @@ public class NeverLog extends Plugin
 	@Override
 	protected void startUp()
 	{
-		eventBus.subscribe(GameTick.class, this, this::onGameTick);
-		randomDelay = randomDelay(7000, 13000);
+		randomDelay = randomDelay();
 	}
 
 	@Override
@@ -56,8 +55,9 @@ public class NeverLog extends Plugin
 	{
 		if (checkIdleLogout())
 		{
-			executorService.submit(this::pressKey);
-			randomDelay = randomDelay(7000, 13000);
+			client.setMouseIdleTicks(0);
+			client.setKeyboardIdleTicks(0);
+			randomDelay = randomDelay();
 		}
 	}
 
@@ -73,25 +73,15 @@ public class NeverLog extends Plugin
 		return idleClientTicks >= randomDelay;
 	}
 
-	private long randomDelay(int min, int max)
+	private long randomDelay()
 	{
 		return (long) clamp(
-			Math.round(random.nextGaussian() * 1000 + LOGOUT_WARNING_CLIENT_TICKS), min, max
+			Math.round(random.nextGaussian() * 8000), 7000, 13000
 		);
 	}
 
 	private static double clamp(double val, double min, double max)
 	{
 		return Math.max(min, Math.min(max, val));
-	}
-
-	private void pressKey()
-	{
-		KeyEvent keyPress = new KeyEvent(this.client.getCanvas(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_BACK_SPACE);
-		this.client.getCanvas().dispatchEvent(keyPress);
-		KeyEvent keyRelease = new KeyEvent(this.client.getCanvas(), KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_BACK_SPACE);
-		this.client.getCanvas().dispatchEvent(keyRelease);
-		KeyEvent keyTyped = new KeyEvent(this.client.getCanvas(), KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_BACK_SPACE);
-		this.client.getCanvas().dispatchEvent(keyTyped);
 	}
 }

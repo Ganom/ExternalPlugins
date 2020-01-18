@@ -45,6 +45,7 @@ import net.runelite.api.events.FocusChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.input.MouseListener;
@@ -60,11 +61,11 @@ import net.runelite.client.ui.overlay.OverlayManager;
 	type = PluginType.EXTERNAL
 )
 @Slf4j
+@SuppressWarnings("unused")
 public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseListener
 {
 	private static final int[] NMZ_MAP_REGION = {9033};
 
-	boolean toggleFlick = false;
 	@Inject
 	private OverlayManager overlayManager;
 	@Inject
@@ -79,8 +80,10 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	private MouseManager mouseManager;
 	@Inject
 	private EventBus eventBus;
-	private boolean held = false;
-	private boolean firstFlick = false;
+
+	private boolean held;
+	private boolean firstFlick;
+	private boolean toggleFlick;
 
 	private static int randomDelay(int min, int max)
 	{
@@ -102,7 +105,6 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	@Override
 	protected void startUp()
 	{
-		addSubscriptions();
 		keyManager.registerKeyListener(this);
 		mouseManager.registerMouseListener(this);
 		overlayManager.add(autoPrayFlickOverlay);
@@ -114,12 +116,6 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		keyManager.unregisterKeyListener(this);
 		overlayManager.remove(autoPrayFlickOverlay);
 		eventBus.unregister(this);
-	}
-
-	private void addSubscriptions()
-	{
-		eventBus.subscribe(FocusChanged.class, this, this::onFocusChanged);
-		eventBus.subscribe(GameTick.class, this, this::onGameTick);
 	}
 
 	@Override
@@ -135,7 +131,9 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		{
 			return;
 		}
+
 		final int keycode = config.hotkey2().getKeyCode();
+
 		if (e.getKeyCode() == keycode && toggleFlick && !held)
 		{
 			toggleFlick = false;
@@ -177,7 +175,8 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		}
 	}
 
-	private void onGameTick(GameTick event)
+	@Subscribe
+	public void onGameTick(GameTick event)
 	{
 		if (config.onlyInNmz() && !isInNightmareZone())
 		{
@@ -211,7 +210,8 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		}
 	}
 
-	private void onFocusChanged(FocusChanged focusChanged)
+	@Subscribe
+	public void onFocusChanged(FocusChanged focusChanged)
 	{
 		if (!focusChanged.isFocused())
 		{

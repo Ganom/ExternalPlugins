@@ -25,6 +25,7 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -38,6 +39,7 @@ import net.runelite.client.util.PvPUtil;
 	type = PluginType.EXTERNAL
 )
 @Slf4j
+@SuppressWarnings("unused")
 public class LeftClickCast extends Plugin
 {
 	@Inject
@@ -49,7 +51,7 @@ public class LeftClickCast extends Plugin
 	@Inject
 	private KeyManager keyManager;
 
-	private boolean maging;
+	private boolean isMage;
 	private Spells currentSpell = Spells.ICE_BARRAGE;
 
 	private final HotkeyListener spellOneSwap = new HotkeyListener(() -> config.spellOneSwap())
@@ -115,7 +117,6 @@ public class LeftClickCast extends Plugin
 	@Override
 	public void startUp()
 	{
-		addSubscriptions();
 		if (client.getGameState() == GameState.LOGGED_IN)
 		{
 			keyManager.registerKeyListener(spellOneSwap);
@@ -139,15 +140,8 @@ public class LeftClickCast extends Plugin
 		keyManager.unregisterKeyListener(spellSixSwap);
 	}
 
-	private void addSubscriptions()
-	{
-		eventBus.subscribe(MenuOptionClicked.class, this, this::onMenuOptionClicked);
-		eventBus.subscribe(ItemContainerChanged.class, this, this::onItemContainerChanged);
-		eventBus.subscribe(MenuEntryAdded.class, this, this::onMenuEntryAdded);
-		eventBus.subscribe(GameStateChanged.class, this, this::onGameStateChanged);
-	}
-
-	private void onGameStateChanged(GameStateChanged event)
+	@Subscribe
+	public void onGameStateChanged(GameStateChanged event)
 	{
 		if (event.getGameState() != GameState.LOGGED_IN)
 		{
@@ -167,9 +161,10 @@ public class LeftClickCast extends Plugin
 		keyManager.registerKeyListener(spellSixSwap);
 	}
 
-	private void onMenuEntryAdded(MenuEntryAdded event)
+	@Subscribe
+	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
-		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && maging)
+		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && isMage)
 		{
 			final String name = Text.standardize(event.getTarget(), true);
 
@@ -195,7 +190,7 @@ public class LeftClickCast extends Plugin
 			setSelectSpell(currentSpell.getSpell());
 			event.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ");
 		}
-		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && maging)
+		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && isMage)
 		{
 			try
 			{
@@ -211,9 +206,10 @@ public class LeftClickCast extends Plugin
 		}
 	}
 
-	private void onMenuOptionClicked(MenuOptionClicked event)
+	@Subscribe
+	public void onMenuOptionClicked(MenuOptionClicked event)
 	{
-		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && maging)
+		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && isMage)
 		{
 			final String name = Text.standardize(event.getTarget(), true);
 
@@ -238,7 +234,7 @@ public class LeftClickCast extends Plugin
 			setSelectSpell(currentSpell.getSpell());
 			event.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ");
 		}
-		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && maging)
+		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && isMage)
 		{
 			try
 			{
@@ -266,7 +262,8 @@ public class LeftClickCast extends Plugin
 		}
 	}
 
-	private void onItemContainerChanged(ItemContainerChanged event)
+	@Subscribe
+	public void onItemContainerChanged(ItemContainerChanged event)
 	{
 		final ItemContainer ic = event.getItemContainer();
 
@@ -275,14 +272,14 @@ public class LeftClickCast extends Plugin
 			return;
 		}
 
-		maging = false;
+		isMage = false;
 
 		for (Item item : ic.getItems())
 		{
 			final String name = client.getItemDefinition(item.getId()).getName().toLowerCase();
 			if (name.contains("staff") || name.contains("wand"))
 			{
-				maging = true;
+				isMage = true;
 				break;
 			}
 		}

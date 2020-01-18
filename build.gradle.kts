@@ -8,19 +8,24 @@ plugins {
     checkstyle
 }
 
+apply<BootstrapPlugin>()
+
 subprojects {
     group = "com.openosrs.externals"
 
+    project.extra["PluginProvider"] = "Ganom"
+    project.extra["ProjectUrl"] = "https://discordapp.com/invite/hVPfVAR"
+    project.extra["PluginLicense"] = "GNU General Public License v3.0"
+
     repositories {
-        maven {
-            url = uri("https://dl.bintray.com/oprs/")
-        }
         jcenter()
         mavenLocal()
-        mavenCentral()
+        maven(url = "https://raw.githubusercontent.com/open-osrs/hosting/master/repo/stable/")
+        maven(url = "https://repo.runelite.net")
+        maven(url = "https://jitpack.io")
     }
 
-    apply<JavaLibraryPlugin>()
+    apply<JavaPlugin>()
     apply(plugin = "checkstyle")
 
     checkstyle {
@@ -31,13 +36,22 @@ subprojects {
     }
 
     configure<JavaPluginConvention> {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     tasks {
         withType<JavaCompile> {
             options.encoding = "UTF-8"
+        }
+
+        withType<Jar> {
+            doLast {
+                copy {
+                    from("./build/libs/")
+                    into("../release/")
+                }
+            }
         }
 
         withType<AbstractArchiveTask> {
