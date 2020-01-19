@@ -147,7 +147,7 @@ public class OneClickPlugin extends Plugin
 	private boolean enableImbue;
 	private boolean imbue;
 	private boolean tick;
-    private boolean javelinWait;
+	private boolean javelinWait;
 	private int prevCannonAnimation = 514;
 
 	@Provides
