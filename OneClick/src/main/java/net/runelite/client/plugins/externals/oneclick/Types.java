@@ -21,7 +21,7 @@ public enum Types
 	LAVA_RUNES("Lava Runes"),
 	STEAM_RUNES("Steam Runes"),
 	SMOKE_RUNES("Smoke Runes"),
-	HIGH_ALCH("High Alch"),
+	SPELL("Spell Casting"),
 	DWARF_CANNON("Dwarf Cannon"),
 	BONES("Bones"),
 	KARAMBWANS("Karambwans"),

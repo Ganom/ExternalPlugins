@@ -25,10 +25,18 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "spell",
+			name = "Spell Select",
+			description = "Choose a spell to One click",
+			position = 2
+	)
+	default Spells getSpells() { return Spells.NONE; }
+
+	@ConfigItem(
 		keyName = "isUsingImbue",
 		name = "Use Magic Imbue",
 		description = "If you are using lava runes, and want to use magic imbue, enable this.",
-		position = 2
+		position = 3
 	)
 	default boolean isUsingImbue()
 	{
@@ -39,7 +47,7 @@ public interface OneClickConfig extends Config
 		keyName = "customInvSwap",
 		name = "Enable Custom Swaps",
 		description = "Dont enable this if you don't know what you're doing.",
-		position = 3
+		position = 4
 	)
 	default boolean customInvSwap()
 	{
