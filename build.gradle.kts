@@ -19,6 +19,7 @@ subprojects {
         jcenter()
         mavenLocal()
         maven(url = "https://raw.githubusercontent.com/open-osrs/hosting/master/repo/stable/")
+        maven(url = "https://raw.githubusercontent.com/open-osrs/hosting/master/")
         maven(url = "https://repo.runelite.net")
         maven(url = "https://jitpack.io")
     }
