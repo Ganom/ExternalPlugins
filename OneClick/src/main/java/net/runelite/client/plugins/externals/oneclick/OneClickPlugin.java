@@ -42,7 +42,6 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
@@ -114,16 +113,14 @@ public class OneClickPlugin extends Plugin
 	private Client client;
 	@Inject
 	private OneClickConfig config;
-	@Inject
-	private EventBus eventBus;
 
 	private final Map<Integer, String> targetMap = new HashMap<>();
 	private final Map<Integer, List<Integer>> customClickMap = new HashMap<>();
 
 	private ClickItem clickItem;
 	private GameObject cannon;
-	private Types type = Types.NONE;
 	private Spells spellSelection = Spells.NONE;
+	private Types type = Types.NONE;
 	private boolean cannonFiring;
 	private boolean enableImbue;
 	private boolean imbue;
@@ -148,7 +145,7 @@ public class OneClickPlugin extends Plugin
 	@Override
 	protected void shutDown()
 	{
-		eventBus.unregister(this);
+
 	}
 
 	@Subscribe
@@ -195,9 +192,13 @@ public class OneClickPlugin extends Plugin
 	{
 		final GameObject gameObject = event.getGameObject();
 		final Player localPlayer = client.getLocalPlayer();
-		if (gameObject.getId() == DWARF_MULTICANNON && cannon == null && localPlayer != null &&
+
+		if (gameObject.getId() == DWARF_MULTICANNON &&
+			cannon == null &&
+			localPlayer != null &&
 			localPlayer.getWorldLocation().distanceTo(gameObject.getWorldLocation()) <= 2 &&
-			localPlayer.getAnimation() == AnimationID.BURYING_BONES)
+			localPlayer.getAnimation() == AnimationID.BURYING_BONES
+		)
 		{
 			cannon = gameObject;
 		}
@@ -209,9 +210,11 @@ public class OneClickPlugin extends Plugin
 		if (cannon != null)
 		{
 			final Entity entity = cannon.getEntity();
+
 			if (entity instanceof DynamicObject)
 			{
 				final int anim = ((DynamicObject) entity).getAnimationID();
+
 				if (anim == 514 && prevCannonAnimation == 514)
 				{
 					cannonFiring = false;
@@ -220,6 +223,7 @@ public class OneClickPlugin extends Plugin
 				{
 					cannonFiring = true;
 				}
+
 				prevCannonAnimation = ((DynamicObject) entity).getAnimationID();
 			}
 		}
