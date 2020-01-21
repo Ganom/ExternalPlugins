@@ -28,7 +28,7 @@ package net.runelite.client.plugins.externals.autoprayflick;
 import com.google.inject.Provides;
 import java.awt.AWTException;
 import java.awt.Robot;
-import java.awt.event.InputEvent;
+import static java.awt.event.InputEvent.BUTTON1_DOWN_MASK;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
@@ -253,8 +253,8 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		try
 		{
 			Robot leftClk = new Robot();
-			leftClk.mousePress(InputEvent.BUTTON1_MASK);
-			leftClk.mouseRelease(InputEvent.BUTTON1_MASK);
+			leftClk.mousePress(BUTTON1_DOWN_MASK);
+			leftClk.mouseRelease(BUTTON1_DOWN_MASK);
 		}
 		catch (AWTException e)
 		{
