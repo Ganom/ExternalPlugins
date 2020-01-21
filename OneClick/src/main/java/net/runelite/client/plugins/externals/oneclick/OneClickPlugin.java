@@ -105,7 +105,6 @@ public class OneClickPlugin extends Plugin
 	);
 	private static final String MAGIC_IMBUE_EXPIRED_MESSAGE = "Your Magic Imbue charge has ended.";
 	private static final String MAGIC_IMBUE_MESSAGE = "You are charged to combine runes!";
-
 	private static final Splitter NEWLINE_SPLITTER = Splitter
 		.on("\n")
 		.omitEmptyStrings()
@@ -121,9 +120,10 @@ public class OneClickPlugin extends Plugin
 	private final Map<Integer, String> targetMap = new HashMap<>();
 	private final Map<Integer, List<Integer>> customClickMap = new HashMap<>();
 
-	private AlchItem alchItem;
+	private ClickItem clickItem;
 	private GameObject cannon;
 	private Types type = Types.NONE;
+	private Spells spellSelection = Spells.NONE;
 	private boolean cannonFiring;
 	private boolean enableImbue;
 	private boolean imbue;
@@ -140,6 +140,7 @@ public class OneClickPlugin extends Plugin
 	protected void startUp()
 	{
 		type = config.getType();
+		spellSelection = config.getSpells();
 		enableImbue = config.isUsingImbue();
 		updateMap();
 	}
@@ -165,6 +166,7 @@ public class OneClickPlugin extends Plugin
 		if (event.getGroup().equals("oneclick"))
 		{
 			type = config.getType();
+			spellSelection = config.getSpells();
 			enableImbue = config.isUsingImbue();
 			updateMap();
 		}
@@ -236,22 +238,112 @@ public class OneClickPlugin extends Plugin
 
 		final int widgetId = firstEntry.getParam1();
 
-		if (widgetId == WidgetInfo.INVENTORY.getId() && type == Types.HIGH_ALCH)
+		if (widgetId == WidgetInfo.INVENTORY.getId() && type == Types.SPELL)
 		{
-			final Widget spell = client.getWidget(WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY);
+
+			final Widget spell = client.getWidget(spellSelection.getWidgetInfo());
 
 			if (spell == null)
 			{
 				return;
 			}
 
-			if (spell.getSpriteId() != SpriteID.SPELL_HIGH_LEVEL_ALCHEMY ||
-				spell.getSpriteId() == SpriteID.SPELL_HIGH_LEVEL_ALCHEMY_DISABLED ||
-				client.getBoostedSkillLevel(Skill.MAGIC) < 55 ||
-				client.getVar(Varbits.SPELLBOOK) != 0)
+			switch (spellSelection)
 			{
-				alchItem = null;
-				return;
+				case HIGH_ALCH:
+					if (spell.getSpriteId() != SpriteID.SPELL_HIGH_LEVEL_ALCHEMY ||
+						spell.getSpriteId() == SpriteID.SPELL_HIGH_LEVEL_ALCHEMY_DISABLED ||
+						client.getBoostedSkillLevel(Skill.MAGIC) < 55 ||
+						client.getVar(Varbits.SPELLBOOK) != 0)
+					{
+						clickItem = null;
+						return;
+					}
+					break;
+				case SUPERHEAT:
+					if (spell.getSpriteId() != SpriteID.SPELL_SUPERHEAT_ITEM ||
+						spell.getSpriteId() == SpriteID.SPELL_SUPERHEAT_ITEM_DISABLED ||
+						client.getBoostedSkillLevel(Skill.MAGIC) < 43 ||
+						client.getVar(Varbits.SPELLBOOK) != 0)
+					{
+						clickItem = null;
+						return;
+					}
+					break;
+				case ENCHANT_SAPPHIRE:
+					if (spell.getSpriteId() != SpriteID.SPELL_LVL_1_ENCHANT ||
+						spell.getSpriteId() == SpriteID.SPELL_LVL_1_ENCHANT_DISABLED ||
+						client.getBoostedSkillLevel(Skill.MAGIC) < 7 ||
+						client.getVar(Varbits.SPELLBOOK) != 0)
+					{
+						clickItem = null;
+						return;
+					}
+					break;
+				case ENCHANT_EMERALD:
+					if (spell.getSpriteId() != SpriteID.SPELL_LVL_2_ENCHANT ||
+						spell.getSpriteId() == SpriteID.SPELL_LVL_2_ENCHANT_DISABLED ||
+						client.getBoostedSkillLevel(Skill.MAGIC) < 27 ||
+						client.getVar(Varbits.SPELLBOOK) != 0)
+					{
+						clickItem = null;
+						return;
+					}
+					break;
+				case ENCHANT_RUBY:
+					if (spell.getSpriteId() != SpriteID.SPELL_LVL_3_ENCHANT ||
+						spell.getSpriteId() == SpriteID.SPELL_LVL_3_ENCHANT_DISABLED ||
+						client.getBoostedSkillLevel(Skill.MAGIC) < 49 ||
+						client.getVar(Varbits.SPELLBOOK) != 0)
+					{
+						clickItem = null;
+						return;
+					}
+					break;
+				case ENCHANT_DIAMOND:
+					if (spell.getSpriteId() != SpriteID.SPELL_LVL_4_ENCHANT ||
+						spell.getSpriteId() == SpriteID.SPELL_LVL_4_ENCHANT_DISABLED ||
+						client.getBoostedSkillLevel(Skill.MAGIC) < 57 ||
+						client.getVar(Varbits.SPELLBOOK) != 0)
+					{
+						clickItem = null;
+						return;
+					}
+					break;
+				case ENCHANT_DRAGONSTONE:
+					if (spell.getSpriteId() != SpriteID.SPELL_LVL_5_ENCHANT ||
+						spell.getSpriteId() == SpriteID.SPELL_LVL_5_ENCHANT_DISABLED ||
+						client.getBoostedSkillLevel(Skill.MAGIC) < 68 ||
+						client.getVar(Varbits.SPELLBOOK) != 0)
+					{
+						clickItem = null;
+						return;
+					}
+					break;
+				case ENCHANT_ONYX:
+					if (spell.getSpriteId() != SpriteID.SPELL_LVL_6_ENCHANT ||
+						spell.getSpriteId() == SpriteID.SPELL_LVL_6_ENCHANT_DISABLED ||
+						client.getBoostedSkillLevel(Skill.MAGIC) < 87 ||
+						client.getVar(Varbits.SPELLBOOK) != 0)
+					{
+						clickItem = null;
+						return;
+					}
+					break;
+				case ENCHANT_ZENYTE:
+					if (spell.getSpriteId() != SpriteID.SPELL_LVL_7_ENCHANT ||
+						spell.getSpriteId() == SpriteID.SPELL_LVL_7_ENCHANT_DISABLED ||
+						client.getBoostedSkillLevel(Skill.MAGIC) < 93 ||
+						client.getVar(Varbits.SPELLBOOK) != 0)
+					{
+						clickItem = null;
+						return;
+					}
+					break;
+				default:
+					clickItem = null;
+					break;
+
 			}
 
 			final int itemId = firstEntry.getIdentifier();
@@ -275,15 +367,46 @@ public class OneClickPlugin extends Plugin
 				}
 			}
 
-			final MenuEntry setHighAlchItem = new MenuEntry();
-			final boolean set = alchItem != null && alchItem.getId() == firstEntry.getIdentifier();
-			setHighAlchItem.setOption(set ? "Unset" : "Set");
-			setHighAlchItem.setTarget("<col=00ff00>High Alchemy Item <col=ffffff> -> " + firstEntry.getTarget());
-			setHighAlchItem.setIdentifier(set ? -1 : firstEntry.getIdentifier());
-			setHighAlchItem.setOpcode(MenuOpcode.RUNELITE.getId());
-			setHighAlchItem.setParam1(widgetId);
-			setHighAlchItem.setForceLeftClick(false);
-			menuList[1] = setHighAlchItem;
+			final MenuEntry setTargetItem = new MenuEntry();
+			final boolean set = clickItem != null && clickItem.getId() == firstEntry.getIdentifier();
+			setTargetItem.setOption(set ? "Unset" : "Set");
+
+			switch (spellSelection)
+			{
+				case HIGH_ALCH:
+					setTargetItem.setTarget("<col=00ff00>High Alchemy Item <col=ffffff> -> " + firstEntry.getTarget());
+					break;
+				case SUPERHEAT:
+					setTargetItem.setTarget("<col=00ff00>Superheat Item <col=ffffff> -> " + firstEntry.getTarget());
+					break;
+				case ENCHANT_SAPPHIRE:
+					setTargetItem.setTarget("<col=00ff00>Lvl-1 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					break;
+				case ENCHANT_EMERALD:
+					setTargetItem.setTarget("<col=00ff00>Lvl-2 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					break;
+				case ENCHANT_RUBY:
+					setTargetItem.setTarget("<col=00ff00>Lvl-3 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					break;
+				case ENCHANT_DIAMOND:
+					setTargetItem.setTarget("<col=00ff00>Lvl-4 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					break;
+				case ENCHANT_DRAGONSTONE:
+					setTargetItem.setTarget("<col=00ff00>Lvl-5 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					break;
+				case ENCHANT_ONYX:
+					setTargetItem.setTarget("<col=00ff00>Lvl-6 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					break;
+				case ENCHANT_ZENYTE:
+					setTargetItem.setTarget("<col=00ff00>Lvl-7 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					break;
+			}
+
+			setTargetItem.setIdentifier(set ? -1 : firstEntry.getIdentifier());
+			setTargetItem.setOpcode(MenuOpcode.RUNELITE.getId());
+			setTargetItem.setParam1(widgetId);
+			setTargetItem.setForceLeftClick(false);
+			menuList[1] = setTargetItem;
 			event.setMenuEntries(menuList);
 			event.setModified();
 		}
@@ -464,17 +587,133 @@ public class OneClickPlugin extends Plugin
 					event.setModified();
 				}
 				break;
-			case HIGH_ALCH:
-				if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() && alchItem != null && event.getOption().equals("Cast") && event.getTarget().equals("<col=00ff00>High Level Alchemy</col>"))
+			case SPELL:
+				switch (spellSelection)
 				{
-					event.setOption("Cast");
-					event.setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> " + alchItem.getName());
-					event.setForceLeftClick(true);
-					event.setModified();
+					case HIGH_ALCH:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>High Level Alchemy</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+							event.setModified();
+						}
+						break;
+					case SUPERHEAT:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Superheat Item</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Superheat Item</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+							event.setModified();
+						}
+						break;
+					case ENCHANT_SAPPHIRE:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-1 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-1 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+							event.setModified();
+						}
+						break;
+					case ENCHANT_EMERALD:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-2 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-2 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+							event.setModified();
+						}
+						break;
+					case ENCHANT_RUBY:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-3 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-3 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+							event.setModified();
+						}
+						break;
+					case ENCHANT_DIAMOND:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-4 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-4 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+							event.setModified();
+						}
+						break;
+					case ENCHANT_DRAGONSTONE:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-5 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-5 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+							event.setModified();
+						}
+						break;
+					case ENCHANT_ONYX:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-6 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-6 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+							event.setModified();
+						}
+						break;
+					case ENCHANT_ZENYTE:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-7 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-7 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+							event.setModified();
+						}
+						break;
 				}
 				break;
 			case DWARF_CANNON:
-				if (cannonFiring && event.getIdentifier() == DWARF_MULTICANNON && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
+				if (cannonFiring &&
+					event.getIdentifier() == DWARF_MULTICANNON &&
+					opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId()
+				)
 				{
 					if (findItem(CANNONBALLS).getLeft() == -1)
 					{
@@ -487,7 +726,10 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case BONES:
-				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().toLowerCase().contains("pray") && event.getTarget().toLowerCase().contains("altar"))
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+					event.getOption().toLowerCase().contains("pray") &&
+					event.getTarget().toLowerCase().contains("altar")
+				)
 				{
 					if (findItem(BONE_SET).getLeft() == -1)
 					{
@@ -500,7 +742,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case SEED_SET:
-				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() && event.getTarget().toLowerCase().contains("tithe"))
+				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
+					event.getTarget().toLowerCase().contains("tithe")
+				)
 				{
 					if (findItem(SEED_SET).getLeft() == -1)
 					{
@@ -512,7 +756,9 @@ public class OneClickPlugin extends Plugin
 					event.setForceLeftClick(true);
 					event.setModified();
 				}
-				else if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() && event.getTarget().toLowerCase().contains("water barrel"))
+				else if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
+					event.getTarget().toLowerCase().contains("water barrel")
+				)
 				{
 					if (findItem(WATERING_CANS).getLeft() == -1)
 					{
@@ -527,17 +773,21 @@ public class OneClickPlugin extends Plugin
 				else if (opcode == MenuOpcode.WALK.getId())
 				{
 					Widget titheWidget = client.getWidget(WidgetInfo.TITHE_FARM);
+
 					if (titheWidget == null || titheWidget.isHidden())
 					{
 						return;
 					}
+
 					MenuEntry menuEntry = client.getLeftClickMenuEntry();
 					menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
 					client.setLeftClickMenuEntry(menuEntry);
 				}
 				break;
 			case KARAMBWANS:
-				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().equals("Cook"))
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+					event.getOption().equals("Cook")
+				)
 				{
 					if (findItem(ItemID.RAW_KARAMBWAN).getLeft() == -1)
 					{
@@ -550,7 +800,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case DARK_ESSENCE:
-				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.CHISEL)
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					id == ItemID.CHISEL
+				)
 				{
 					if (findItem(ItemID.DARK_ESSENCE_BLOCK).getLeft() == -1)
 					{
@@ -564,7 +816,8 @@ public class OneClickPlugin extends Plugin
 			case TIARA:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 					event.getOption().equals("Craft-rune") &&
-					event.getTarget().equals("<col=ffff>Altar"))
+					event.getTarget().equals("<col=ffff>Altar")
+				)
 				{
 					if (findItem(ItemID.TIARA).getLeft() == -1)
 					{
@@ -600,7 +853,9 @@ public class OneClickPlugin extends Plugin
 		{
 			case COMPOST:
 			{
-				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.COMPOST)
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					id == ItemID.COMPOST
+				)
 				{
 					if (findItem(ItemID.COMPOST).getLeft() == -1)
 					{
@@ -613,7 +868,9 @@ public class OneClickPlugin extends Plugin
 			break;
 			case BRUMA_ROOT:
 			{
-				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.BRUMA_ROOT)
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					id == ItemID.BRUMA_ROOT
+				)
 				{
 					if (findItem(ItemID.BRUMA_ROOT).getLeft() == -1)
 					{
@@ -625,7 +882,9 @@ public class OneClickPlugin extends Plugin
 			}
 			break;
 			case DARTS:
-				if (opcode == MenuOpcode.ITEM_USE.getId() && (DART_TIPS.contains(id) || BOLTS.contains(id)))
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					(DART_TIPS.contains(id) || BOLTS.contains(id))
+				)
 				{
 					if (findItem(ItemID.FEATHER).getLeft() == -1)
 					{
@@ -636,7 +895,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case FIREMAKING:
-				if (opcode == MenuOpcode.ITEM_USE.getId() && LOG_ID.contains(id))
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					LOG_ID.contains(id)
+				)
 				{
 					if (findItem(ItemID.TINDERBOX).getLeft() == -1)
 					{
@@ -647,7 +908,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case BIRDHOUSES:
-				if (opcode == MenuOpcode.GAME_OBJECT_SECOND_OPTION.getId() && BIRD_HOUSES_NAMES.contains(event.getTarget()))
+				if (opcode == MenuOpcode.GAME_OBJECT_SECOND_OPTION.getId() &&
+					BIRD_HOUSES_NAMES.contains(event.getTarget())
+				)
 				{
 					if (findItem(HOPS_SEED).getLeft() == -1)
 					{
@@ -660,7 +923,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case HERB_TAR:
-				if (opcode == MenuOpcode.ITEM_USE.getId() && HERBS.contains(id))
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					HERBS.contains(id)
+				)
 				{
 					if (findItem(ItemID.SWAMP_TAR).getLeft() == -1 || findItem(ItemID.PESTLE_AND_MORTAR).getLeft() == -1)
 					{
@@ -671,7 +936,10 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case LAVA_RUNES:
-				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().equals("Craft-rune") && event.getTarget().equals("<col=ffff>Altar"))
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+					event.getOption().equals("Craft-rune") &&
+					event.getTarget().equals("<col=ffff>Altar")
+				)
 				{
 					if (findItem(ItemID.EARTH_RUNE).getLeft() == -1)
 					{
@@ -693,7 +961,8 @@ public class OneClickPlugin extends Plugin
 			case STEAM_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 					event.getOption().equals("Craft-rune") &&
-					event.getTarget().equals("<col=ffff>Altar"))
+					event.getTarget().equals("<col=ffff>Altar")
+				)
 				{
 					if (findItem(ItemID.WATER_RUNE).getLeft() == -1)
 					{
@@ -715,7 +984,8 @@ public class OneClickPlugin extends Plugin
 			case SMOKE_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 					event.getOption().equals("Craft-rune") &&
-					event.getTarget().equals("<col=ffff>Altar"))
+					event.getTarget().equals("<col=ffff>Altar")
+				)
 				{
 					if (findItem(ItemID.AIR_RUNE).getLeft() == -1)
 					{
@@ -734,16 +1004,123 @@ public class OneClickPlugin extends Plugin
 					event.setForceLeftClick(true);
 				}
 				break;
-			case HIGH_ALCH:
-				if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() && alchItem != null && event.getOption().equals("Cast") && event.getTarget().equals("<col=00ff00>High Level Alchemy</col>"))
+			case SPELL:
+				switch (spellSelection)
 				{
-					event.setOption("Cast");
-					event.setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> " + alchItem.getName());
-					event.setForceLeftClick(true);
+					case HIGH_ALCH:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>High Level Alchemy</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+						}
+						break;
+					case SUPERHEAT:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Superheat Item</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Superheat Item</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+						}
+						break;
+					case ENCHANT_SAPPHIRE:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-1 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-1 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+						}
+						break;
+					case ENCHANT_RUBY:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-2 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-2 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+						}
+						break;
+					case ENCHANT_EMERALD:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-3 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-3 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+						}
+						break;
+					case ENCHANT_DIAMOND:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-4 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-4 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+						}
+						break;
+					case ENCHANT_DRAGONSTONE:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-5 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-5 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+						}
+						break;
+					case ENCHANT_ONYX:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null && event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-6 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-6 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+						}
+						break;
+					case ENCHANT_ZENYTE:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							clickItem != null &&
+							event.getOption().equals("Cast") &&
+							event.getTarget().equals("<col=00ff00>Lvl-7 Enchant</col>")
+						)
+						{
+							event.setOption("Cast");
+							event.setTarget("<col=00ff00>Lvl-7 Enchant</col><col=ffffff> -> " + clickItem.getName());
+							event.setForceLeftClick(true);
+						}
+						break;
 				}
 				break;
 			case DWARF_CANNON:
-				if (cannonFiring && event.getIdentifier() == DWARF_MULTICANNON && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
+				if (cannonFiring &&
+					event.getIdentifier() == DWARF_MULTICANNON &&
+					opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId()
+				)
 				{
 					if (findItem(CANNONBALLS).getLeft() == -1)
 					{
@@ -755,7 +1132,10 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case BONES:
-				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().toLowerCase().contains("pray") && event.getTarget().toLowerCase().contains("altar"))
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+					event.getOption().toLowerCase().contains("pray") &&
+					event.getTarget().toLowerCase().contains("altar")
+				)
 				{
 					if (findItem(BONE_SET).getLeft() == -1)
 					{
@@ -767,7 +1147,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case SEED_SET:
-				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() && event.getTarget().toLowerCase().contains("tithe"))
+				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
+					event.getTarget().toLowerCase().contains("tithe")
+				)
 				{
 					if (findItem(SEED_SET).getLeft() == -1)
 					{
@@ -778,7 +1160,9 @@ public class OneClickPlugin extends Plugin
 					event.setTarget("<col=ff9040>Seed<col=ffffff> -> " + event.getTarget());
 					event.setForceLeftClick(true);
 				}
-				else if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() && event.getTarget().toLowerCase().contains("water barrel"))
+				else if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
+					event.getTarget().toLowerCase().contains("water barrel")
+				)
 				{
 					if (findItem(WATERING_CANS).getLeft() == -1)
 					{
@@ -802,7 +1186,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case KARAMBWANS:
-				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getOption().equals("Cook"))
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+					event.getOption().equals("Cook")
+				)
 				{
 					if (findItem(ItemID.RAW_KARAMBWAN).getLeft() == -1)
 					{
@@ -814,7 +1200,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case DARK_ESSENCE:
-				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.CHISEL)
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					id == ItemID.CHISEL
+				)
 				{
 					if (findItem(ItemID.DARK_ESSENCE_BLOCK).getLeft() == -1)
 					{
@@ -827,7 +1215,8 @@ public class OneClickPlugin extends Plugin
 			case TIARA:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
 					event.getOption().equals("Craft-rune") &&
-					event.getTarget().equals("<col=ffff>Altar"))
+					event.getTarget().equals("<col=ffff>Altar")
+				)
 				{
 					if (findItem(ItemID.TIARA).getLeft() == -1)
 					{
@@ -844,23 +1233,23 @@ public class OneClickPlugin extends Plugin
 		opcode = event.getOpcode();
 		id = event.getIdentifier();
 
-		if (config.customInvSwap())
+		if (config.customInvSwap() &&
+			opcode == MenuOpcode.ITEM_USE.getId() &&
+			customClickMap.containsKey(id) &&
+			updateSelectedItem(customClickMap.get(id))
+		)
 		{
-			if (opcode == MenuOpcode.ITEM_USE.getId() && customClickMap.containsKey(id))
-			{
-				if (updateSelectedItem(customClickMap.get(id)))
-				{
-					event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
-					return;
-				}
-			}
+			event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			return;
 		}
 
 		switch (type)
 		{
 			case COMPOST:
 			{
-				if (opcode == MenuOpcode.ITEM_USE.getId() && id == ItemID.COMPOST)
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					id == ItemID.COMPOST
+				)
 				{
 					if (updateSelectedItem(ItemID.SALTPETRE))
 					{
@@ -870,7 +1259,9 @@ public class OneClickPlugin extends Plugin
 			}
 			break;
 			case BRUMA_ROOT:
-				if (opcode == MenuOpcode.ITEM_USE.getId() && target.contains("<col=ff9040>Knife<col=ffffff> -> "))
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					target.contains("<col=ff9040>Knife<col=ffffff> -> ")
+				)
 				{
 					if (updateSelectedItem(ItemID.KNIFE))
 					{
@@ -879,7 +1270,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case DARTS:
-				if (opcode == MenuOpcode.ITEM_USE.getId() && target.contains("<col=ff9040>Feather<col=ffffff> -> "))
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					target.contains("<col=ff9040>Feather<col=ffffff> -> ")
+				)
 				{
 					if (updateSelectedItem(ItemID.FEATHER))
 					{
@@ -888,7 +1281,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case FIREMAKING:
-				if (opcode == MenuOpcode.ITEM_USE.getId() && target.contains("<col=ff9040>Tinderbox<col=ffffff> -> "))
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					target.contains("<col=ff9040>Tinderbox<col=ffffff> -> ")
+				)
 				{
 					if (updateSelectedItem(ItemID.TINDERBOX))
 					{
@@ -897,13 +1292,17 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case BIRDHOUSES:
-				if (opcode == MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId() && target.contains("<col=ff9040>Hops seed<col=ffffff> -> "))
+				if (opcode == MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId() &&
+					target.contains("<col=ff9040>Hops seed<col=ffffff> -> ")
+				)
 				{
 					updateSelectedItem(HOPS_SEED);
 				}
 				break;
 			case HERB_TAR:
-				if (opcode == MenuOpcode.ITEM_USE.getId() && target.contains("<col=ff9040>Swamp tar<col=ffffff> -> "))
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					target.contains("<col=ff9040>Swamp tar<col=ffffff> -> ")
+				)
 				{
 					if (updateSelectedItem(ItemID.SWAMP_TAR))
 					{
@@ -913,7 +1312,8 @@ public class OneClickPlugin extends Plugin
 				break;
 			case LAVA_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-					target.equals("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar"))
+					target.equals("<col=ff9040>Earth rune<col=ffffff> -> <col=ffff>Altar")
+				)
 				{
 					if (updateSelectedItem(ItemID.EARTH_RUNE))
 					{
@@ -921,7 +1321,8 @@ public class OneClickPlugin extends Plugin
 					}
 				}
 				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself")
+				)
 				{
 					event.setIdentifier(1);
 					event.setOpcode(MenuOpcode.CC_OP.getId());
@@ -931,7 +1332,8 @@ public class OneClickPlugin extends Plugin
 				break;
 			case STEAM_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-					target.equals("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar"))
+					target.equals("<col=ff9040>Water rune<col=ffffff> -> <col=ffff>Altar")
+				)
 				{
 					if (updateSelectedItem(ItemID.WATER_RUNE))
 					{
@@ -939,7 +1341,8 @@ public class OneClickPlugin extends Plugin
 					}
 				}
 				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself")
+				)
 				{
 					event.setIdentifier(1);
 					event.setOpcode(MenuOpcode.CC_OP.getId());
@@ -949,7 +1352,8 @@ public class OneClickPlugin extends Plugin
 				break;
 			case SMOKE_RUNES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-					target.equals("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar"))
+					target.equals("<col=ff9040>Air rune<col=ffffff> -> <col=ffff>Altar")
+				)
 				{
 					if (updateSelectedItem(ItemID.AIR_RUNE))
 					{
@@ -957,7 +1361,8 @@ public class OneClickPlugin extends Plugin
 					}
 				}
 				else if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+					target.equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself")
+				)
 				{
 					event.setIdentifier(1);
 					event.setOpcode(MenuOpcode.CC_OP.getId());
@@ -965,32 +1370,289 @@ public class OneClickPlugin extends Plugin
 					event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
 				}
 				break;
-			case HIGH_ALCH:
-				if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() && event.getOption().equals("Cast") && target.contains("<col=00ff00>High Level Alchemy</col><col=ffffff> -> "))
+			case SPELL:
+				switch (spellSelection)
 				{
-					final Pair<Integer, Integer> pair = findItem(alchItem.getId());
-					if (pair.getLeft() != -1)
-					{
-						event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-						event.setIdentifier(pair.getLeft());
-						event.setParam0(pair.getRight());
-						event.setParam1(WidgetInfo.INVENTORY.getId());
-						client.setSelectedSpellName("<col=00ff00>High Level Alchemy</col><col=ffffff>");
-						client.setSelectedSpellWidget(WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY.getId());
-					}
+					case HIGH_ALCH:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							event.getOption().equals("Cast") &&
+							target.contains("<col=00ff00>High Level Alchemy</col><col=ffffff> -> ")
+						)
+						{
+							final Pair<Integer, Integer> pair = findItem(clickItem.getId());
+
+							if (pair.getLeft() != -1)
+							{
+								event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
+								event.setIdentifier(pair.getLeft());
+								event.setParam0(pair.getRight());
+								event.setParam1(WidgetInfo.INVENTORY.getId());
+								client.setSelectedSpellName("<col=00ff00>High Level Alchemy</col><col=ffffff>");
+								client.setSelectedSpellWidget(WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY.getId());
+							}
+						}
+						else if (opcode == MenuOpcode.RUNELITE.getId() && event.getIdentifier() == -1)
+						{
+							clickItem = null;
+						}
+						else if (spellSelection == Spells.HIGH_ALCH && opcode == MenuOpcode.RUNELITE.getId())
+						{
+							final String itemName = event.getTarget().split("<col=00ff00>High Alchemy Item <col=ffffff> -> ")[1];
+							clickItem = new ClickItem(itemName, event.getIdentifier());
+						}
+						break;
+					case SUPERHEAT:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							event.getOption().equals("Cast") &&
+							target.contains("<col=00ff00>Superheat Item</col><col=ffffff> -> ")
+						)
+						{
+							final Pair<Integer, Integer> pair = findItem(clickItem.getId());
+							if (pair.getLeft() != -1)
+							{
+								event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
+								event.setIdentifier(pair.getLeft());
+								event.setParam0(pair.getRight());
+								event.setParam1(WidgetInfo.INVENTORY.getId());
+								client.setSelectedSpellName("<col=00ff00>Superheat Item</col><col=ffffff>");
+								client.setSelectedSpellWidget(WidgetInfo.SPELL_SUPERHEAT_ITEM.getId());
+							}
+						}
+						else if (opcode == MenuOpcode.RUNELITE.getId() && event.getIdentifier() == -1)
+						{
+							clickItem = null;
+						}
+						else if (spellSelection == Spells.SUPERHEAT && opcode == MenuOpcode.RUNELITE.getId())
+						{
+							final String itemName = event.getTarget().split("<col=00ff00>Superheat Item <col=ffffff> -> ")[1];
+							clickItem = new ClickItem(itemName, event.getIdentifier());
+						}
+						break;
+					case ENCHANT_SAPPHIRE:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							event.getOption().equals("Cast") &&
+							target.contains("<col=00ff00>Lvl-1 Enchant</col><col=ffffff> -> ")
+						)
+						{
+							final Pair<Integer, Integer> pair = findItem(clickItem.getId());
+							if (pair.getLeft() != -1)
+							{
+								event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
+								event.setIdentifier(pair.getLeft());
+								event.setParam0(pair.getRight());
+								event.setParam1(WidgetInfo.INVENTORY.getId());
+								client.setSelectedSpellName("<col=00ff00>Lvl-1 Enchant</col><col=ffffff>");
+								client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_1_ENCHANT.getId());
+							}
+						}
+						else if (opcode == MenuOpcode.RUNELITE.getId() &&
+							event.getIdentifier() == -1
+						)
+						{
+							clickItem = null;
+						}
+						else if (spellSelection == Spells.ENCHANT_SAPPHIRE &&
+							opcode == MenuOpcode.RUNELITE.getId()
+						)
+						{
+							final String itemName = event.getTarget().split("<col=00ff00>Lvl-1 Enchant <col=ffffff> -> ")[1];
+							clickItem = new ClickItem(itemName, event.getIdentifier());
+						}
+						break;
+					case ENCHANT_RUBY:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							event.getOption().equals("Cast") &&
+							target.contains("<col=00ff00>Lvl-2 Enchant</col><col=ffffff> -> ")
+						)
+						{
+							final Pair<Integer, Integer> pair = findItem(clickItem.getId());
+							if (pair.getLeft() != -1)
+							{
+								event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
+								event.setIdentifier(pair.getLeft());
+								event.setParam0(pair.getRight());
+								event.setParam1(WidgetInfo.INVENTORY.getId());
+								client.setSelectedSpellName("<col=00ff00>Lvl-2 Enchant</col><col=ffffff>");
+								client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_2_ENCHANT.getId());
+							}
+						}
+						else if (opcode == MenuOpcode.RUNELITE.getId() &&
+							event.getIdentifier() == -1
+						)
+						{
+							clickItem = null;
+						}
+						else if (spellSelection == Spells.ENCHANT_RUBY &&
+							opcode == MenuOpcode.RUNELITE.getId()
+						)
+						{
+							final String itemName = event.getTarget().split("<col=00ff00>Lvl-2 Enchant <col=ffffff> -> ")[1];
+							clickItem = new ClickItem(itemName, event.getIdentifier());
+						}
+						break;
+					case ENCHANT_EMERALD:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							event.getOption().equals("Cast") &&
+							target.contains("<col=00ff00>Lvl-3 Enchant</col><col=ffffff> -> ")
+						)
+						{
+							final Pair<Integer, Integer> pair = findItem(clickItem.getId());
+							if (pair.getLeft() != -1)
+							{
+								event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
+								event.setIdentifier(pair.getLeft());
+								event.setParam0(pair.getRight());
+								event.setParam1(WidgetInfo.INVENTORY.getId());
+								client.setSelectedSpellName("<col=00ff00>Lvl-3 Enchant</col><col=ffffff>");
+								client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_3_ENCHANT.getId());
+							}
+						}
+						else if (opcode == MenuOpcode.RUNELITE.getId() &&
+							event.getIdentifier() == -1
+						)
+						{
+							clickItem = null;
+						}
+						else if (spellSelection == Spells.ENCHANT_EMERALD &&
+							opcode == MenuOpcode.RUNELITE.getId()
+						)
+						{
+							final String itemName = event.getTarget().split("<col=00ff00>Lvl-3 Enchant <col=ffffff> -> ")[1];
+							clickItem = new ClickItem(itemName, event.getIdentifier());
+						}
+						break;
+					case ENCHANT_DIAMOND:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							event.getOption().equals("Cast") &&
+							target.contains("<col=00ff00>Lvl-4 Enchant</col><col=ffffff> -> ")
+						)
+						{
+							final Pair<Integer, Integer> pair = findItem(clickItem.getId());
+							if (pair.getLeft() != -1)
+							{
+								event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
+								event.setIdentifier(pair.getLeft());
+								event.setParam0(pair.getRight());
+								event.setParam1(WidgetInfo.INVENTORY.getId());
+								client.setSelectedSpellName("<col=00ff00>Lvl-4 Enchant</col><col=ffffff>");
+								client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_4_ENCHANT.getId());
+							}
+						}
+						else if (opcode == MenuOpcode.RUNELITE.getId() &&
+							event.getIdentifier() == -1
+						)
+						{
+							clickItem = null;
+						}
+						else if (spellSelection == Spells.ENCHANT_DIAMOND &&
+							opcode == MenuOpcode.RUNELITE.getId()
+						)
+						{
+							final String itemName = event.getTarget().split("<col=00ff00>Lvl-4 Enchant <col=ffffff> -> ")[1];
+							clickItem = new ClickItem(itemName, event.getIdentifier());
+						}
+						break;
+					case ENCHANT_DRAGONSTONE:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							event.getOption().equals("Cast") &&
+							target.contains("<col=00ff00>Lvl-5 Enchant</col><col=ffffff> -> ")
+						)
+						{
+							final Pair<Integer, Integer> pair = findItem(clickItem.getId());
+							if (pair.getLeft() != -1)
+							{
+								event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
+								event.setIdentifier(pair.getLeft());
+								event.setParam0(pair.getRight());
+								event.setParam1(WidgetInfo.INVENTORY.getId());
+								client.setSelectedSpellName("<col=00ff00>Lvl-5 Enchant</col><col=ffffff>");
+								client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_5_ENCHANT.getId());
+							}
+						}
+						else if (opcode == MenuOpcode.RUNELITE.getId() &&
+							event.getIdentifier() == -1
+						)
+						{
+							clickItem = null;
+						}
+						else if (spellSelection == Spells.ENCHANT_DRAGONSTONE &&
+							opcode == MenuOpcode.RUNELITE.getId()
+						)
+						{
+							final String itemName = event.getTarget().split("<col=00ff00>Lvl-5 Enchant <col=ffffff> -> ")[1];
+							clickItem = new ClickItem(itemName, event.getIdentifier());
+						}
+						break;
+					case ENCHANT_ONYX:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							event.getOption().equals("Cast") &&
+							target.contains("<col=00ff00>Lvl-6 Enchant</col><col=ffffff> -> ")
+						)
+						{
+							final Pair<Integer, Integer> pair = findItem(clickItem.getId());
+							if (pair.getLeft() != -1)
+							{
+								event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
+								event.setIdentifier(pair.getLeft());
+								event.setParam0(pair.getRight());
+								event.setParam1(WidgetInfo.INVENTORY.getId());
+								client.setSelectedSpellName("<col=00ff00>Lvl-6 Enchant</col><col=ffffff>");
+								client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_6_ENCHANT.getId());
+							}
+						}
+						else if (opcode == MenuOpcode.RUNELITE.getId() &&
+							event.getIdentifier() == -1
+						)
+						{
+							clickItem = null;
+						}
+						else if (spellSelection == Spells.ENCHANT_ONYX &&
+							opcode == MenuOpcode.RUNELITE.getId()
+						)
+						{
+							final String itemName = event.getTarget().split("<col=00ff00>Lvl-6 Enchant <col=ffffff> -> ")[1];
+							clickItem = new ClickItem(itemName, event.getIdentifier());
+						}
+						break;
+					case ENCHANT_ZENYTE:
+						if (opcode == MenuOpcode.WIDGET_TYPE_2.getId() &&
+							event.getOption().equals("Cast") &&
+							target.contains("<col=00ff00>Lvl-7 Enchant</col><col=ffffff> -> ")
+						)
+						{
+							final Pair<Integer, Integer> pair = findItem(clickItem.getId());
+							if (pair.getLeft() != -1)
+							{
+								event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
+								event.setIdentifier(pair.getLeft());
+								event.setParam0(pair.getRight());
+								event.setParam1(WidgetInfo.INVENTORY.getId());
+								client.setSelectedSpellName("<col=00ff00>Lvl-7 Enchant</col><col=ffffff>");
+								client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_7_ENCHANT.getId());
+							}
+						}
+						else if (opcode == MenuOpcode.RUNELITE.getId() &&
+							event.getIdentifier() == -1
+						)
+						{
+							clickItem = null;
+						}
+						else if (spellSelection == Spells.ENCHANT_ZENYTE &&
+							opcode == MenuOpcode.RUNELITE.getId()
+						)
+						{
+							final String itemName = event.getTarget().split("<col=00ff00>Lvl-7 Enchant <col=ffffff> -> ")[1];
+							clickItem = new ClickItem(itemName, event.getIdentifier());
+						}
+						break;
 				}
-				else if (opcode == MenuOpcode.RUNELITE.getId() && event.getIdentifier() == -1)
-				{
-					alchItem = null;
-				}
-				else if (type == Types.HIGH_ALCH && opcode == MenuOpcode.RUNELITE.getId())
-				{
-					final String itemName = event.getTarget().split("<col=00ff00>High Alchemy Item <col=ffffff> -> ")[1];
-					alchItem = new AlchItem(itemName, event.getIdentifier());
-				}
+
 				break;
 			case DWARF_CANNON:
-				if (cannonFiring && event.getIdentifier() == DWARF_MULTICANNON && opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
+				if (cannonFiring &&
+					event.getIdentifier() == DWARF_MULTICANNON &&
+					opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId()
+				)
 				{
 					if (updateSelectedItem(ItemID.CANNON_BALL))
 					{
@@ -1000,7 +1662,9 @@ public class OneClickPlugin extends Plugin
 				break;
 			case BONES:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-					event.getTarget().contains("<col=ff9040>Bones<col=ffffff> -> ") && target.toLowerCase().contains("altar"))
+					event.getTarget().contains("<col=ff9040>Bones<col=ffffff> -> ") &&
+					target.toLowerCase().contains("altar")
+				)
 				{
 					if (updateSelectedItem(BONE_SET))
 					{
@@ -1010,7 +1674,9 @@ public class OneClickPlugin extends Plugin
 				break;
 			case SEED_SET:
 				if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
-					event.getTarget().contains("<col=ff9040>Seed<col=ffffff> -> ") && target.toLowerCase().contains("tithe"))
+					event.getTarget().contains("<col=ff9040>Seed<col=ffffff> -> ") &&
+					target.toLowerCase().contains("tithe")
+				)
 				{
 					if (updateSelectedItem(SEED_SET))
 					{
@@ -1018,7 +1684,9 @@ public class OneClickPlugin extends Plugin
 					}
 				}
 				else if (opcode == MenuOpcode.EXAMINE_OBJECT.getId() &&
-					event.getTarget().contains("<col=ff9040>Watering can<col=ffffff> -> ") && target.toLowerCase().contains("water barrel"))
+					event.getTarget().contains("<col=ff9040>Watering can<col=ffffff> -> ") &&
+					target.toLowerCase().contains("water barrel")
+				)
 				{
 					if (updateSelectedItem(WATERING_CANS))
 					{
@@ -1027,7 +1695,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case KARAMBWANS:
-				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getTarget().contains("<col=ff9040>Raw karambwan<col=ffffff> -> "))
+				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+					event.getTarget().contains("<col=ff9040>Raw karambwan<col=ffffff> -> ")
+				)
 				{
 					if (updateSelectedItem(ItemID.RAW_KARAMBWAN))
 					{
@@ -1037,7 +1707,9 @@ public class OneClickPlugin extends Plugin
 				}
 				break;
 			case DARK_ESSENCE:
-				if (opcode == MenuOpcode.ITEM_USE.getId() && target.contains("<col=ff9040>Chisel<col=ffffff> ->"))
+				if (opcode == MenuOpcode.ITEM_USE.getId() &&
+					target.contains("<col=ff9040>Chisel<col=ffffff> ->")
+				)
 				{
 					if (updateSelectedItem(ItemID.DARK_ESSENCE_BLOCK))
 					{
@@ -1047,7 +1719,8 @@ public class OneClickPlugin extends Plugin
 				break;
 			case TIARA:
 				if (opcode == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-					target.equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar"))
+					target.equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar")
+				)
 				{
 					if (updateSelectedItem(ItemID.TIARA))
 					{

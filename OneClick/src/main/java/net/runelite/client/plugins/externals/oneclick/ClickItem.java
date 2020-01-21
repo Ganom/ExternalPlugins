@@ -9,12 +9,12 @@ package net.runelite.client.plugins.externals.oneclick;
 import lombok.Getter;
 
 @Getter
-class AlchItem
+class ClickItem
 {
 	private String name;
 	private int id;
 
-	AlchItem(String name, int id)
+	ClickItem(String name, int id)
 	{
 		this.name = name;
 		this.id = id;
