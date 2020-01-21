@@ -25,12 +25,15 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "spell",
-			name = "Spell Select",
-			description = "Choose a spell to One click",
-			position = 2
+		keyName = "spell",
+		name = "Spell Select",
+		description = "Choose a spell to One click",
+		position = 2
 	)
-	default Spells getSpells() { return Spells.NONE; }
+	default Spells getSpells()
+	{
+		return Spells.NONE;
+	}
 
 	@ConfigItem(
 		keyName = "isUsingImbue",
