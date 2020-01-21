@@ -105,7 +105,6 @@ public class OneClickPlugin extends Plugin
 	);
 	private static final String MAGIC_IMBUE_EXPIRED_MESSAGE = "Your Magic Imbue charge has ended.";
 	private static final String MAGIC_IMBUE_MESSAGE = "You are charged to combine runes!";
-
 	private static final Splitter NEWLINE_SPLITTER = Splitter
 		.on("\n")
 		.omitEmptyStrings()
