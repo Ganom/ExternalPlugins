@@ -6,15 +6,10 @@
 package net.runelite.client.plugins.externals.neverlog;
 
 import java.util.Random;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import net.runelite.api.Client;
-import net.runelite.api.Constants;
 import net.runelite.api.events.GameTick;
-import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
@@ -27,15 +22,9 @@ import net.runelite.client.plugins.PluginType;
 @SuppressWarnings("unused")
 public class NeverLog extends Plugin
 {
-	private static final int LOGOUT_WARNING_MILLIS = (4 * 60 + 40) * 1000; // 4 minutes and 40 seconds
-	private static final int LOGOUT_WARNING_CLIENT_TICKS = LOGOUT_WARNING_MILLIS / Constants.CLIENT_TICK_LENGTH;
 	@Inject
 	private Client client;
-	@Inject
-	private EventBus eventBus;
-	private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
-	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1,
-		10, TimeUnit.SECONDS, queue, new ThreadPoolExecutor.DiscardPolicy());
+
 	private Random random = new Random();
 	private long randomDelay;
 
@@ -48,10 +37,11 @@ public class NeverLog extends Plugin
 	@Override
 	protected void shutDown()
 	{
-		eventBus.unregister(this);
+
 	}
 
-	private void onGameTick(GameTick event)
+	@Subscribe
+	public void onGameTick(GameTick event)
 	{
 		if (checkIdleLogout())
 		{
@@ -76,12 +66,12 @@ public class NeverLog extends Plugin
 	private long randomDelay()
 	{
 		return (long) clamp(
-			Math.round(random.nextGaussian() * 8000), 7000, 13000
+			Math.round(random.nextGaussian() * 8000)
 		);
 	}
 
-	private static double clamp(double val, double min, double max)
+	private static double clamp(double val)
 	{
-		return Math.max(min, Math.min(max, val));
+		return Math.max(1, Math.min(13000, val));
 	}
 }
