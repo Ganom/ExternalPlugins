@@ -113,7 +113,6 @@ public class NyloSwapper extends Plugin
 	protected void shutDown()
 	{
 		reset();
-		eventBus.unregister(this);
 	}
 
 	@Subscribe

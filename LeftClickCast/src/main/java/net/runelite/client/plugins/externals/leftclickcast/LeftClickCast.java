@@ -131,7 +131,6 @@ public class LeftClickCast extends Plugin
 	@Override
 	public void shutDown()
 	{
-		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(spellOneSwap);
 		keyManager.unregisterKeyListener(spellTwoSwap);
 		keyManager.unregisterKeyListener(spellThreeSwap);

@@ -92,7 +92,6 @@ public class OlmSwapper extends Plugin
 	protected void shutDown()
 	{
 		flexo = null;
-		eventBus.unregister(this);
 	}
 
 	@Subscribe

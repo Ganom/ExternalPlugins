@@ -118,7 +118,6 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	{
 		keyManager.unregisterKeyListener(this);
 		overlayManager.remove(autoPrayFlickOverlay);
-		eventBus.unregister(this);
 	}
 
 	@Override

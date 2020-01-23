@@ -122,7 +122,6 @@ public class CustomSwapper extends Plugin
 	protected void shutDown()
 	{
 		executor.shutdown();
-		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(one);
 		keyManager.unregisterKeyListener(two);
 		keyManager.unregisterKeyListener(three);
