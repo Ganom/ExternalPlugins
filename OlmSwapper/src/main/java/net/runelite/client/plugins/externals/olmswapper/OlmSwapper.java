@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.Prayer;
+import net.runelite.api.Skill;
 import net.runelite.api.VarClientInt;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
@@ -163,7 +164,7 @@ public class OlmSwapper extends Plugin
 
 	private void clickPrayer(Prayer prayer)
 	{
-		if (client.isPrayerActive(prayer))
+		if (client.isPrayerActive(prayer) || client.getBoostedSkillLevel(Skill.PRAYER) < 1)
 		{
 			return;
 		}
