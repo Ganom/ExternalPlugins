@@ -5,6 +5,7 @@
  */
 package net.runelite.client.plugins.externals.neverlog;
 
+import java.awt.event.KeyEvent;
 import java.util.Random;
 import javax.inject.Inject;
 import net.runelite.api.Client;
@@ -45,9 +46,8 @@ public class NeverLog extends Plugin
 	{
 		if (checkIdleLogout())
 		{
-			client.setMouseIdleTicks(0);
-			client.setKeyboardIdleTicks(0);
 			randomDelay = randomDelay();
+			pressKey();
 		}
 	}
 
@@ -73,5 +73,15 @@ public class NeverLog extends Plugin
 	private static double clamp(double val)
 	{
 		return Math.max(1, Math.min(13000, val));
+	}
+
+	private void pressKey()
+	{
+		KeyEvent keyPress = new KeyEvent(this.client.getCanvas(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_BACK_SPACE);
+		this.client.getCanvas().dispatchEvent(keyPress);
+		KeyEvent keyRelease = new KeyEvent(this.client.getCanvas(), KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_BACK_SPACE);
+		this.client.getCanvas().dispatchEvent(keyRelease);
+		KeyEvent keyTyped = new KeyEvent(this.client.getCanvas(), KeyEvent.KEY_TYPED, System.currentTimeMillis(), 0, KeyEvent.VK_BACK_SPACE);
+		this.client.getCanvas().dispatchEvent(keyTyped);
 	}
 }
