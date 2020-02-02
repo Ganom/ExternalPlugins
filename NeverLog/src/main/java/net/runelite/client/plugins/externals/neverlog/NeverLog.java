@@ -7,6 +7,7 @@ package net.runelite.client.plugins.externals.neverlog;
 
 import java.awt.event.KeyEvent;
 import java.util.Random;
+import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import net.runelite.api.Client;
 import net.runelite.api.events.GameTick;
@@ -47,7 +48,8 @@ public class NeverLog extends Plugin
 		if (checkIdleLogout())
 		{
 			randomDelay = randomDelay();
-			pressKey();
+			Executors.newSingleThreadExecutor()
+				.submit(this::pressKey);
 		}
 	}
 
