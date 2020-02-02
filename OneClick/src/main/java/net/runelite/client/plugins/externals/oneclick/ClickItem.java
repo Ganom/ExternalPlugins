@@ -6,17 +6,13 @@
  */
 package net.runelite.client.plugins.externals.oneclick;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 class ClickItem
 {
 	private String name;
 	private int id;
-
-	ClickItem(String name, int id)
-	{
-		this.name = name;
-		this.id = id;
-	}
 }
