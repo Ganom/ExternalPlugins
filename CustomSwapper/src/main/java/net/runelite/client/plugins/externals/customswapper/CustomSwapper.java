@@ -295,7 +295,7 @@ public class CustomSwapper extends Plugin
 					final WidgetInfo info = PrayerMap.getWidget(param);
 					final Prayer p = Prayer.valueOf(param.toUpperCase().replace(" ", "_"));
 
-					if (client.isPrayerActive(p))
+					if (config.enablePrayCheck() && client.isPrayerActive(p))
 					{
 						continue;
 					}

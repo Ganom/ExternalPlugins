@@ -541,6 +541,18 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "enablePrayCheck",
+		name = "Active Prayer Check",
+		description = "Enabling this will make it so you can't toggle prayers if they're on.",
+		titleSection = "config",
+		position = 43
+	)
+	default boolean enablePrayCheck()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 		keyName = "randLow",
 		name = "Minimum MS Delay",
 		description = "Dont set this too high.",
