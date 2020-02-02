@@ -11,7 +11,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-class ClickItem
+public class ClickItem
 {
 	private String name;
 	private int id;

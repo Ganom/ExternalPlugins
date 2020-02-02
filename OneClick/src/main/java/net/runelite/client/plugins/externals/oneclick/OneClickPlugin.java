@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +52,7 @@ import org.apache.commons.lang3.tuple.Pair;
 )
 @SuppressWarnings("unused")
 @Getter
+@Setter
 @Slf4j
 public class OneClickPlugin extends Plugin
 {
@@ -62,22 +64,23 @@ public class OneClickPlugin extends Plugin
 		.trimResults();
 
 	@Inject
+	@Setter(AccessLevel.NONE)
 	private Client client;
 
 	@Inject
+	@Setter(AccessLevel.NONE)
 	private OneClickConfig config;
 
 	private final Map<Integer, String> targetMap = new HashMap<>();
 	private final Map<Integer, List<Integer>> customClickMap = new HashMap<>();
 
 	private ClickComparable comparable = new Blank();
-	private ClickItem clickItem;
+	private ClickItem clickItem = null;
 	private Spells spellSelection = Spells.NONE;
 	private Types type = Types.NONE;
 
 	private boolean enableImbue;
 	private boolean imbue;
-	@Setter
 	private boolean tick;
 
 	@Provides
@@ -92,8 +95,15 @@ public class OneClickPlugin extends Plugin
 		type = config.getType();
 		spellSelection = config.getSpells();
 		enableImbue = config.isUsingImbue();
-		comparable = type.getComparable();
 		updateMap();
+		if (type == Types.SPELL)
+		{
+			comparable = spellSelection.getComparable();
+		}
+		else
+		{
+			comparable = type.getComparable();
+		}
 	}
 
 	@Override
@@ -119,8 +129,15 @@ public class OneClickPlugin extends Plugin
 			type = config.getType();
 			spellSelection = config.getSpells();
 			enableImbue = config.isUsingImbue();
-			comparable = type.getComparable();
 			updateMap();
+			if (type == Types.SPELL)
+			{
+				comparable = spellSelection.getComparable();
+			}
+			else
+			{
+				comparable = type.getComparable();
+			}
 		}
 	}
 
@@ -158,7 +175,6 @@ public class OneClickPlugin extends Plugin
 
 		if (widgetId == WidgetInfo.INVENTORY.getId() && type == Types.SPELL)
 		{
-
 			final Widget spell = client.getWidget(spellSelection.getWidgetInfo());
 
 			if (spell == null)
@@ -353,143 +369,22 @@ public class OneClickPlugin extends Plugin
 			}
 		}
 
-		/*Todo: abstract spells.*/
-		if (type == Types.SPELL)
-		{
-			switch (spellSelection)
-			{
-				case HIGH_ALCH:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						clickItem != null &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().equals("<col=00ff00>High Level Alchemy</col>")
-					)
-					{
-						event.setOption("Cast");
-						event.setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> " + clickItem.getName());
-						event.setForceLeftClick(true);
-						event.setModified();
-					}
-					break;
-				case SUPERHEAT:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						clickItem != null &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().equals("<col=00ff00>Superheat Item</col>")
-					)
-					{
-						event.setOption("Cast");
-						event.setTarget("<col=00ff00>Superheat Item</col><col=ffffff> -> " + clickItem.getName());
-						event.setForceLeftClick(true);
-						event.setModified();
-					}
-					break;
-				case ENCHANT_SAPPHIRE:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						clickItem != null &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().equals("<col=00ff00>Lvl-1 Enchant</col>")
-					)
-					{
-						event.setOption("Cast");
-						event.setTarget("<col=00ff00>Lvl-1 Enchant</col><col=ffffff> -> " + clickItem.getName());
-						event.setForceLeftClick(true);
-						event.setModified();
-					}
-					break;
-				case ENCHANT_EMERALD:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						clickItem != null &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().equals("<col=00ff00>Lvl-2 Enchant</col>")
-					)
-					{
-						event.setOption("Cast");
-						event.setTarget("<col=00ff00>Lvl-2 Enchant</col><col=ffffff> -> " + clickItem.getName());
-						event.setForceLeftClick(true);
-						event.setModified();
-					}
-					break;
-				case ENCHANT_RUBY:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						clickItem != null &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().equals("<col=00ff00>Lvl-3 Enchant</col>")
-					)
-					{
-						event.setOption("Cast");
-						event.setTarget("<col=00ff00>Lvl-3 Enchant</col><col=ffffff> -> " + clickItem.getName());
-						event.setForceLeftClick(true);
-						event.setModified();
-					}
-					break;
-				case ENCHANT_DIAMOND:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						clickItem != null &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().equals("<col=00ff00>Lvl-4 Enchant</col>")
-					)
-					{
-						event.setOption("Cast");
-						event.setTarget("<col=00ff00>Lvl-4 Enchant</col><col=ffffff> -> " + clickItem.getName());
-						event.setForceLeftClick(true);
-						event.setModified();
-					}
-					break;
-				case ENCHANT_DRAGONSTONE:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						clickItem != null &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().equals("<col=00ff00>Lvl-5 Enchant</col>")
-					)
-					{
-						event.setOption("Cast");
-						event.setTarget("<col=00ff00>Lvl-5 Enchant</col><col=ffffff> -> " + clickItem.getName());
-						event.setForceLeftClick(true);
-						event.setModified();
-					}
-					break;
-				case ENCHANT_ONYX:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						clickItem != null &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().equals("<col=00ff00>Lvl-6 Enchant</col>")
-					)
-					{
-						event.setOption("Cast");
-						event.setTarget("<col=00ff00>Lvl-6 Enchant</col><col=ffffff> -> " + clickItem.getName());
-						event.setForceLeftClick(true);
-						event.setModified();
-					}
-					break;
-				case ENCHANT_ZENYTE:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						clickItem != null &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().equals("<col=00ff00>Lvl-7 Enchant</col>")
-					)
-					{
-						event.setOption("Cast");
-						event.setTarget("<col=00ff00>Lvl-7 Enchant</col><col=ffffff> -> " + clickItem.getName());
-						event.setForceLeftClick(true);
-						event.setModified();
-					}
-					break;
-			}
-		}
-		else
-		{
-			if (comparable == null)
-			{
-				log.error("This should not be possible.");
-				throw new AssertionError();
-			}
 
-			if (comparable.isEntryValid(event))
-			{
-				comparable.modifyEntry(this, event);
-				event.setModified();
-			}
+		if (comparable == null)
+		{
+			log.error("This should not be possible.");
+			throw new AssertionError();
+		}
+
+		if (type == Types.SPELL && clickItem == null)
+		{
+			return;
+		}
+
+		if (comparable.isEntryValid(event))
+		{
+			comparable.modifyEntry(this, event);
+			event.setModified();
 		}
 	}
 
@@ -517,304 +412,20 @@ public class OneClickPlugin extends Plugin
 			return;
 		}
 
-		/*Todo: abstract spells.*/
-		if (type == Types.SPELL)
+		if (comparable == null)
 		{
-			switch (spellSelection)
-			{
-				case HIGH_ALCH:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().contains("<col=00ff00>High Level Alchemy</col><col=ffffff> -> ")
-					)
-					{
-						final Pair<Integer, Integer> pair = findItem(clickItem.getId());
-
-						if (pair.getLeft() != -1)
-						{
-							event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-							event.setIdentifier(pair.getLeft());
-							event.setParam0(pair.getRight());
-							event.setParam1(WidgetInfo.INVENTORY.getId());
-							client.setSelectedSpellName("<col=00ff00>High Level Alchemy</col><col=ffffff>");
-							client.setSelectedSpellWidget(WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY.getId());
-						}
-					}
-					else if (event.getOpcode() == MenuOpcode.RUNELITE.getId() && event.getIdentifier() == -1)
-					{
-						clickItem = null;
-					}
-					else if (spellSelection == Spells.HIGH_ALCH && event.getOpcode() == MenuOpcode.RUNELITE.getId())
-					{
-						final String itemName = event.getTarget().split("<col=00ff00>High Alchemy Item <col=ffffff> -> ")[1];
-						clickItem = new ClickItem(itemName, event.getIdentifier());
-					}
-					break;
-				case SUPERHEAT:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().contains("<col=00ff00>Superheat Item</col><col=ffffff> -> ")
-					)
-					{
-						final Pair<Integer, Integer> pair = findItem(clickItem.getId());
-						if (pair.getLeft() != -1)
-						{
-							event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-							event.setIdentifier(pair.getLeft());
-							event.setParam0(pair.getRight());
-							event.setParam1(WidgetInfo.INVENTORY.getId());
-							client.setSelectedSpellName("<col=00ff00>Superheat Item</col><col=ffffff>");
-							client.setSelectedSpellWidget(WidgetInfo.SPELL_SUPERHEAT_ITEM.getId());
-						}
-					}
-					else if (event.getOpcode() == MenuOpcode.RUNELITE.getId() && event.getIdentifier() == -1)
-					{
-						clickItem = null;
-					}
-					else if (spellSelection == Spells.SUPERHEAT && event.getOpcode() == MenuOpcode.RUNELITE.getId())
-					{
-						final String itemName = event.getTarget().split("<col=00ff00>Superheat Item <col=ffffff> -> ")[1];
-						clickItem = new ClickItem(itemName, event.getIdentifier());
-					}
-					break;
-				case ENCHANT_SAPPHIRE:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().contains("<col=00ff00>Lvl-1 Enchant</col><col=ffffff> -> ")
-					)
-					{
-						final Pair<Integer, Integer> pair = findItem(clickItem.getId());
-						if (pair.getLeft() != -1)
-						{
-							event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-							event.setIdentifier(pair.getLeft());
-							event.setParam0(pair.getRight());
-							event.setParam1(WidgetInfo.INVENTORY.getId());
-							client.setSelectedSpellName("<col=00ff00>Lvl-1 Enchant</col><col=ffffff>");
-							client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_1_ENCHANT.getId());
-						}
-					}
-					else if (event.getOpcode() == MenuOpcode.RUNELITE.getId() &&
-						event.getIdentifier() == -1
-					)
-					{
-						clickItem = null;
-					}
-					else if (spellSelection == Spells.ENCHANT_SAPPHIRE &&
-						event.getOpcode() == MenuOpcode.RUNELITE.getId()
-					)
-					{
-						final String itemName = event.getTarget().split("<col=00ff00>Lvl-1 Enchant <col=ffffff> -> ")[1];
-						clickItem = new ClickItem(itemName, event.getIdentifier());
-					}
-					break;
-				case ENCHANT_RUBY:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().contains("<col=00ff00>Lvl-2 Enchant</col><col=ffffff> -> ")
-					)
-					{
-						final Pair<Integer, Integer> pair = findItem(clickItem.getId());
-						if (pair.getLeft() != -1)
-						{
-							event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-							event.setIdentifier(pair.getLeft());
-							event.setParam0(pair.getRight());
-							event.setParam1(WidgetInfo.INVENTORY.getId());
-							client.setSelectedSpellName("<col=00ff00>Lvl-2 Enchant</col><col=ffffff>");
-							client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_2_ENCHANT.getId());
-						}
-					}
-					else if (event.getOpcode() == MenuOpcode.RUNELITE.getId() &&
-						event.getIdentifier() == -1
-					)
-					{
-						clickItem = null;
-					}
-					else if (spellSelection == Spells.ENCHANT_RUBY &&
-						event.getOpcode() == MenuOpcode.RUNELITE.getId()
-					)
-					{
-						final String itemName = event.getTarget().split("<col=00ff00>Lvl-2 Enchant <col=ffffff> -> ")[1];
-						clickItem = new ClickItem(itemName, event.getIdentifier());
-					}
-					break;
-				case ENCHANT_EMERALD:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().contains("<col=00ff00>Lvl-3 Enchant</col><col=ffffff> -> ")
-					)
-					{
-						final Pair<Integer, Integer> pair = findItem(clickItem.getId());
-						if (pair.getLeft() != -1)
-						{
-							event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-							event.setIdentifier(pair.getLeft());
-							event.setParam0(pair.getRight());
-							event.setParam1(WidgetInfo.INVENTORY.getId());
-							client.setSelectedSpellName("<col=00ff00>Lvl-3 Enchant</col><col=ffffff>");
-							client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_3_ENCHANT.getId());
-						}
-					}
-					else if (event.getOpcode() == MenuOpcode.RUNELITE.getId() &&
-						event.getIdentifier() == -1
-					)
-					{
-						clickItem = null;
-					}
-					else if (spellSelection == Spells.ENCHANT_EMERALD &&
-						event.getOpcode() == MenuOpcode.RUNELITE.getId()
-					)
-					{
-						final String itemName = event.getTarget().split("<col=00ff00>Lvl-3 Enchant <col=ffffff> -> ")[1];
-						clickItem = new ClickItem(itemName, event.getIdentifier());
-					}
-					break;
-				case ENCHANT_DIAMOND:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().contains("<col=00ff00>Lvl-4 Enchant</col><col=ffffff> -> ")
-					)
-					{
-						final Pair<Integer, Integer> pair = findItem(clickItem.getId());
-						if (pair.getLeft() != -1)
-						{
-							event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-							event.setIdentifier(pair.getLeft());
-							event.setParam0(pair.getRight());
-							event.setParam1(WidgetInfo.INVENTORY.getId());
-							client.setSelectedSpellName("<col=00ff00>Lvl-4 Enchant</col><col=ffffff>");
-							client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_4_ENCHANT.getId());
-						}
-					}
-					else if (event.getOpcode() == MenuOpcode.RUNELITE.getId() &&
-						event.getIdentifier() == -1
-					)
-					{
-						clickItem = null;
-					}
-					else if (spellSelection == Spells.ENCHANT_DIAMOND &&
-						event.getOpcode() == MenuOpcode.RUNELITE.getId()
-					)
-					{
-						final String itemName = event.getTarget().split("<col=00ff00>Lvl-4 Enchant <col=ffffff> -> ")[1];
-						clickItem = new ClickItem(itemName, event.getIdentifier());
-					}
-					break;
-				case ENCHANT_DRAGONSTONE:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().contains("<col=00ff00>Lvl-5 Enchant</col><col=ffffff> -> ")
-					)
-					{
-						final Pair<Integer, Integer> pair = findItem(clickItem.getId());
-						if (pair.getLeft() != -1)
-						{
-							event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-							event.setIdentifier(pair.getLeft());
-							event.setParam0(pair.getRight());
-							event.setParam1(WidgetInfo.INVENTORY.getId());
-							client.setSelectedSpellName("<col=00ff00>Lvl-5 Enchant</col><col=ffffff>");
-							client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_5_ENCHANT.getId());
-						}
-					}
-					else if (event.getOpcode() == MenuOpcode.RUNELITE.getId() &&
-						event.getIdentifier() == -1
-					)
-					{
-						clickItem = null;
-					}
-					else if (spellSelection == Spells.ENCHANT_DRAGONSTONE &&
-						event.getOpcode() == MenuOpcode.RUNELITE.getId()
-					)
-					{
-						final String itemName = event.getTarget().split("<col=00ff00>Lvl-5 Enchant <col=ffffff> -> ")[1];
-						clickItem = new ClickItem(itemName, event.getIdentifier());
-					}
-					break;
-				case ENCHANT_ONYX:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().contains("<col=00ff00>Lvl-6 Enchant</col><col=ffffff> -> ")
-					)
-					{
-						final Pair<Integer, Integer> pair = findItem(clickItem.getId());
-						if (pair.getLeft() != -1)
-						{
-							event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-							event.setIdentifier(pair.getLeft());
-							event.setParam0(pair.getRight());
-							event.setParam1(WidgetInfo.INVENTORY.getId());
-							client.setSelectedSpellName("<col=00ff00>Lvl-6 Enchant</col><col=ffffff>");
-							client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_6_ENCHANT.getId());
-						}
-					}
-					else if (event.getOpcode() == MenuOpcode.RUNELITE.getId() &&
-						event.getIdentifier() == -1
-					)
-					{
-						clickItem = null;
-					}
-					else if (spellSelection == Spells.ENCHANT_ONYX &&
-						event.getOpcode() == MenuOpcode.RUNELITE.getId()
-					)
-					{
-						final String itemName = event.getTarget().split("<col=00ff00>Lvl-6 Enchant <col=ffffff> -> ")[1];
-						clickItem = new ClickItem(itemName, event.getIdentifier());
-					}
-					break;
-				case ENCHANT_ZENYTE:
-					if (event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-						event.getOption().equals("Cast") &&
-						event.getTarget().contains("<col=00ff00>Lvl-7 Enchant</col><col=ffffff> -> ")
-					)
-					{
-						final Pair<Integer, Integer> pair = findItem(clickItem.getId());
-						if (pair.getLeft() != -1)
-						{
-							event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-							event.setIdentifier(pair.getLeft());
-							event.setParam0(pair.getRight());
-							event.setParam1(WidgetInfo.INVENTORY.getId());
-							client.setSelectedSpellName("<col=00ff00>Lvl-7 Enchant</col><col=ffffff>");
-							client.setSelectedSpellWidget(WidgetInfo.SPELL_LVL_7_ENCHANT.getId());
-						}
-					}
-					else if (event.getOpcode() == MenuOpcode.RUNELITE.getId() &&
-						event.getIdentifier() == -1
-					)
-					{
-						clickItem = null;
-					}
-					else if (spellSelection == Spells.ENCHANT_ZENYTE &&
-						event.getOpcode() == MenuOpcode.RUNELITE.getId()
-					)
-					{
-						final String itemName = event.getTarget().split("<col=00ff00>Lvl-7 Enchant <col=ffffff> -> ")[1];
-						clickItem = new ClickItem(itemName, event.getIdentifier());
-					}
-					break;
-			}
+			log.error("This should not be possible.");
+			throw new AssertionError();
 		}
-		else
+
+		if (comparable.isEntryValid(event))
 		{
-			// Hacky solution for mixin changes.
+			comparable.modifyEntry(this, event);
+		}
 
-			if (comparable == null)
-			{
-				log.error("This should not be possible.");
-				throw new AssertionError();
-			}
-
-			if (comparable.isEntryValid(event))
-			{
-				comparable.modifyEntry(this, event);
-
-				if (comparable.isClickValid(event))
-				{
-					comparable.modifyClick(this, event);
-				}
-			}
+		if (comparable.isClickValid(event))
+		{
+			comparable.modifyClick(this, event);
 		}
 	}
 
