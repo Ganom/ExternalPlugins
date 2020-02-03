@@ -74,7 +74,7 @@ public class Spell implements ClickComparable
 				event.setParam0(pair.getRight());
 				event.setParam1(WidgetInfo.INVENTORY.getId());
 				plugin.getClient().setSelectedSpellName("<col=00ff00>" + spell + "</col>" + "<col=ffffff>");
-				plugin.getClient().setSelectedSpellWidget(WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY.getId());
+				plugin.getClient().setSelectedSpellWidget(plugin.getSpellSelection().getWidgetInfo().getId());
 			}
 		}
 		else if (reset.test(event))
