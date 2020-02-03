@@ -68,9 +68,7 @@ public interface NyloSwapperConfig extends Config
 		keyName = "mage",
 		name = "Mage Gearswap",
 		description = "Mage Gearswap Item Id's",
-		titleSection = "configs",
-		hidden = true,
-		unhide = "nyloSwapper"
+		titleSection = "configs"
 	)
 	default String mage()
 	{
@@ -82,9 +80,7 @@ public interface NyloSwapperConfig extends Config
 		keyName = "range",
 		name = "Range Gearswap",
 		description = "Range Gearswap Item Id's",
-		titleSection = "configs",
-		hidden = true,
-		unhide = "nyloSwapper"
+		titleSection = "configs"
 	)
 	default String range()
 	{
@@ -96,9 +92,7 @@ public interface NyloSwapperConfig extends Config
 		keyName = "melee",
 		name = "Melee Gearswap",
 		description = "Melee Gearswap Item Id's",
-		titleSection = "configs",
-		hidden = true,
-		unhide = "nyloSwapper"
+		titleSection = "configs"
 	)
 	default String melee()
 	{
