@@ -19,6 +19,7 @@ import net.runelite.client.plugins.externals.oneclick.Comparables.Compost;
 import net.runelite.client.plugins.externals.oneclick.Comparables.DarkEssence;
 import net.runelite.client.plugins.externals.oneclick.Comparables.Darts;
 import net.runelite.client.plugins.externals.oneclick.Comparables.Firemaking;
+import net.runelite.client.plugins.externals.oneclick.Comparables.Healer;
 import net.runelite.client.plugins.externals.oneclick.Comparables.Herbtar;
 import net.runelite.client.plugins.externals.oneclick.Comparables.Karambwans;
 import net.runelite.client.plugins.externals.oneclick.Comparables.Runes;
@@ -43,6 +44,7 @@ public enum Types
 	SEED_SET("Tithe Farm", new Seeds()),
 	TIARA("Tiara", new Tiara()),
 	SPELL("Spell Casting", new Blank()),
+	BA_HEALER("BA Healer", new Healer()),
 	NONE("None", new Blank());
 
 	private String name;

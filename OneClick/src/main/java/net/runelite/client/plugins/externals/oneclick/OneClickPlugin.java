@@ -22,6 +22,7 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
+import static net.runelite.api.MenuOpcode.MENU_ACTION_DEPRIORITIZE_OFFSET;
 import net.runelite.api.Skill;
 import net.runelite.api.SpriteID;
 import net.runelite.api.Varbits;
@@ -78,6 +79,7 @@ public class OneClickPlugin extends Plugin
 	private ClickItem clickItem = null;
 	private Spells spellSelection = Spells.NONE;
 	private Types type = Types.NONE;
+	private String roleText = "";
 
 	private boolean enableImbue;
 	private boolean imbue;
@@ -159,6 +161,15 @@ public class OneClickPlugin extends Plugin
 	public void onGameTick(GameTick event)
 	{
 		tick = false;
+		Widget widget = client.getWidget(WidgetInfo.BA_HEAL_LISTEN_TEXT);
+		if (widget != null && widget.getText() != null)
+		{
+			roleText = widget.getText().trim();
+		}
+		else
+		{
+			roleText = "";
+		}
 	}
 
 	@Subscribe
@@ -369,6 +380,20 @@ public class OneClickPlugin extends Plugin
 			}
 		}
 
+		switch (type)
+		{
+			case SEED_SET:
+			case BA_HEALER:
+				if (event.getOpcode() == MenuOpcode.WALK.getId())
+				{
+					MenuEntry menuEntry = client.getLeftClickMenuEntry();
+					menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
+					client.setLeftClickMenuEntry(menuEntry);
+				}
+				break;
+			default:
+				break;
+		}
 
 		if (comparable == null)
 		{
