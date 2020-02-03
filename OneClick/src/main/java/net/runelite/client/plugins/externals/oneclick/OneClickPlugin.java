@@ -161,14 +161,19 @@ public class OneClickPlugin extends Plugin
 	public void onGameTick(GameTick event)
 	{
 		tick = false;
-		Widget widget = client.getWidget(WidgetInfo.BA_HEAL_LISTEN_TEXT);
-		if (widget != null && widget.getText() != null)
+		
+		if (type == Types.BA_HEALER)
 		{
-			roleText = widget.getText().trim();
-		}
-		else
-		{
-			roleText = "";
+			Widget widget = client.getWidget(WidgetInfo.BA_HEAL_LISTEN_TEXT);
+
+			if (widget != null && widget.getText() != null)
+			{
+				roleText = widget.getText().trim();
+			}
+			else
+			{
+				roleText = "";
+			}
 		}
 	}
 
