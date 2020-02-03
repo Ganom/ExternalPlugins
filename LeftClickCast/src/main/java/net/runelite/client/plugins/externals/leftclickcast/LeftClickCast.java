@@ -6,6 +6,9 @@
 package net.runelite.client.plugins.externals.leftclickcast;
 
 import com.google.inject.Provides;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -26,6 +29,7 @@ import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -50,6 +54,8 @@ public class LeftClickCast extends Plugin
 	private LeftClickConfig config;
 	@Inject
 	private KeyManager keyManager;
+
+	private final Set<Integer> whitelist = new HashSet<>();
 
 	private boolean isMage;
 	private Spells currentSpell = Spells.ICE_BARRAGE;
@@ -126,6 +132,7 @@ public class LeftClickCast extends Plugin
 			keyManager.registerKeyListener(spellFiveSwap);
 			keyManager.registerKeyListener(spellSixSwap);
 		}
+		updateConfig();
 	}
 
 	@Override
@@ -158,6 +165,12 @@ public class LeftClickCast extends Plugin
 		keyManager.registerKeyListener(spellFourSwap);
 		keyManager.registerKeyListener(spellFiveSwap);
 		keyManager.registerKeyListener(spellSixSwap);
+	}
+
+	@Subscribe
+	public void onConfigChanged(ConfigChanged event)
+	{
+		updateConfig();
 	}
 
 	@Subscribe
@@ -194,14 +207,19 @@ public class LeftClickCast extends Plugin
 			try
 			{
 				NPC npc = client.getCachedNPCs()[event.getParam0()];
+
+				if (!whitelist.contains(npc.getId()))
+				{
+					return;
+				}
+
+				event.setModified();
+				setSelectSpell(currentSpell.getSpell());
+				event.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ");
 			}
-			catch (IndexOutOfBoundsException ex)
+			catch (IndexOutOfBoundsException ignored)
 			{
-				return;
 			}
-			event.setModified();
-			setSelectSpell(currentSpell.getSpell());
-			event.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ");
 		}
 	}
 
@@ -238,13 +256,19 @@ public class LeftClickCast extends Plugin
 			try
 			{
 				NPC npc = client.getCachedNPCs()[event.getParam0()];
+
+				if (!whitelist.contains(npc.getId()))
+				{
+					return;
+				}
+
+				setSelectSpell(currentSpell.getSpell());
+				event.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ");
 			}
 			catch (IndexOutOfBoundsException ex)
 			{
 				return;
 			}
-			setSelectSpell(currentSpell.getSpell());
-			event.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ");
 		}
 
 		if (event.getOption().contains("(P)"))
@@ -280,6 +304,30 @@ public class LeftClickCast extends Plugin
 			{
 				isMage = true;
 				break;
+			}
+		}
+
+		if (config.disableStaffChecks())
+		{
+			isMage = true;
+		}
+	}
+
+	private void updateConfig()
+	{
+		whitelist.clear();
+		if (config.disableStaffChecks())
+		{
+			List<String> string = Text.fromCSV(config.whitelist());
+			for (String s : string)
+			{
+				try
+				{
+					whitelist.add(Integer.parseInt(s));
+				}
+				catch (NumberFormatException ignored)
+				{
+				}
 			}
 		}
 	}

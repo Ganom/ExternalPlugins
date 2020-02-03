@@ -27,7 +27,7 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 2,
+		position = 1,
 		keyName = "disableFriendlyRegionChecks",
 		name = "Disable Friend/Clan/Lvl Checks",
 		description = "This will make it so you can cast on friends/clan members.",
@@ -36,6 +36,32 @@ public interface LeftClickConfig extends Config
 	default boolean disableFriendlyRegionChecks()
 	{
 		return false;
+	}
+
+	@ConfigItem(
+		position = 2,
+		keyName = "disableStaffChecks",
+		name = "Disable Staff/Wand Check",
+		description = "This will make it so your attack will always change to cast.",
+		titleSection = "preset"
+	)
+	default boolean disableStaffChecks()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		position = 3,
+		keyName = "whitelist",
+		name = "Whitelisted NPCs",
+		description = "Seperate with comma.",
+		titleSection = "preset",
+		hidden = true,
+		unhide = "disableStaffChecks"
+	)
+	default String whitelist()
+	{
+		return "";
 	}
 
 	@ConfigTitleSection(

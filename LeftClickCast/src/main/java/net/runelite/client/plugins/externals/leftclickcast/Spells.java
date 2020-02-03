@@ -15,6 +15,7 @@ public enum Spells
 {
 	BIND("Bind", WidgetInfo.SPELL_BIND),
 	CLAWS_OF_GUTHIX("Claws of Guthix", WidgetInfo.SPELL_CLAWS_OF_GUTHIX),
+	CRUMBLE("Crumble Undead", WidgetInfo.SPELL_CRUMBLE_UNDEAD),
 	EARTH_BLAST("Earth Blast", WidgetInfo.SPELL_EARTH_BLAST),
 	EARTH_BOLT("Earth Bolt", WidgetInfo.SPELL_EARTH_BOLT),
 	EARTH_STRIKE("Earth Strike", WidgetInfo.SPELL_EARTH_STRIKE),
