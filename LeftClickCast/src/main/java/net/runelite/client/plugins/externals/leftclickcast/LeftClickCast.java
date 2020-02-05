@@ -9,6 +9,7 @@ import com.google.inject.Provides;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -206,9 +207,14 @@ public class LeftClickCast extends Plugin
 		{
 			try
 			{
-				NPC npc = client.getCachedNPCs()[event.getParam0()];
+				NPC npc = validateNpc(event.getIdentifier());
 
-				if (!whitelist.contains(npc.getId()))
+				if (npc == null)
+				{
+					return;
+				}
+
+				if (config.disableStaffChecks() && !whitelist.contains(npc.getId()))
 				{
 					return;
 				}
@@ -255,9 +261,14 @@ public class LeftClickCast extends Plugin
 		{
 			try
 			{
-				NPC npc = client.getCachedNPCs()[event.getParam0()];
+				NPC npc = validateNpc(event.getIdentifier());
 
-				if (!whitelist.contains(npc.getId()))
+				if (npc == null)
+				{
+					return;
+				}
+
+				if (config.disableStaffChecks() && !whitelist.contains(npc.getId()))
 				{
 					return;
 				}
@@ -338,5 +349,35 @@ public class LeftClickCast extends Plugin
 		client.setSelectedSpellName("<col=00ff00>" + widget.getName() + "</col>");
 		client.setSelectedSpellWidget(widget.getId());
 		client.setSelectedSpellChildIndex(-1);
+	}
+
+
+	/**
+	 * This method is not ideal, as its going to create a ton of junk
+	 * but its the most reliable method i've found so far for validating
+	 * NPCs on menu events. Another solution would be to use string
+	 * comparison, however most users are used to the id concept
+	 * so this was the path of least resistance. I'm open to
+	 * suggestions however if anyone wants to offer them.
+	 * -Ganom
+	 *
+	 * @param index Menu event index.
+	 * @return {@link NPC} object for comparison.
+	 */
+	@Nullable
+	private NPC validateNpc(int index)
+	{
+		NPC npc = null;
+
+		for (NPC clientNpc : client.getNpcs())
+		{
+			if (index == clientNpc.getIndex())
+			{
+				npc = clientNpc;
+				break;
+			}
+		}
+
+		return npc;
 	}
 }

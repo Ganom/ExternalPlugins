@@ -79,7 +79,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spellOneSwap",
 		name = "Swap to Spell #1",
 		description = "",
-		position = 5,
+		position = 1,
 		titleSection = "hotkeys"
 	)
 	default Keybind spellOneSwap()
@@ -91,7 +91,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spellTwoSwap",
 		name = "Swap to Spell #2",
 		description = "",
-		position = 6,
+		position = 2,
 		titleSection = "hotkeys"
 	)
 	default Keybind spellTwoSwap()
@@ -103,7 +103,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spellThreeSwap",
 		name = "Swap to Spell #3",
 		description = "",
-		position = 7,
+		position = 3,
 		titleSection = "hotkeys"
 	)
 	default Keybind spellThreeSwap()
@@ -115,7 +115,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spellFourSwap",
 		name = "Swap to Spell #4",
 		description = "",
-		position = 5,
+		position = 4,
 		titleSection = "hotkeys"
 	)
 	default Keybind spellFourSwap()
@@ -127,7 +127,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spell5Swap",
 		name = "Swap to Spell #5",
 		description = "",
-		position = 6,
+		position = 5,
 		titleSection = "hotkeys"
 	)
 	default Keybind spellFiveSwap()
@@ -139,7 +139,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spellSixSwap",
 		name = "Swap to Spell #6",
 		description = "",
-		position = 7,
+		position = 6,
 		titleSection = "hotkeys"
 	)
 	default Keybind spellSixSwap()
@@ -162,7 +162,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spellOne",
 		name = "Spell #1",
 		description = "",
-		position = 9,
+		position = 1,
 		titleSection = "spells"
 	)
 	default Spells spellOne()
@@ -174,7 +174,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spellTwo",
 		name = "Spell #2",
 		description = "",
-		position = 10,
+		position = 2,
 		titleSection = "spells"
 	)
 	default Spells spellTwo()
@@ -186,7 +186,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spellThree",
 		name = "Spell #3",
 		description = "",
-		position = 11,
+		position = 3,
 		titleSection = "spells"
 	)
 	default Spells spellThree()
@@ -198,7 +198,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spellFour",
 		name = "Spell #4",
 		description = "",
-		position = 9,
+		position = 4,
 		titleSection = "spells"
 	)
 	default Spells spellFour()
@@ -210,7 +210,7 @@ public interface LeftClickConfig extends Config
 		keyName = "spellFive",
 		name = "Spell #5",
 		description = "",
-		position = 10,
+		position = 5,
 		titleSection = "spells"
 	)
 	default Spells spellFive()
@@ -222,14 +222,12 @@ public interface LeftClickConfig extends Config
 		keyName = "spellSix",
 		name = "Spell #6",
 		description = "",
-		position = 11,
+		position = 6,
 		titleSection = "spells"
 	)
 	default Spells spellSix()
 	{
 		return Spells.ICE_BARRAGE;
 	}
-
-
 }
 
