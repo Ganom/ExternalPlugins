@@ -27,7 +27,8 @@ public class Healer implements ClickComparable
 	{
 		if (plugin.getRoleText() == null ||
 			plugin.getRoleText().isBlank() ||
-			plugin.getRoleText().isEmpty())
+			plugin.getRoleText().isEmpty() ||
+			plugin.getRoleText().equals("- - -"))
 		{
 			return;
 		}
@@ -36,8 +37,8 @@ public class Healer implements ClickComparable
 
 		if (id == -1)
 		{
-			log.error("This shouldn't be possible");
-			throw new AssertionError();
+			log.error("This shouldn't be possible, bad string: {}", plugin.getRoleText());
+			return;
 		}
 
 		event.setOption("Use");
