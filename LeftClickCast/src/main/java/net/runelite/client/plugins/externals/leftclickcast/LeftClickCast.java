@@ -37,6 +37,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.util.HotkeyListener;
 import net.runelite.client.util.PvPUtil;
+import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(

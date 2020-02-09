@@ -3,7 +3,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.externals.customswapper.utils;
+package com.ganom.utils;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;

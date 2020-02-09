@@ -5,8 +5,12 @@
  */
 package net.runelite.client.plugins.externals.olmswapper;
 
+import com.ganom.utils.ExtUtils;
+import com.ganom.utils.Tab;
 import com.google.inject.Provides;
+import java.awt.AWTException;
 import java.awt.Rectangle;
+import java.awt.Robot;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -27,14 +31,10 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.flexo.Flexo;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
-import net.runelite.client.plugins.externals.olmswapper.utils.ExtUtils;
-import net.runelite.client.plugins.externals.olmswapper.utils.Tab;
-import net.runelite.client.plugins.externals.olmswapper.utils.TabUtils;
-import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
+import org.pf4j.Extension;
 
 
 @Extension
@@ -57,11 +57,13 @@ public class OlmSwapper extends Plugin
 	@Inject
 	private EventBus eventBus;
 	@Inject
-	private TabUtils tabUtils;
+	private ExtUtils utils;
+
 	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
-	private Flexo flexo;
+
+	private Robot robot;
 	private boolean swapMage;
 	private boolean swapRange;
 
@@ -73,27 +75,15 @@ public class OlmSwapper extends Plugin
 	}
 
 	@Override
-	protected void startUp()
+	protected void startUp() throws AWTException
 	{
-		Flexo.client = client;
-		executorService.submit(() ->
-		{
-			flexo = null;
-			try
-			{
-				flexo = new Flexo();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		});
+		robot = new Robot();
 	}
 
 	@Override
 	protected void shutDown()
 	{
-		flexo = null;
+		robot = null;
 	}
 
 	@Subscribe
@@ -183,14 +173,14 @@ public class OlmSwapper extends Plugin
 		{
 			if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.PRAYER.getId())
 			{
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.PRAYER));
+				robot.keyPress(utils.getTabHotkey(Tab.PRAYER));
 			}
 
-			ExtUtils.handleSwitch(bounds, config.actionType(), flexo, client, configManager.getConfig(StretchedModeConfig.class).scalingFactor(), (int) getMillis());
+			utils.click(bounds);
 
 			if (client.isPrayerActive(prayer))
 			{
-				flexo.keyPress(tabUtils.getTabHotkey(Tab.INVENTORY));
+				robot.keyPress(utils.getTabHotkey(Tab.INVENTORY));
 			}
 		});
 	}

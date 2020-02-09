@@ -10,7 +10,6 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.ConfigTitleSection;
 import net.runelite.client.config.Title;
-import net.runelite.client.plugins.externals.nyloswapper.utils.ActionType;
 
 @ConfigGroup("nyloSwapper")
 
@@ -97,18 +96,6 @@ public interface NyloSwapperConfig extends Config
 	default String melee()
 	{
 		return "11665,12006,6570,19553,12954";
-	}
-
-	@ConfigItem(
-		position = 7,
-		keyName = "actionType",
-		name = "Action Type",
-		description = "Flexo is smooth mouse, MouseEvents is ghost mouse",
-		titleSection = "configs"
-	)
-	default ActionType actionType()
-	{
-		return ActionType.FLEXO;
 	}
 
 	@ConfigItem(

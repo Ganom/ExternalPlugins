@@ -8,7 +8,6 @@ package net.runelite.client.plugins.externals.olmswapper;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
-import net.runelite.client.plugins.externals.olmswapper.utils.ActionType;
 
 @ConfigGroup(value = "OlmSwapper")
 public interface OlmSwapperConfig extends Config
@@ -22,17 +21,6 @@ public interface OlmSwapperConfig extends Config
 	default boolean swapAutos()
 	{
 		return false;
-	}
-
-	@ConfigItem(
-		position = 1,
-		keyName = "actionType",
-		name = "Action Type",
-		description = "Flexo is smooth mouse, MouseEvents is ghost mouse."
-	)
-	default ActionType actionType()
-	{
-		return ActionType.FLEXO;
 	}
 
 	@ConfigItem(

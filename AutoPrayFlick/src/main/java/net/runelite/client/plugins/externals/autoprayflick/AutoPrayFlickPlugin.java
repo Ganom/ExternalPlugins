@@ -56,11 +56,11 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.ui.overlay.OverlayManager;
+import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
 	name = "Auto Pray Flick",
-	enabledByDefault = false,
 	type = PluginType.EXTERNAL
 )
 @Slf4j

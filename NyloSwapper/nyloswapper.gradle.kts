@@ -31,7 +31,12 @@ version = rlVersion
 project.extra["PluginName"] = "NyloSwapper"
 project.extra["PluginDescription"] = "Nylo Swapper."
 
+plugins {
+    id("com.github.johnrengelman.shadow") version "5.2.0"
+}
+
 dependencies {
+    api(project(":ExtUtils"))
     annotationProcessor(Libraries.lombok)
     annotationProcessor(Libraries.pf4j)
 
@@ -56,6 +61,13 @@ tasks {
                     "Plugin-Description" to project.extra["PluginDescription"],
                     "Plugin-License" to project.extra["PluginLicense"]
             ))
+        }
+    }
+
+    shadowJar {
+        archiveClassifier.set("")
+        dependencies {
+            include(project(":ExtUtils"))
         }
     }
 }

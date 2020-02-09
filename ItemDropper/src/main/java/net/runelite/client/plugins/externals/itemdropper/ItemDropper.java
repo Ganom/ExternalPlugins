@@ -5,9 +5,11 @@
  */
 package net.runelite.client.plugins.externals.itemdropper;
 
+import com.ganom.utils.ExtUtils;
 import com.google.inject.Provides;
 import java.awt.AWTException;
 import java.awt.Rectangle;
+import java.awt.Robot;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -31,16 +33,14 @@ import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.flexo.Flexo;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.menus.MenuManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
-import static net.runelite.client.plugins.externals.itemdropper.ExtUtils.stringToIntArray;
-import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 import net.runelite.client.util.HotkeyListener;
+import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
@@ -65,6 +65,8 @@ public class ItemDropper extends Plugin
 	private MenuManager menuManager;
 	@Inject
 	private ItemManager itemManager;
+	@Inject
+	private ExtUtils utils;
 
 	private final List<WidgetItem> items = new ArrayList<>();
 	private final Set<Integer> ids = new HashSet<>();
@@ -73,7 +75,7 @@ public class ItemDropper extends Plugin
 	private boolean iterating;
 	private int iterTicks;
 
-	private Flexo flexo;
+	private Robot robot;
 	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
 	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 25, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
@@ -99,18 +101,10 @@ public class ItemDropper extends Plugin
 	}
 
 	@Override
-	protected void startUp()
+	protected void startUp() throws AWTException
 	{
-		Flexo.client = client;
+		robot = new Robot();
 		keyManager.registerKeyListener(toggle);
-		try
-		{
-			flexo = new Flexo();
-		}
-		catch (AWTException e)
-		{
-			e.printStackTrace();
-		}
 		updateConfig();
 	}
 
@@ -118,7 +112,7 @@ public class ItemDropper extends Plugin
 	protected void shutDown()
 	{
 		keyManager.unregisterKeyListener(toggle);
-		flexo = null;
+		robot = null;
 	}
 
 	@Subscribe
@@ -216,13 +210,7 @@ public class ItemDropper extends Plugin
 		{
 			for (Rectangle rect : rects)
 			{
-				ExtUtils.handleSwitch(
-					rect,
-					config.actionType(),
-					flexo,
-					client,
-					configManager.getConfig(StretchedModeConfig.class).scalingFactor()
-				);
+				utils.click(rect);
 
 				try
 				{
@@ -245,7 +233,7 @@ public class ItemDropper extends Plugin
 	{
 		ids.clear();
 
-		for (int i : stringToIntArray(config.items()))
+		for (int i : utils.stringToIntArray(config.items()))
 		{
 			ids.add(i);
 		}

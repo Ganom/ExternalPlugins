@@ -36,17 +36,6 @@ public interface ItemDropperConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 2,
-		keyName = "actionType",
-		name = "Action Type",
-		description = "Flexo is smooth mouse, MouseEvents is ghost mouse"
-	)
-	default ActionType actionType()
-	{
-		return ActionType.FLEXO;
-	}
-
-	@ConfigItem(
 		keyName = "randLow",
 		name = "Minimum Delay",
 		description = "For MouseEvents only.",

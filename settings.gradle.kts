@@ -8,6 +8,7 @@ include(":NeverLog")
 include(":NyloSwapper")
 include(":OlmSwapper")
 include(":OneClick")
+include(":ExtUtils")
 
 for (project in rootProject.children) {
     project.apply {

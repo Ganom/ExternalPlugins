@@ -31,7 +31,12 @@ version = rlVersion
 project.extra["PluginName"] = "CustomSwapper"
 project.extra["PluginDescription"] = "Use plugin in PvP situations for best results."
 
+plugins {
+    id("com.github.johnrengelman.shadow") version "5.2.0"
+}
+
 dependencies {
+    api(project(":ExtUtils"))
     annotationProcessor(Libraries.lombok)
     annotationProcessor(Libraries.pf4j)
 
@@ -56,6 +61,14 @@ tasks {
                     "Plugin-Description" to project.extra["PluginDescription"],
                     "Plugin-License" to project.extra["PluginLicense"]
             ))
+        }
+        finalizedBy(shadowJar)
+    }
+
+    shadowJar {
+        archiveClassifier.set("")
+        dependencies {
+            include(project(":ExtUtils"))
         }
     }
 }

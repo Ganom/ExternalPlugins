@@ -28,33 +28,17 @@ import ProjectVersions.rlVersion
 
 version = rlVersion
 
-project.extra["PluginName"] = "ItemDropper"
-project.extra["PluginDescription"] = "Drops Items."
-
 dependencies {
     annotationProcessor(Libraries.lombok)
+    annotationProcessor(Libraries.pf4j)
 
     implementation("com.openosrs:runelite-api:$rlVersion")
     implementation("com.openosrs:runelite-client:$rlVersion")
 
     implementation(Libraries.guice)
-    implementation(Libraries.javax)
     implementation(Libraries.lombok)
-    implementation(Libraries.logback)
+    implementation(Libraries.pf4j)
+    implementation(Libraries.okhttp3)
+    implementation(Libraries.apacheCommonsText)
     implementation(Libraries.rxjava)
-    implementation(Libraries.naturalMouse)
-}
-
-tasks {
-    jar {
-        manifest {
-            attributes(mapOf(
-                    "Plugin-Version" to project.version,
-                    "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
-                    "Plugin-Provider" to project.extra["PluginProvider"],
-                    "Plugin-Description" to project.extra["PluginDescription"],
-                    "Plugin-License" to project.extra["PluginLicense"]
-            ))
-        }
-    }
 }
