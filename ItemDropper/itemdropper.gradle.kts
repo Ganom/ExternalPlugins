@@ -60,6 +60,7 @@ tasks {
                     "Plugin-License" to project.extra["PluginLicense"]
             ))
         }
+        finalizedBy(shadowJar)
     }
 
     shadowJar {

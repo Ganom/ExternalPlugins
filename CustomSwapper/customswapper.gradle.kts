@@ -61,6 +61,7 @@ tasks {
             ))
         }
         finalizedBy(shadowJar)
+        finalizedBy(shadowJar)
     }
 
     shadowJar {
