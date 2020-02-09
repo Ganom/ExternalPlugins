@@ -33,6 +33,7 @@ project.extra["PluginDescription"] = "This makes it so you'll never logout durin
 
 dependencies {
     annotationProcessor(Libraries.lombok)
+    annotationProcessor(Libraries.pf4j)
 
     implementation("com.openosrs:runelite-api:$rlVersion")
     implementation("com.openosrs:runelite-client:$rlVersion")

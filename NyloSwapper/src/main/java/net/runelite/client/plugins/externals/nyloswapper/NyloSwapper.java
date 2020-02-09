@@ -39,6 +39,7 @@ import net.runelite.client.plugins.externals.nyloswapper.utils.Tab;
 import net.runelite.client.plugins.externals.nyloswapper.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 
+@Extension
 @PluginDescriptor(
 	name = "Nylo Swapper",
 	description = "Nylo Swapper",

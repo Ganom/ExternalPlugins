@@ -57,6 +57,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.ui.overlay.OverlayManager;
 
+@Extension
 @PluginDescriptor(
 	name = "Auto Pray Flick",
 	enabledByDefault = false,

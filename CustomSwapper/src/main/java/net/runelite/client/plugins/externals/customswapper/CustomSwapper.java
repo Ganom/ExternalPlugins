@@ -50,6 +50,7 @@ import net.runelite.client.util.Clipboard;
 import net.runelite.client.util.HotkeyListener;
 import org.apache.commons.lang3.tuple.Pair;
 
+@Extension
 @PluginDescriptor(
 	name = "Custom Swapper",
 	description = "Use plugin in PvP situations for best results",

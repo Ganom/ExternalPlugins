@@ -37,6 +37,7 @@ import net.runelite.client.plugins.externals.olmswapper.utils.TabUtils;
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 
 
+@Extension
 @PluginDescriptor(
 	name = "Olm Pray Swapper",
 	description = "Automatically swaps prayers for CoX",

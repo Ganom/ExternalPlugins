@@ -42,6 +42,7 @@ import static net.runelite.client.plugins.externals.itemdropper.ExtUtils.stringT
 import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 import net.runelite.client.util.HotkeyListener;
 
+@Extension
 @PluginDescriptor(
 	name = "Item Dropper",
 	description = "Drops selected items for you.",

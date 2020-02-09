@@ -38,6 +38,7 @@ import net.runelite.client.plugins.PluginType;
 import net.runelite.client.util.HotkeyListener;
 import net.runelite.client.util.PvPUtil;
 
+@Extension
 @PluginDescriptor(
 	name = "Left Click Cast",
 	description = "Casting made even easier.",

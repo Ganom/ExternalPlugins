@@ -44,11 +44,12 @@ import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.externals.oneclick.Comparables.Blank;
 import net.runelite.client.plugins.externals.oneclick.Comparables.ClickComparable;
 import org.apache.commons.lang3.tuple.Pair;
+import org.pf4j.Extension;
 
+@Extension
 @PluginDescriptor(
 	name = "One Click",
 	description = "OP One Click methods.",
-	enabledByDefault = false,
 	type = PluginType.EXTERNAL
 )
 @SuppressWarnings("unused")
@@ -161,7 +162,7 @@ public class OneClickPlugin extends Plugin
 	public void onGameTick(GameTick event)
 	{
 		tick = false;
-		
+
 		if (type == Types.BA_HEALER)
 		{
 			Widget widget = client.getWidget(WidgetInfo.BA_HEAL_LISTEN_TEXT);
