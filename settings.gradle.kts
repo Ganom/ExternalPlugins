@@ -2,7 +2,6 @@ rootProject.name = "public"
 
 include(":AutoPrayFlick")
 include(":CustomSwapper")
-include(":Flexo")
 include(":ItemDropper")
 include(":LeftClickCast")
 include(":NeverLog")

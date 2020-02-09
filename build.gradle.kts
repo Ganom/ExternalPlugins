@@ -5,8 +5,11 @@ buildscript {
 }
 
 plugins {
+    `java-library`
     checkstyle
 }
+
+apply<BootstrapPlugin>()
 
 subprojects {
     group = "com.openosrs.externals"
@@ -25,6 +28,7 @@ subprojects {
     }
 
     apply<JavaPlugin>()
+    apply(plugin = "java-library")
     apply(plugin = "checkstyle")
 
     checkstyle {
