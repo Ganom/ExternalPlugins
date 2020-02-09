@@ -34,10 +34,8 @@ project.extra["PluginDescription"] = "Use plugin in PvP situations for best resu
 dependencies {
     annotationProcessor(Libraries.lombok)
     annotationProcessor(Libraries.pf4j)
-
-    implementation("com.openosrs:runelite-api:$rlVersion")
-    implementation("com.openosrs:runelite-client:$rlVersion")
-
+    implementation("com.github.open-osrs.runelite:runelite-api:-SNAPSHOT")
+    implementation("com.github.open-osrs.runelite:runelite-client:-SNAPSHOT")
     implementation(Libraries.guice)
     implementation(Libraries.lombok)
     implementation(Libraries.pf4j)

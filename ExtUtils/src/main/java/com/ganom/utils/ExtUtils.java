@@ -28,21 +28,17 @@ import net.runelite.api.queries.WallObjectQuery;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
-import net.runelite.client.config.ConfigManager;
-import net.runelite.client.plugins.stretchedmode.StretchedModeConfig;
 
 @Slf4j
 @SuppressWarnings("unused")
 public class ExtUtils
 {
 	private final Client client;
-	private final ConfigManager configManager;
 
 	@Inject
-	public ExtUtils(Client client, ConfigManager configManager)
+	public ExtUtils(Client client)
 	{
 		this.client = client;
-		this.configManager = configManager;
 	}
 
 	public int[] stringToIntArray(String string)
@@ -327,7 +323,7 @@ public class ExtUtils
 
 			if (client.isStretchedEnabled())
 			{
-				double scale = 1 + ((double) configManager.getConfig(StretchedModeConfig.class).scalingFactor() / 100);
+				double scale = client.getScalingFactor();
 				final int x = (int) (p.getX() * scale);
 				final int y = (int) (p.getY() * scale);
 				final Point click = new Point(x, y);
