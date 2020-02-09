@@ -39,7 +39,6 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.client.util.Clipboard;
 import net.runelite.client.util.HotkeyListener;
 import org.apache.commons.lang3.tuple.Pair;
@@ -49,8 +48,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Custom Swapper",
 	description = "Use plugin in PvP situations for best results",
-	tags = {"op", "af"},
-	type = PluginType.EXTERNAL
+	tags = {"op", "af"}
 )
 @Slf4j
 @SuppressWarnings("unused")

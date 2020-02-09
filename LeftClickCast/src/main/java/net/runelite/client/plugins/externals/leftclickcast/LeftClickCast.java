@@ -34,7 +34,6 @@ import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.client.util.HotkeyListener;
 import net.runelite.client.util.PvPUtil;
 import org.pf4j.Extension;
@@ -42,8 +41,7 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "Left Click Cast",
-	description = "Casting made even easier.",
-	type = PluginType.EXTERNAL
+	description = "Casting made even easier."
 )
 @Slf4j
 @SuppressWarnings("unused")

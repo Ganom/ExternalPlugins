@@ -33,7 +33,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import org.pf4j.Extension;
 
 
@@ -41,8 +40,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Olm Pray Swapper",
 	description = "Automatically swaps prayers for CoX",
-	tags = {"prayer", "olm", "bot", "swap"},
-	type = PluginType.EXTERNAL
+	tags = {"prayer", "olm", "bot", "swap"}
 )
 @Slf4j
 @SuppressWarnings("unused")

@@ -40,7 +40,6 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.externals.oneclick.Comparables.Blank;
 import net.runelite.client.plugins.externals.oneclick.Comparables.ClickComparable;
 import org.apache.commons.lang3.tuple.Pair;
@@ -49,8 +48,7 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "One Click",
-	description = "OP One Click methods.",
-	type = PluginType.EXTERNAL
+	description = "OP One Click methods."
 )
 @SuppressWarnings("unused")
 @Getter

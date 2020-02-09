@@ -36,15 +36,13 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
 	name = "Nylo Swapper",
 	description = "Nylo Swapper",
-	tags = {"tob", "theatre", "blood", "cheats"},
-	type = PluginType.EXTERNAL
+	tags = {"tob", "theatre", "blood", "cheats"}
 )
 @Slf4j
 @SuppressWarnings("unused")

@@ -1,4 +1,3 @@
-import com.savvasdalkitsis.jsonmerger.JsonMerger
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.gradle.api.DefaultTask
@@ -46,7 +45,7 @@ open class BootstrapTask : DefaultTask() {
             bootstrapReleaseDir.mkdirs()
 
             val plugins = ArrayList<JSONObject>()
-            val baseBootstrap = getBootstrap() ?: throw RuntimeException("Base bootstrap is null!")
+            /*val baseBootstrap = getBootstrap() ?: throw RuntimeException("Base bootstrap is null!")*/
 
             project.subprojects.forEach {
                 if (it.project.properties.containsKey("PluginName") && it.project.properties.containsKey("PluginDescription")) {
@@ -72,7 +71,7 @@ open class BootstrapTask : DefaultTask() {
                             "releases" to releases.toTypedArray()
                     ).jsonObject()
 
-                    for (i in 0 until baseBootstrap.length()) {
+/*                    for (i in 0 until baseBootstrap.length()) {
                         val item = baseBootstrap.getJSONObject(i)
 
                         if (!item.get("id").equals(nameToId(it.project.extra.get("PluginName") as String))) {
@@ -87,7 +86,7 @@ open class BootstrapTask : DefaultTask() {
 
                         plugins.add(JsonMerger(arrayMergeMode = JsonMerger.ArrayMergeMode.MERGE_ARRAY).merge(item, pluginObject))
                         pluginAdded = true
-                    }
+                    }*/
 
                     if (!pluginAdded) {
                         plugins.add(pluginObject)
