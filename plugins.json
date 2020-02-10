@@ -1,1 +1,146 @@
-[{"projectUrl":"https://discordapp.com/invite/hVPfVAR","provider":"Ganom","name":"AutoPrayFlick","description":"Use plugin in PvP situations for best results.","id":"autoprayflick-plugin","releases":[{"date":"2020-02-09","sha512sum":"C4984B3773835FA891369887C2555044A9CAECF0C9168A91D248EC855F63A1DBD2C73AAD0A83DA4FB8F021F59F0DEF6AAC99207A2DFCFC02BE7AE8854079E36A","version":"1.6.6-SNAPSHOT","url":"https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoPrayFlick-1.6.6-SNAPSHOT.jar?raw=true","requires":"0.0.1"}]}, {"projectUrl":"https://discordapp.com/invite/hVPfVAR","provider":"Ganom","name":"CustomSwapper","description":"Use plugin in PvP situations for best results.","id":"customswapper-plugin","releases":[{"date":"2020-02-09","sha512sum":"F976AD810605CDD9B4624E19C403CEB4D904B78BF97017C366134F89B7D4BD3A67789F72F6C2BE8492A6026E9BF67AABA0D731B70B4A471F31FB2509C6AD20C0","version":"1.6.6-SNAPSHOT","url":"https://github.com/Ganom/ExternalPlugins/blob/master/release/CustomSwapper-1.6.6-SNAPSHOT.jar?raw=true","requires":"0.0.1"}]}, {"projectUrl":"https://discordapp.com/invite/hVPfVAR","provider":"Ganom","name":"ExtUtils","description":"Utils required for plugins to function.","id":"extutils-plugin","releases":[{"date":"2020-02-09","sha512sum":"F16EB10BECC145FE7E8CD144C58F6BC5DD475CBB690BDDC6565743A628BDD6EE9453E377869A1BC828F01AE0249C8485A366520D6F019A9B2FA8081C5C9956F4","version":"1.6.6-SNAPSHOT","url":"https://github.com/Ganom/ExternalPlugins/blob/master/release/ExtUtils-1.6.6-SNAPSHOT.jar?raw=true","requires":"0.0.1"}]}, {"projectUrl":"https://discordapp.com/invite/hVPfVAR","provider":"Ganom","name":"ItemDropper","description":"Drops Items.","id":"itemdropper-plugin","releases":[{"date":"2020-02-09","sha512sum":"FECCB0F568F7D15DB422CCD377EE683EB2FDC5F7457BB44AB2001BF290ED21F83F361C35558A77005E2074DE3F449C7359545CF8DA8A6EB035348FFC0C8DEDF3","version":"1.6.6-SNAPSHOT","url":"https://github.com/Ganom/ExternalPlugins/blob/master/release/ItemDropper-1.6.6-SNAPSHOT.jar?raw=true","requires":"0.0.1"}]}, {"projectUrl":"https://discordapp.com/invite/hVPfVAR","provider":"Ganom","name":"LeftClickCast","description":"Casting made even easier.","id":"leftclickcast-plugin","releases":[{"date":"2020-02-09","sha512sum":"15A48AC53D53ED74FC4BE5408992DA4000268A3A52947E4F13F3734E81032FA2170F88AB8DF997C8C6D9608087CC99EDAB25EC3AF45C622B8ED92A967F30663C","version":"1.6.6-SNAPSHOT","url":"https://github.com/Ganom/ExternalPlugins/blob/master/release/LeftClickCast-1.6.6-SNAPSHOT.jar?raw=true","requires":"0.0.1"}]}, {"projectUrl":"https://discordapp.com/invite/hVPfVAR","provider":"Ganom","name":"NeverLog","description":"This makes it so you'll never logout during the 6h period.","id":"neverlog-plugin","releases":[{"date":"2020-02-09","sha512sum":"E5795CB3198E7155BC0467D024DD9ECA6363C9BE2BE49D0C904DA6ED0D5D9FCBD140E5E7E539017CD7E60D32C5C608A657E41E7906CCABA7797DEB33138F1DBB","version":"1.6.6-SNAPSHOT","url":"https://github.com/Ganom/ExternalPlugins/blob/master/release/NeverLog-1.6.6-SNAPSHOT.jar?raw=true","requires":"0.0.1"}]}, {"projectUrl":"https://discordapp.com/invite/hVPfVAR","provider":"Ganom","name":"NyloSwapper","description":"Nylo Swapper.","id":"nyloswapper-plugin","releases":[{"date":"2020-02-09","sha512sum":"233D0B52FDB8423427BB28A8D677A6F2DE97EA84F2502D780D121631C115EC80FE50FB981FF5943545DC5E320B362FC008E2F5A275EFC8EAEBDAF6F3C516E685","version":"1.6.6-SNAPSHOT","url":"https://github.com/Ganom/ExternalPlugins/blob/master/release/NyloSwapper-1.6.6-SNAPSHOT.jar?raw=true","requires":"0.0.1"}]}, {"projectUrl":"https://discordapp.com/invite/hVPfVAR","provider":"Ganom","name":"OlmSwapper","description":"Automatically swaps prayers for CoX.","id":"olmswapper-plugin","releases":[{"date":"2020-02-09","sha512sum":"BD4FDA2B7A481294605245DF382402D3F27B17F0A752CB3385476EA3EEC691FD4E320533CC0DBF284A8FD5C320874DF5D3B043C666A3EA96F3E6BF03B46FAE24","version":"1.6.6-SNAPSHOT","url":"https://github.com/Ganom/ExternalPlugins/blob/master/release/OlmSwapper-1.6.6-SNAPSHOT.jar?raw=true","requires":"0.0.1"}]}, {"projectUrl":"https://discordapp.com/invite/hVPfVAR","provider":"Ganom","name":"OneClick","description":"OP One Click methods.","id":"oneclick-plugin","releases":[{"date":"2020-02-09","sha512sum":"E8E548EA62690815FA71DE9D87AB582E56B7D5C0B5DFDEEDCBD39FFB1C003719095672CCD8E9761FF2D379A1D5CFE9F8855FE7B9C0FA55FF2A7237C820FF1F4E","version":"1.6.6-SNAPSHOT","url":"https://github.com/Ganom/ExternalPlugins/blob/master/release/OneClick-1.6.6-SNAPSHOT.jar?raw=true","requires":"0.0.1"}]}]
+[
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
+    "name": "AutoPrayFlick",
+    "description": "Use plugin in PvP situations for best results.",
+    "id": "autoprayflick-plugin",
+    "releases": [
+      {
+        "date": "2020-02-10",
+        "sha512sum": "C4984B3773835FA891369887C2555044A9CAECF0C9168A91D248EC855F63A1DBD2C73AAD0A83DA4FB8F021F59F0DEF6AAC99207A2DFCFC02BE7AE8854079E36A",
+        "version": "1.6.6-SNAPSHOT",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoPrayFlick-1.6.6-SNAPSHOT.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
+    "name": "CustomSwapper",
+    "description": "Use plugin in PvP situations for best results.",
+    "id": "customswapper-plugin",
+    "releases": [
+      {
+        "date": "2020-02-10",
+        "sha512sum": "5A9AB805D5D050DF72B080E8F5D1F290C5E0F77AF532DC3638F9A2B443B0B4CFA66AB8C776B8ADBA359FD0FE3D7E376CF9EDCA77CA992E13046D94A6B5BAF0F7",
+        "version": "1.6.6-SNAPSHOT",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/CustomSwapper-1.6.6-SNAPSHOT.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
+    "name": "ExtUtils",
+    "description": "Utils required for plugins to function.",
+    "id": "extutils-plugin",
+    "releases": [
+      {
+        "date": "2020-02-10",
+        "sha512sum": "F16EB10BECC145FE7E8CD144C58F6BC5DD475CBB690BDDC6565743A628BDD6EE9453E377869A1BC828F01AE0249C8485A366520D6F019A9B2FA8081C5C9956F4",
+        "version": "1.6.6-SNAPSHOT",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/ExtUtils-1.6.6-SNAPSHOT.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
+    "name": "ItemDropper",
+    "description": "Drops Items.",
+    "id": "itemdropper-plugin",
+    "releases": [
+      {
+        "date": "2020-02-10",
+        "sha512sum": "9F9E42771271743ADAB38712AD60691C8872CE8A0A828552DF71E2622E7CDEA6E585920B3D814DCA140D0BCCF7FFB86DC1CBCEA8365177E91A66F84ACCB45001",
+        "version": "1.6.6-SNAPSHOT",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/ItemDropper-1.6.6-SNAPSHOT.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
+    "name": "LeftClickCast",
+    "description": "Casting made even easier.",
+    "id": "leftclickcast-plugin",
+    "releases": [
+      {
+        "date": "2020-02-10",
+        "sha512sum": "15A48AC53D53ED74FC4BE5408992DA4000268A3A52947E4F13F3734E81032FA2170F88AB8DF997C8C6D9608087CC99EDAB25EC3AF45C622B8ED92A967F30663C",
+        "version": "1.6.6-SNAPSHOT",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/LeftClickCast-1.6.6-SNAPSHOT.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
+    "name": "NeverLog",
+    "description": "This makes it so you'll never logout during the 6h period.",
+    "id": "neverlog-plugin",
+    "releases": [
+      {
+        "date": "2020-02-10",
+        "sha512sum": "E5795CB3198E7155BC0467D024DD9ECA6363C9BE2BE49D0C904DA6ED0D5D9FCBD140E5E7E539017CD7E60D32C5C608A657E41E7906CCABA7797DEB33138F1DBB",
+        "version": "1.6.6-SNAPSHOT",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/NeverLog-1.6.6-SNAPSHOT.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
+    "name": "NyloSwapper",
+    "description": "Nylo Swapper.",
+    "id": "nyloswapper-plugin",
+    "releases": [
+      {
+        "date": "2020-02-10",
+        "sha512sum": "3648587B5F9CFD84B11405A7DB494F3E2F0BFE1A9FF6492FA8B3C1CD5909A996CFD3DB49C2F8BAE348CAB26D5D761D7618317D465717572C3A11E83033A4E538",
+        "version": "1.6.6-SNAPSHOT",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/NyloSwapper-1.6.6-SNAPSHOT.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
+    "name": "OlmSwapper",
+    "description": "Automatically swaps prayers for CoX.",
+    "id": "olmswapper-plugin",
+    "releases": [
+      {
+        "date": "2020-02-10",
+        "sha512sum": "1E23D03A3E4111C0093DDAA7EF2F4A55E27E104A0214D83406DDA7A2014EA78279E59FAE3D20FC968E05776C55040B3982446FA34E6D10934183BBA592357E50",
+        "version": "1.6.6-SNAPSHOT",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/OlmSwapper-1.6.6-SNAPSHOT.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
+    "name": "OneClick",
+    "description": "OP One Click methods.",
+    "id": "oneclick-plugin",
+    "releases": [
+      {
+        "date": "2020-02-10",
+        "sha512sum": "E8E548EA62690815FA71DE9D87AB582E56B7D5C0B5DFDEEDCBD39FFB1C003719095672CCD8E9761FF2D379A1D5CFE9F8855FE7B9C0FA55FF2A7237C820FF1F4E",
+        "version": "1.6.6-SNAPSHOT",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/OneClick-1.6.6-SNAPSHOT.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  }
+]
