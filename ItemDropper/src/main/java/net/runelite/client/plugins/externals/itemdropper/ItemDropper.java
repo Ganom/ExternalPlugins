@@ -38,6 +38,7 @@ import net.runelite.client.menus.MenuManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.externals.utils.ExtUtils;
 import net.runelite.client.util.HotkeyListener;
 import org.pf4j.Extension;
@@ -46,7 +47,8 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Item Dropper",
 	description = "Drops selected items for you.",
-	tags = {"item", "drop", "dropper", "bot"}
+	tags = {"item", "drop", "dropper", "bot"},
+	type = PluginType.UTILITY
 )
 @Slf4j
 @SuppressWarnings("unused")

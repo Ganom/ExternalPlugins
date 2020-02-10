@@ -31,11 +31,13 @@ import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.PluginType;
 import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
-	name = "ExtUtils"
+	name = "ExtUtils",
+	type = PluginType.UTILITY
 )
 @Slf4j
 @SuppressWarnings("unused")

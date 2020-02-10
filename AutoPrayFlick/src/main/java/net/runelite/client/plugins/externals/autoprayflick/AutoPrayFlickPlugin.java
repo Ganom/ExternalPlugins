@@ -54,12 +54,14 @@ import net.runelite.client.input.MouseListener;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.PluginType;
 import net.runelite.client.ui.overlay.OverlayManager;
 import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
-	name = "Auto Pray Flick"
+	name = "Auto Pray Flick",
+	type = PluginType.UTILITY
 )
 @Slf4j
 @SuppressWarnings("unused")
