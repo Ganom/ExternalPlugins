@@ -32,6 +32,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import org.pf4j.Extension;
 
@@ -44,6 +45,7 @@ import org.pf4j.Extension;
 )
 @Slf4j
 @SuppressWarnings("unused")
+@PluginDependency(ExtUtils.class)
 public class OlmSwapper extends Plugin
 {
 	@Inject

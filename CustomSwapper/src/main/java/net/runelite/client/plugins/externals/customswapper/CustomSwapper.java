@@ -38,6 +38,7 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.util.Clipboard;
 import net.runelite.client.util.HotkeyListener;
@@ -52,6 +53,7 @@ import org.pf4j.Extension;
 )
 @Slf4j
 @SuppressWarnings("unused")
+@PluginDependency(ExtUtils.class)
 public class CustomSwapper extends Plugin
 {
 	private static final Splitter NEWLINE_SPLITTER = Splitter

@@ -31,9 +31,6 @@ version = rlVersion
 project.extra["PluginName"] = "OlmSwapper"
 project.extra["PluginDescription"] = "Automatically swaps prayers for CoX."
 
-plugins {
-    id("com.github.johnrengelman.shadow") version "5.2.0"
-}
 
 dependencies {
     annotationProcessor(Libraries.lombok)
@@ -59,14 +56,6 @@ tasks {
                     "Plugin-Description" to project.extra["PluginDescription"],
                     "Plugin-License" to project.extra["PluginLicense"]
             ))
-        }
-        finalizedBy(shadowJar)
-    }
-
-    shadowJar {
-        archiveClassifier.set("")
-        dependencies {
-            include(project(":ExtUtils"))
         }
     }
 }

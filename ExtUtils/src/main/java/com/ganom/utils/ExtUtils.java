@@ -28,10 +28,17 @@ import net.runelite.api.queries.WallObjectQuery;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.api.widgets.WidgetItem;
+import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDescriptor;
+import org.pf4j.Extension;
 
+@Extension
+@PluginDescriptor(
+	name = "ExtUtils"
+)
 @Slf4j
 @SuppressWarnings("unused")
-public class ExtUtils
+public class ExtUtils extends Plugin
 {
 	private final Client client;
 

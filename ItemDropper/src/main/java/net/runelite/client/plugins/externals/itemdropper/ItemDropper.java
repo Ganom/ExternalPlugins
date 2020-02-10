@@ -37,6 +37,7 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.menus.MenuManager;
 import net.runelite.client.plugins.Plugin;
+import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.util.HotkeyListener;
 import org.pf4j.Extension;
@@ -49,6 +50,7 @@ import org.pf4j.Extension;
 )
 @Slf4j
 @SuppressWarnings("unused")
+@PluginDependency(ExtUtils.class)
 public class ItemDropper extends Plugin
 {
 	@Inject
