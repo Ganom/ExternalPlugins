@@ -51,7 +51,7 @@ import org.pf4j.Extension;
 	name = "Custom Swapper",
 	description = "Use plugin in PvP situations for best results",
 	tags = {"op", "af"},
-	type = PluginType.UTILITY
+	type = PluginType.EXTERNAL
 )
 @Slf4j
 @SuppressWarnings("unused")
@@ -349,7 +349,17 @@ public class CustomSwapper extends Plugin
 			for (Pair<Tab, Rectangle> pair : rectPairs)
 			{
 				executePair(pair);
+
+				try
+				{
+					Thread.sleep(getMillis());
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
+
 			if (config.swapBack())
 			{
 				robot.keyPress(utils.getTabHotkey(Tab.INVENTORY));

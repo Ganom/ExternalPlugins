@@ -10,7 +10,7 @@
         "date": "2020-02-10",
         "sha512sum": "C4984B3773835FA891369887C2555044A9CAECF0C9168A91D248EC855F63A1DBD2C73AAD0A83DA4FB8F021F59F0DEF6AAC99207A2DFCFC02BE7AE8854079E36A",
         "version": "1.6.6-SNAPSHOT",
-        "url": "https://github.com/Ganom/ExternalPlugins/blob/test/release/AutoPrayFlick-1.6.6-SNAPSHOT.jar?raw=true",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoPrayFlick-1.6.6-SNAPSHOT.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -24,9 +24,9 @@
     "releases": [
       {
         "date": "2020-02-10",
-        "sha512sum": "5A9AB805D5D050DF72B080E8F5D1F290C5E0F77AF532DC3638F9A2B443B0B4CFA66AB8C776B8ADBA359FD0FE3D7E376CF9EDCA77CA992E13046D94A6B5BAF0F7",
+        "sha512sum": "6AB5D7FCA86FFA527000599C65B19143D423ABD670E9D121C9DD9D607D41C2471C9E97778037735382CA86C5BCB4AD3C8CBF769E765E687B637F73B46E1CA188",
         "version": "1.6.6-SNAPSHOT",
-        "url": "https://github.com/Ganom/ExternalPlugins/blob/test/release/CustomSwapper-1.6.6-SNAPSHOT.jar?raw=true",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/CustomSwapper-1.6.6-SNAPSHOT.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -42,7 +42,7 @@
         "date": "2020-02-10",
         "sha512sum": "B5EFE3B59FFDF822D81A5AC15834BA21F525FDDFD1676E424BA28EC3AA4074EE41794DBB52F9F3DF6110A5F26889AA26A1AABAED18F24F1A8952FEA8DD28BD64",
         "version": "1.6.6-SNAPSHOT",
-        "url": "https://github.com/Ganom/ExternalPlugins/blob/test/release/ExtUtils-1.6.6-SNAPSHOT.jar?raw=true",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/ExtUtils-1.6.6-SNAPSHOT.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -58,7 +58,7 @@
         "date": "2020-02-10",
         "sha512sum": "9F9E42771271743ADAB38712AD60691C8872CE8A0A828552DF71E2622E7CDEA6E585920B3D814DCA140D0BCCF7FFB86DC1CBCEA8365177E91A66F84ACCB45001",
         "version": "1.6.6-SNAPSHOT",
-        "url": "https://github.com/Ganom/ExternalPlugins/blob/test/release/ItemDropper-1.6.6-SNAPSHOT.jar?raw=true",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/ItemDropper-1.6.6-SNAPSHOT.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -74,7 +74,7 @@
         "date": "2020-02-10",
         "sha512sum": "15A48AC53D53ED74FC4BE5408992DA4000268A3A52947E4F13F3734E81032FA2170F88AB8DF997C8C6D9608087CC99EDAB25EC3AF45C622B8ED92A967F30663C",
         "version": "1.6.6-SNAPSHOT",
-        "url": "https://github.com/Ganom/ExternalPlugins/blob/test/release/LeftClickCast-1.6.6-SNAPSHOT.jar?raw=true",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/LeftClickCast-1.6.6-SNAPSHOT.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -90,7 +90,7 @@
         "date": "2020-02-10",
         "sha512sum": "E5795CB3198E7155BC0467D024DD9ECA6363C9BE2BE49D0C904DA6ED0D5D9FCBD140E5E7E539017CD7E60D32C5C608A657E41E7906CCABA7797DEB33138F1DBB",
         "version": "1.6.6-SNAPSHOT",
-        "url": "https://github.com/Ganom/ExternalPlugins/blob/test/release/NeverLog-1.6.6-SNAPSHOT.jar?raw=true",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/NeverLog-1.6.6-SNAPSHOT.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -104,9 +104,9 @@
     "releases": [
       {
         "date": "2020-02-10",
-        "sha512sum": "3648587B5F9CFD84B11405A7DB494F3E2F0BFE1A9FF6492FA8B3C1CD5909A996CFD3DB49C2F8BAE348CAB26D5D761D7618317D465717572C3A11E83033A4E538",
+        "sha512sum": "1D912A445E1A159C7A1D2378ACBF2F3B6C0E5D34D86D422DD7F1F04D29CDE19695A25074B165508D69918B2A74A0A8537F619E34130243EDD9D8CED3A0BCF150",
         "version": "1.6.6-SNAPSHOT",
-        "url": "https://github.com/Ganom/ExternalPlugins/blob/test/release/NyloSwapper-1.6.6-SNAPSHOT.jar?raw=true",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/NyloSwapper-1.6.6-SNAPSHOT.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -120,9 +120,9 @@
     "releases": [
       {
         "date": "2020-02-10",
-        "sha512sum": "1E23D03A3E4111C0093DDAA7EF2F4A55E27E104A0214D83406DDA7A2014EA78279E59FAE3D20FC968E05776C55040B3982446FA34E6D10934183BBA592357E50",
+        "sha512sum": "E006E0F4D663F786A1F700A50272480E9AB2CEA8636C64136CC4CF4114ACF0B341C7CA8ACD0F376E796B0C73798BC17AA75BB174604CB4EC61B181BB7E3A6415",
         "version": "1.6.6-SNAPSHOT",
-        "url": "https://github.com/Ganom/ExternalPlugins/blob/test/release/OlmSwapper-1.6.6-SNAPSHOT.jar?raw=true",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/OlmSwapper-1.6.6-SNAPSHOT.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -138,7 +138,7 @@
         "date": "2020-02-10",
         "sha512sum": "E8E548EA62690815FA71DE9D87AB582E56B7D5C0B5DFDEEDCBD39FFB1C003719095672CCD8E9761FF2D379A1D5CFE9F8855FE7B9C0FA55FF2A7237C820FF1F4E",
         "version": "1.6.6-SNAPSHOT",
-        "url": "https://github.com/Ganom/ExternalPlugins/blob/test/release/OneClick-1.6.6-SNAPSHOT.jar?raw=true",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/OneClick-1.6.6-SNAPSHOT.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
