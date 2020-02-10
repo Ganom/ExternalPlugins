@@ -201,6 +201,14 @@ public class NyloSwapper extends Plugin
 		if (nyloBounds != null)
 		{
 			utils.click(nyloBounds);
+			try
+			{
+				Thread.sleep(getMillis());
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		if (config.backToInventory())
 		{
@@ -235,6 +243,14 @@ public class NyloSwapper extends Plugin
 			if (item != null)
 			{
 				utils.click(item.getCanvasBounds());
+				try
+				{
+					Thread.sleep(getMillis());
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -250,6 +266,14 @@ public class NyloSwapper extends Plugin
 			if (widget != null)
 			{
 				utils.click(widget.getBounds());
+				try
+				{
+					Thread.sleep(getMillis());
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}

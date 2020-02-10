@@ -37,7 +37,8 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "ExtUtils",
-	type = PluginType.UTILITY
+	type = PluginType.UTILITY,
+	hidden = true
 )
 @Slf4j
 @SuppressWarnings("unused")
@@ -330,31 +331,28 @@ public class ExtUtils extends Plugin
 			return;
 		}
 
-		click(p).run();
+		click(p);
 	}
 
-	private Runnable click(Point p)
+	public void click(Point p)
 	{
-		return () ->
+		assert !client.isClientThread();
+
+		if (client.isStretchedEnabled())
 		{
-			assert !client.isClientThread();
+			double scale = client.getScalingFactor();
+			final int x = (int) (p.getX() * scale);
+			final int y = (int) (p.getY() * scale);
+			final Point click = new Point(x, y);
 
-			if (client.isStretchedEnabled())
-			{
-				double scale = client.getScalingFactor();
-				final int x = (int) (p.getX() * scale);
-				final int y = (int) (p.getY() * scale);
-				final Point click = new Point(x, y);
-
-				eventDispatcher(501, click);
-				eventDispatcher(502, click);
-				eventDispatcher(500, click);
-				return;
-			}
-			eventDispatcher(501, p);
-			eventDispatcher(502, p);
-			eventDispatcher(500, p);
-		};
+			eventDispatcher(501, click);
+			eventDispatcher(502, click);
+			eventDispatcher(500, click);
+			return;
+		}
+		eventDispatcher(501, p);
+		eventDispatcher(502, p);
+		eventDispatcher(500, p);
 	}
 
 	public Point getClickPoint(Rectangle rect)

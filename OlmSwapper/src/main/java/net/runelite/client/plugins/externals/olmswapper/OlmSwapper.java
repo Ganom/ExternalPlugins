@@ -184,6 +184,15 @@ public class OlmSwapper extends Plugin
 			{
 				robot.keyPress(utils.getTabHotkey(Tab.INVENTORY));
 			}
+
+			try
+			{
+				Thread.sleep(getMillis());
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		});
 	}
 

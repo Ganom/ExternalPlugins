@@ -15,8 +15,68 @@ import net.runelite.client.config.Title;
 @ConfigGroup("customSwapper")
 public interface CustomSwapperConfig extends Config
 {
+
 	@ConfigTitleSection(
-		position = 0,
+		keyName = "config",
+		name = "Config",
+		description = "",
+		position = 0
+	)
+	default Title config()
+	{
+		return new Title();
+	}
+
+	@ConfigItem(
+		keyName = "swapBack",
+		name = "Swap back to inventory",
+		description = "Once finished with a swap, should it swap back to inventory?",
+		titleSection = "config",
+		position = 1
+	)
+	default boolean swapBack()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "enablePrayCheck",
+		name = "Active Prayer Check",
+		description = "Enabling this will make it so you can't toggle prayers if they're on.",
+		titleSection = "config",
+		position = 2
+	)
+	default boolean enablePrayCheck()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "randLow",
+		name = "Minimum MS Delay",
+		description = "Dont set this too high.",
+		titleSection = "config",
+		position = 3
+	)
+	default int randLow()
+	{
+		return 70;
+	}
+
+	@ConfigItem(
+		keyName = "randLower",
+		name = "Maximum MS Delay",
+		description = "Dont set this too high.",
+		titleSection = "config",
+		position = 4
+	)
+	default int randHigh()
+	{
+		return 80;
+	}
+
+	@ConfigTitleSection(
+		position = 1,
 		keyName = "mainConfig",
 		name = "Main Config",
 		description = ""
@@ -515,64 +575,5 @@ public interface CustomSwapperConfig extends Config
 	default Keybind customTwenty()
 	{
 		return Keybind.NOT_SET;
-	}
-
-	@ConfigTitleSection(
-		keyName = "config",
-		name = "Config",
-		description = "",
-		position = 42
-	)
-	default Title config()
-	{
-		return new Title();
-	}
-
-	@ConfigItem(
-		keyName = "swapBack",
-		name = "Swap back to inventory",
-		description = "Once finished with a swap, should it swap back to inventory?",
-		titleSection = "config",
-		position = 43
-	)
-	default boolean swapBack()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "enablePrayCheck",
-		name = "Active Prayer Check",
-		description = "Enabling this will make it so you can't toggle prayers if they're on.",
-		titleSection = "config",
-		position = 43
-	)
-	default boolean enablePrayCheck()
-	{
-		return true;
-	}
-
-	@ConfigItem(
-		keyName = "randLow",
-		name = "Minimum MS Delay",
-		description = "Dont set this too high.",
-		titleSection = "config",
-		position = 44
-	)
-	default int randLow()
-	{
-		return 70;
-	}
-
-	@ConfigItem(
-		keyName = "randLower",
-		name = "Maximum MS Delay",
-		description = "Dont set this too high.",
-		titleSection = "config",
-		position = 45
-	)
-	default int randHigh()
-	{
-		return 80;
 	}
 }
