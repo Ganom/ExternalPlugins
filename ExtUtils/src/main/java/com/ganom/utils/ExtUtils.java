@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.DecorativeObject;
@@ -38,14 +39,22 @@ import org.pf4j.Extension;
 )
 @Slf4j
 @SuppressWarnings("unused")
+@Singleton
 public class ExtUtils extends Plugin
 {
-	private final Client client;
-
 	@Inject
-	public ExtUtils(Client client)
+	private Client client;
+
+	@Override
+	protected void startUp()
 	{
-		this.client = client;
+
+	}
+
+	@Override
+	protected void shutDown()
+	{
+
 	}
 
 	public int[] stringToIntArray(String string)
