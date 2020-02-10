@@ -34,6 +34,22 @@
   {
     "projectUrl": "https://discordapp.com/invite/hVPfVAR",
     "provider": "Ganom",
+    "name": "ExtUtils",
+    "description": "Utils required for plugins to function.",
+    "id": "extutils-plugin",
+    "releases": [
+      {
+        "date": "2020-02-09",
+        "sha512sum": "55249CF4A2BE6382A89181FFEF1028E3E2CCBBE26FB742038C39012053C47BEE1FE34033D408C68300281057A2ED9241E96D7EBEF0BA62AB1B747403F185D682",
+        "version": "1.6.6-SNAPSHOT",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/ExtUtils-1.6.6-SNAPSHOT.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
     "name": "ItemDropper",
     "description": "Drops Items.",
     "id": "itemdropper-plugin",
