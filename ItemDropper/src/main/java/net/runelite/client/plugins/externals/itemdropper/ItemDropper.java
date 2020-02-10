@@ -5,7 +5,6 @@
  */
 package net.runelite.client.plugins.externals.itemdropper;
 
-import com.ganom.utils.ExtUtils;
 import com.google.inject.Provides;
 import java.awt.AWTException;
 import java.awt.Rectangle;
@@ -39,6 +38,7 @@ import net.runelite.client.menus.MenuManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.externals.utils.ExtUtils;
 import net.runelite.client.util.HotkeyListener;
 import org.pf4j.Extension;
 

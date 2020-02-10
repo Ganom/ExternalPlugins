@@ -5,8 +5,6 @@
  */
 package net.runelite.client.plugins.externals.nyloswapper;
 
-import com.ganom.utils.ExtUtils;
-import com.ganom.utils.Tab;
 import com.google.inject.Provides;
 import java.awt.AWTException;
 import java.awt.Rectangle;
@@ -37,6 +35,8 @@ import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.externals.utils.ExtUtils;
+import net.runelite.client.plugins.externals.utils.Tab;
 import org.pf4j.Extension;
 
 @Extension

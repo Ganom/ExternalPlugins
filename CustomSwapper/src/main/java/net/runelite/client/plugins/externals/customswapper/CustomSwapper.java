@@ -5,8 +5,6 @@
  */
 package net.runelite.client.plugins.externals.customswapper;
 
-import com.ganom.utils.ExtUtils;
-import com.ganom.utils.Tab;
 import com.google.common.base.Splitter;
 import com.google.inject.Provides;
 import java.awt.AWTException;
@@ -40,6 +38,8 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.externals.utils.ExtUtils;
+import net.runelite.client.plugins.externals.utils.Tab;
 import net.runelite.client.util.Clipboard;
 import net.runelite.client.util.HotkeyListener;
 import org.apache.commons.lang3.tuple.Pair;
