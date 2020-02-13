@@ -21,7 +21,7 @@ open class VersionsTask : DefaultTask() {
     @Suppress("UnstableApiUsage")
     @set:Option(option = "minor", description = "Bump minor version")
     @get:Input
-    var minor: Boolean = false
+    var minor: Boolean = true
 
     @Suppress("UnstableApiUsage")
     @set:Option(option = "patch", description = "Bump patch version")

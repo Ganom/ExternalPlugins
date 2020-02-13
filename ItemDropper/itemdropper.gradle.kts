@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "5.4.0"
+version = "5.5.0"
 
 project.extra["PluginName"] = "ItemDropper"
 project.extra["PluginDescription"] = "Drops Items."

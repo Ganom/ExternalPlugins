@@ -51,7 +51,7 @@ import org.pf4j.Extension;
 	name = "Custom Swapper",
 	description = "Use plugin in PvP situations for best results",
 	tags = {"op", "af"},
-	type = PluginType.EXTERNAL
+	type = PluginType.UTILITY
 )
 @Slf4j
 @SuppressWarnings("unused")
