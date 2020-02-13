@@ -1,5 +1,3 @@
-import ProjectVersions.rlVersion
-
 /*
  * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
  * Copyright (c) 2019 Ganom <https://github.com/Ganom>
@@ -26,7 +24,7 @@ import ProjectVersions.rlVersion
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = rlVersion
+version = "5.4.0"
 
 project.extra["PluginName"] = "NyloSwapper"
 project.extra["PluginDescription"] = "Nylo Swapper."
