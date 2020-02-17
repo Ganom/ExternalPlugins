@@ -166,6 +166,7 @@ public class OlmSwapper extends Plugin
 
 		if (widget == null)
 		{
+			log.error("Olm: Unable to find prayer widget.");
 			return;
 		}
 
@@ -179,6 +180,7 @@ public class OlmSwapper extends Plugin
 			}
 
 			utils.click(bounds);
+			log.debug("Olm: clicking bounds {}", bounds);
 
 			if (client.isPrayerActive(prayer))
 			{

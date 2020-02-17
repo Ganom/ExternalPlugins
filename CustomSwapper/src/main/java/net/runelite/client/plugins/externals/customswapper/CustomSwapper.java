@@ -197,6 +197,7 @@ public class CustomSwapper extends Plugin
 
 			if (e == null)
 			{
+				log.error("CopyCS: Can't find equipment container.");
 				return;
 			}
 
@@ -235,6 +236,7 @@ public class CustomSwapper extends Plugin
 			}
 			catch (IndexOutOfBoundsException e)
 			{
+				log.error("Decode: Invalid Syntax in decoder.");
 				return;
 			}
 		}
@@ -252,6 +254,7 @@ public class CustomSwapper extends Plugin
 
 					if (rect == null)
 					{
+						log.error("Equip: Can't find valid bounds for param {}.", param);
 						continue;
 					}
 
@@ -264,6 +267,7 @@ public class CustomSwapper extends Plugin
 
 					if (rectangleList.isEmpty())
 					{
+						log.error("Clean: Can't find valid bounds for param {}.", param);
 						continue;
 					}
 
@@ -279,6 +283,7 @@ public class CustomSwapper extends Plugin
 
 					if (rect == null)
 					{
+						log.error("Remove: Can't find valid bounds for param {}.", param);
 						continue;
 					}
 
@@ -297,6 +302,7 @@ public class CustomSwapper extends Plugin
 
 					if (info == null)
 					{
+						log.error("Prayer: Can't find valid widget info for param {}.", param);
 						continue;
 					}
 
@@ -304,6 +310,7 @@ public class CustomSwapper extends Plugin
 
 					if (widget == null)
 					{
+						log.error("Prayer: Can't find valid widget for param {}.", param);
 						continue;
 					}
 
@@ -316,6 +323,7 @@ public class CustomSwapper extends Plugin
 
 					if (info == null)
 					{
+						log.error("Cast: Can't find valid widget info for param {}.", param);
 						continue;
 					}
 
@@ -323,6 +331,7 @@ public class CustomSwapper extends Plugin
 
 					if (widget == null)
 					{
+						log.error("Cast: Can't find valid widget for param {}.", param);
 						continue;
 					}
 
@@ -335,6 +344,7 @@ public class CustomSwapper extends Plugin
 
 					if (widget == null)
 					{
+						log.error("Spec: Can't find valid widget");
 						continue;
 					}
 
@@ -349,6 +359,7 @@ public class CustomSwapper extends Plugin
 			for (Pair<Tab, Rectangle> pair : rectPairs)
 			{
 				executePair(pair);
+				log.debug("Executing click on: {}", pair);
 
 				try
 				{
@@ -362,6 +373,7 @@ public class CustomSwapper extends Plugin
 
 			if (config.swapBack())
 			{
+				log.debug("Swapping back to inventory.");
 				robot.keyPress(utils.getTabHotkey(Tab.INVENTORY));
 			}
 		});

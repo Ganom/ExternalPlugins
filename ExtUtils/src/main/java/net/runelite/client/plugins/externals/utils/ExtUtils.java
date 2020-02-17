@@ -371,15 +371,10 @@ public class ExtUtils extends Plugin
 	private void eventDispatcher(int id, Point point)
 	{
 		MouseEvent e = new MouseEvent(
-			client.getCanvas(),
-			id,
+			client.getCanvas(), id,
 			System.currentTimeMillis(),
-			0,
-			point.getX(),
-			point.getY(),
-			1,
-			false,
-			1
+			0, point.getX(), point.getY(),
+			1, false, 1
 		);
 
 		client.getCanvas().dispatchEvent(e);
