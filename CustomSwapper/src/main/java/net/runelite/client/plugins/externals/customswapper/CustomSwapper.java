@@ -8,6 +8,7 @@ package net.runelite.client.plugins.externals.customswapper;
 import com.google.common.base.Splitter;
 import com.google.inject.Provides;
 import java.awt.AWTException;
+import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
@@ -42,6 +44,7 @@ import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.externals.utils.ExtUtils;
 import net.runelite.client.plugins.externals.utils.Tab;
 import net.runelite.client.util.Clipboard;
+import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.HotkeyListener;
 import org.apache.commons.lang3.tuple.Pair;
 import org.pf4j.Extension;
@@ -65,12 +68,16 @@ public class CustomSwapper extends Plugin
 
 	@Inject
 	private Client client;
+
 	@Inject
 	private KeyManager keyManager;
+
 	@Inject
 	private CustomSwapperConfig config;
+
 	@Inject
 	private EventBus eventBus;
+
 	@Inject
 	private ExtUtils utils;
 
@@ -237,6 +244,7 @@ public class CustomSwapper extends Plugin
 			catch (IndexOutOfBoundsException e)
 			{
 				log.error("Decode: Invalid Syntax in decoder.");
+				dispatchError("Invalid Syntax in decoder.");
 				return;
 			}
 		}
@@ -254,7 +262,7 @@ public class CustomSwapper extends Plugin
 
 					if (rect == null)
 					{
-						log.error("Equip: Can't find valid bounds for param {}.", param);
+						log.debug("Equip: Can't find valid bounds for param {}.", param);
 						continue;
 					}
 
@@ -267,13 +275,13 @@ public class CustomSwapper extends Plugin
 
 					if (rectangleList.isEmpty())
 					{
-						log.error("Clean: Can't find valid bounds for param {}.", param);
+						log.debug("Clean: Can't find valid bounds for param {}.", param);
 						continue;
 					}
 
-					for (Rectangle rectangle : rectangleList)
+					for (Rectangle rect : rectangleList)
 					{
-						rectPairs.add(Pair.of(Tab.INVENTORY, rectangle));
+						rectPairs.add(Pair.of(Tab.INVENTORY, rect));
 					}
 				}
 				break;
@@ -283,7 +291,7 @@ public class CustomSwapper extends Plugin
 
 					if (rect == null)
 					{
-						log.error("Remove: Can't find valid bounds for param {}.", param);
+						log.debug("Remove: Can't find valid bounds for param {}.", param);
 						continue;
 					}
 
@@ -302,7 +310,7 @@ public class CustomSwapper extends Plugin
 
 					if (info == null)
 					{
-						log.error("Prayer: Can't find valid widget info for param {}.", param);
+						log.debug("Prayer: Can't find valid widget info for param {}.", param);
 						continue;
 					}
 
@@ -310,7 +318,7 @@ public class CustomSwapper extends Plugin
 
 					if (widget == null)
 					{
-						log.error("Prayer: Can't find valid widget for param {}.", param);
+						log.debug("Prayer: Can't find valid widget for param {}.", param);
 						continue;
 					}
 
@@ -323,7 +331,7 @@ public class CustomSwapper extends Plugin
 
 					if (info == null)
 					{
-						log.error("Cast: Can't find valid widget info for param {}.", param);
+						log.debug("Cast: Can't find valid widget info for param {}.", param);
 						continue;
 					}
 
@@ -331,7 +339,7 @@ public class CustomSwapper extends Plugin
 
 					if (widget == null)
 					{
-						log.error("Cast: Can't find valid widget for param {}.", param);
+						log.debug("Cast: Can't find valid widget for param {}.", param);
 						continue;
 					}
 
@@ -344,7 +352,7 @@ public class CustomSwapper extends Plugin
 
 					if (widget == null)
 					{
-						log.error("Spec: Can't find valid widget");
+						log.debug("Spec: Can't find valid widget");
 						continue;
 					}
 
@@ -358,6 +366,15 @@ public class CustomSwapper extends Plugin
 		{
 			for (Pair<Tab, Rectangle> pair : rectPairs)
 			{
+				int key = utils.getTabHotkey(pair.getLeft());
+
+				if (key == -1 || key == 0)
+				{
+					log.error("Unable to find key for tab.");
+					dispatchError("Unable to find " + pair.getLeft().toString() + " hotkey.");
+					break;
+				}
+
 				executePair(pair);
 				log.debug("Executing click on: {}", pair);
 
@@ -429,6 +446,17 @@ public class CustomSwapper extends Plugin
 				utils.click(pair.getRight());
 				break;
 		}
+	}
+
+	private void dispatchError(String error)
+	{
+		String str = ColorUtil.wrapWithColorTag("Custom Swapper", Color.MAGENTA)
+			+ " has encountered an "
+			+ ColorUtil.wrapWithColorTag("error", Color.RED)
+			+ ": "
+			+ error;
+
+		client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", str, null);
 	}
 
 	private Rectangle invBounds(int id)
