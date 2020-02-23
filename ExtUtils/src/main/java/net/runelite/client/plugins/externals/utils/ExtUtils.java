@@ -5,7 +5,9 @@
  */
 package net.runelite.client.plugins.externals.utils;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +34,7 @@ import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
+import org.jetbrains.annotations.NotNull;
 import org.pf4j.Extension;
 
 @Extension
@@ -320,18 +323,34 @@ public class ExtUtils extends Plugin
 	 * {@link net.runelite.client.callback.ClientThread}
 	 * it will result in a crash/desynced thread.
 	 */
-	public void click(Rectangle rectangle)
+	public void typeString(String string)
 	{
 		assert !client.isClientThread();
 
-		Point p = getClickPoint(rectangle);
-
-		if (p.getX() < 1 || p.getY() < 1)
+		for (char c : string.toCharArray())
 		{
-			return;
+			pressKey(c);
 		}
+	}
 
-		click(p);
+	public void pressKey(char key)
+	{
+		keyEvent(401, key);
+		keyEvent(402, key);
+		keyEvent(400, key);
+	}
+
+	/**
+	 * This method must be called on a new
+	 * thread, if you try to call it on
+	 * {@link net.runelite.client.callback.ClientThread}
+	 * it will result in a crash/desynced thread.
+	 */
+	public void click(Rectangle rectangle)
+	{
+		assert !client.isClientThread();
+		Point point = getClickPoint(rectangle);
+		click(point);
 	}
 
 	public void click(Point p)
@@ -340,22 +359,22 @@ public class ExtUtils extends Plugin
 
 		if (client.isStretchedEnabled())
 		{
-			double scale = client.getScalingFactor();
-			final int x = (int) (p.getX() * scale);
-			final int y = (int) (p.getY() * scale);
-			final Point click = new Point(x, y);
-
-			eventDispatcher(501, click);
-			eventDispatcher(502, click);
-			eventDispatcher(500, click);
+			final Dimension stretched = client.getStretchedDimensions();
+			final Dimension real = client.getRealDimensions();
+			final double width = (stretched.width / real.getWidth());
+			final double height = (stretched.height / real.getHeight());
+			final Point point = new Point((int) (p.getX() * width), (int) (p.getY() * height));
+			mouseEvent(501, point);
+			mouseEvent(502, point);
+			mouseEvent(500, point);
 			return;
 		}
-		eventDispatcher(501, p);
-		eventDispatcher(502, p);
-		eventDispatcher(500, p);
+		mouseEvent(501, p);
+		mouseEvent(502, p);
+		mouseEvent(500, p);
 	}
 
-	public Point getClickPoint(Rectangle rect)
+	public Point getClickPoint(@NotNull Rectangle rect)
 	{
 		final int x = (int) (rect.getX() + getRandomIntBetweenRange((int) rect.getWidth() / 6 * -1, (int) rect.getWidth() / 6) + rect.getWidth() / 2);
 		final int y = (int) (rect.getY() + getRandomIntBetweenRange((int) rect.getHeight() / 6 * -1, (int) rect.getHeight() / 6) + rect.getHeight() / 2);
@@ -368,13 +387,24 @@ public class ExtUtils extends Plugin
 		return (int) ((Math.random() * ((max - min) + 1)) + min);
 	}
 
-	private void eventDispatcher(int id, Point point)
+	private void mouseEvent(int id, @NotNull Point point)
 	{
 		MouseEvent e = new MouseEvent(
 			client.getCanvas(), id,
 			System.currentTimeMillis(),
 			0, point.getX(), point.getY(),
 			1, false, 1
+		);
+
+		client.getCanvas().dispatchEvent(e);
+	}
+
+
+	private void keyEvent(int id, char key)
+	{
+		KeyEvent e = new KeyEvent(
+			client.getCanvas(), id, System.currentTimeMillis(),
+			0, KeyEvent.VK_UNDEFINED, key
 		);
 
 		client.getCanvas().dispatchEvent(e);

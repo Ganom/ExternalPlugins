@@ -9,10 +9,8 @@ import com.google.inject.Provides;
 import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
@@ -21,6 +19,7 @@ import net.runelite.api.Prayer;
 import net.runelite.api.Skill;
 import net.runelite.api.VarClientInt;
 import net.runelite.api.events.ChatMessage;
+import net.runelite.api.events.CommandExecuted;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ProjectileMoved;
 import net.runelite.api.util.Text;
@@ -35,6 +34,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.externals.utils.ExtUtils;
 import net.runelite.client.plugins.externals.utils.Tab;
+import org.jetbrains.annotations.NotNull;
 import org.pf4j.Extension;
 
 
@@ -50,25 +50,27 @@ import org.pf4j.Extension;
 @PluginDependency(ExtUtils.class)
 public class OlmSwapper extends Plugin
 {
+	private static final String MAGE = "the great olm fires a sphere of magical power your way";
+	private static final String RANGE = "the great olm fires a sphere of accuracy and dexterity your way";
+	private static final String MELEE = "the great olm fires a sphere of aggression your way";
+
 	@Inject
 	private Client client;
+
 	@Inject
 	private OlmSwapperConfig config;
-	@Inject
-	private ConfigManager configManager;
+
 	@Inject
 	private EventBus eventBus;
+
 	@Inject
 	private ExtUtils utils;
 
-	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
-	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, queue,
-		new ThreadPoolExecutor.DiscardPolicy());
-
-	private Robot robot;
+	private ExecutorService executor;
 	private boolean swapMage;
 	private boolean swapRange;
-
+	private boolean swapMelee;
+	private Robot robot;
 
 	@Provides
 	OlmSwapperConfig getConfig(ConfigManager configManager)
@@ -79,17 +81,36 @@ public class OlmSwapper extends Plugin
 	@Override
 	protected void startUp() throws AWTException
 	{
+		executor = Executors.newSingleThreadExecutor();
 		robot = new Robot();
 	}
 
 	@Override
 	protected void shutDown()
 	{
+		executor.shutdown();
 		robot = null;
 	}
 
 	@Subscribe
-	private void onGameTick(GameTick event)
+	public void onCommandExecuted(CommandExecuted event)
+	{
+		if (event.getCommand().equalsIgnoreCase("olm"))
+		{
+			switch (Text.standardize(event.getArguments()[0]))
+			{
+				case "mage":
+					eventBus.post(ProjectileMoved.class, projBuilder(1339));
+					break;
+				case "range":
+					eventBus.post(ProjectileMoved.class, projBuilder(1340));
+					break;
+			}
+		}
+	}
+
+	@Subscribe
+	public void onGameTick(GameTick event)
 	{
 		if (swapMage)
 		{
@@ -101,35 +122,39 @@ public class OlmSwapper extends Plugin
 			clickPrayer(Prayer.PROTECT_FROM_MISSILES);
 			swapRange = false;
 		}
+		else if (swapMelee)
+		{
+			clickPrayer(Prayer.PROTECT_FROM_MELEE);
+			swapMelee = false;
+		}
 	}
 
 	@Subscribe
-	private void onChatMessage(ChatMessage event)
+	public void onChatMessage(ChatMessage event)
 	{
 		if (event.getType() != ChatMessageType.GAMEMESSAGE)
 		{
 			return;
 		}
 
-		switch (Text.standardize(event.getMessageNode().getValue()))
+		String msg = Text.standardize(event.getMessage());
+
+		if (msg.startsWith(MAGE))
 		{
-			case "the great olm fires a sphere of aggression your way. your prayers have been sapped.":
-			case "the great olm fires a sphere of aggression your way.":
-				clickPrayer(Prayer.PROTECT_FROM_MELEE);
-				break;
-			case "the great olm fires a sphere of magical power your way. your prayers have been sapped.":
-			case "the great olm fires a sphere of magical power your way.":
-				clickPrayer(Prayer.PROTECT_FROM_MAGIC);
-				break;
-			case "the great olm fires a sphere of accuracy and dexterity your way. your prayers have been sapped.":
-			case "the great olm fires a sphere of accuracy and dexterity your way.":
-				clickPrayer(Prayer.PROTECT_FROM_MISSILES);
-				break;
+			swapMage = true;
+		}
+		else if (msg.startsWith(RANGE))
+		{
+			swapRange = true;
+		}
+		else if (msg.startsWith(MELEE))
+		{
+			swapMelee = true;
 		}
 	}
 
 	@Subscribe
-	private void onProjectileMoved(ProjectileMoved event)
+	public void onProjectileMoved(ProjectileMoved event)
 	{
 		if (!config.swapAutos())
 		{
@@ -172,15 +197,31 @@ public class OlmSwapper extends Plugin
 
 		final Rectangle bounds = widget.getBounds();
 
-		executorService.submit(() ->
+		executor.submit(() ->
 		{
 			if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.PRAYER.getId())
 			{
 				robot.keyPress(utils.getTabHotkey(Tab.PRAYER));
+				try
+				{
+					Thread.sleep(20);
+				}
+				catch (InterruptedException e)
+				{
+					return;
+				}
 			}
 
 			utils.click(bounds);
-			log.debug("Olm: clicking bounds {}", bounds);
+
+			try
+			{
+				Thread.sleep(getMillis());
+			}
+			catch (InterruptedException e)
+			{
+				return;
+			}
 
 			if (client.isPrayerActive(prayer))
 			{
@@ -191,15 +232,24 @@ public class OlmSwapper extends Plugin
 			{
 				Thread.sleep(getMillis());
 			}
-			catch (InterruptedException e)
+			catch (InterruptedException ignored)
 			{
-				e.printStackTrace();
 			}
 		});
 	}
 
-	private long getMillis()
+	public int getMillis()
 	{
-		return (long) (Math.random() * config.randLow() + config.randHigh());
+		return (int) (Math.random() * config.randLow() + config.randHigh());
+	}
+
+	@NotNull
+	private ProjectileMoved projBuilder(int id)
+	{
+		ProjectileMoved moved = new ProjectileMoved();
+		moved.setPosition(null);
+		moved.setProjectile(new TestProjectile(id));
+		moved.setZ(0);
+		return moved;
 	}
 }
