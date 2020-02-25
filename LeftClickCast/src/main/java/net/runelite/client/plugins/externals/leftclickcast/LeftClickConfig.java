@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, ganom <https://github.com/Ganom>
+ * Copyright (c) 2019-2020, ganom <https://github.com/Ganom>
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */

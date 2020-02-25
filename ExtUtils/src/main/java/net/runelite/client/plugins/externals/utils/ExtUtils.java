@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019, ganom <https://github.com/Ganom>
+ * Copyright (c) 2019-2020, ganom <https://github.com/Ganom>
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
@@ -340,6 +340,16 @@ public class ExtUtils extends Plugin
 		keyEvent(400, key);
 	}
 
+	private void keyEvent(int id, char key)
+	{
+		KeyEvent e = new KeyEvent(
+			client.getCanvas(), id, System.currentTimeMillis(),
+			0, KeyEvent.VK_UNDEFINED, key
+		);
+
+		client.getCanvas().dispatchEvent(e);
+	}
+
 	/**
 	 * This method must be called on a new
 	 * thread, if you try to call it on
@@ -394,17 +404,6 @@ public class ExtUtils extends Plugin
 			System.currentTimeMillis(),
 			0, point.getX(), point.getY(),
 			1, false, 1
-		);
-
-		client.getCanvas().dispatchEvent(e);
-	}
-
-
-	private void keyEvent(int id, char key)
-	{
-		KeyEvent e = new KeyEvent(
-			client.getCanvas(), id, System.currentTimeMillis(),
-			0, KeyEvent.VK_UNDEFINED, key
 		);
 
 		client.getCanvas().dispatchEvent(e);

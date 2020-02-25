@@ -9,6 +9,7 @@ include(":NyloSwapper")
 include(":OlmSwapper")
 include(":OneClick")
 include(":ExtUtils")
+include(":AutoClicker")
 
 for (project in rootProject.children) {
     project.apply {

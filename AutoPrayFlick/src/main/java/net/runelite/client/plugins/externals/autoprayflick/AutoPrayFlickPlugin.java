@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018, DennisDeV <https://github.com/DevDennis>
- * Copyright (c) 2019, Ganom <https://github.com/ganom>
+ * Copyright (c) 2019-2020, ganom <https://github.com/Ganom>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

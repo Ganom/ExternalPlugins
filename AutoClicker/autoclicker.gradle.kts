@@ -26,16 +26,15 @@
 
 version = "5.9.0"
 
-project.extra["PluginName"] = "ExtUtils"
-project.extra["PluginDescription"] = "Utils required for plugins to function."
+project.extra["PluginName"] = "AutoClicker"
+project.extra["PluginDescription"] = "What more is there to say?"
 
 dependencies {
     annotationProcessor(Libraries.lombok)
     annotationProcessor(Libraries.pf4j)
-
+    compileOnly(project(":ExtUtils"))
     compileOnly("com.github.open-osrs.runelite:runelite-api:-SNAPSHOT")
     compileOnly("com.github.open-osrs.runelite:runelite-client:-SNAPSHOT")
-
     compileOnly(Libraries.guice)
     compileOnly(Libraries.lombok)
     compileOnly(Libraries.pf4j)
@@ -51,6 +50,7 @@ tasks {
                     "Plugin-Version" to project.version,
                     "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
                     "Plugin-Provider" to project.extra["PluginProvider"],
+                    "Plugin-Dependencies" to nameToId("extutils"),
                     "Plugin-Description" to project.extra["PluginDescription"],
                     "Plugin-License" to project.extra["PluginLicense"]
             ))
