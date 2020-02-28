@@ -94,7 +94,10 @@ public interface AutoClickConfig extends Config
 		position = 7,
 		titleSection = "mainConfig"
 	)
-	default boolean weightedDistribution() { return false; }
+	default boolean weightedDistribution()
+	{
+		return false;
+	}
 
 	@ConfigTitleSection(
 		position = 1,
