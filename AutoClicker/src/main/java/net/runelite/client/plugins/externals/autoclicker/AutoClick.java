@@ -141,14 +141,24 @@ public class AutoClick extends Plugin
 
 	private long randomDelay()
 	{
-		/* generate a gaussian random (average at 0.0, std dev of 1.0)
-		 * take the absolute value of it (if we don't, every negative value will be clamped at the minimum value)
-		 * get the log base e of it to make it shifted towards the right side
-		 * invert it to shift the distribution to the other end
-		 * clamp it to min max, any values outside of range are set to min or max */
-		return (long) clamp(
-			(-Math.log(Math.abs(random.nextGaussian()))) * config.deviation() + config.target()
-		);
+		if (config.weightedDistribution())
+		{
+			/* generate a gaussian random (average at 0.0, std dev of 1.0)
+			 * take the absolute value of it (if we don't, every negative value will be clamped at the minimum value)
+			 * get the log base e of it to make it shifted towards the right side
+			 * invert it to shift the distribution to the other end
+			 * clamp it to min max, any values outside of range are set to min or max */
+			return (long) clamp(
+				(-Math.log(Math.abs(random.nextGaussian()))) * config.deviation() + config.target()
+			);
+		}
+		else
+		{
+			/* generate a normal even distribution random */
+			return (long) clamp(
+				Math.round(random.nextGaussian() * config.deviation() + config.target())
+			);
+		}
 	}
 
 	private double clamp(double val)

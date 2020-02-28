@@ -87,6 +87,15 @@ public interface AutoClickConfig extends Config
 		return 10;
 	}
 
+	@ConfigItem(
+		keyName = "weightedDistribution",
+		name = "Weighted Distribution",
+		description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
+		position = 7,
+		titleSection = "mainConfig"
+	)
+	default boolean weightedDistribution() { return false; }
+
 	@ConfigTitleSection(
 		position = 1,
 		keyName = "helperConfig",
