@@ -22,7 +22,7 @@ All delays values below are in milliseconds.
 Below is a picture of a 10,000,000 click sample size at settings min=20, max=80, target=50, deviation=5.
 Blue is weighted distribution.
 Yellow is standard distribution.
-![](https://i.imgur.com/sSewAuK.png)
+![](https://i.imgur.com/CrRCWa5.png)
 
 ## Plugins
 * __Auto Clicker__: This plugin will automatically click where you are hovering when you press the hotkey.
