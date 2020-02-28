@@ -34,17 +34,6 @@ import net.runelite.client.config.Keybind;
 public interface AutoPrayFlickConfig extends Config
 {
 	@ConfigItem(
-		keyName = "onlyInNmz",
-		name = "Only flick in NMZ",
-		description = "If you leave nmz, it will stop working.",
-		position = 10
-	)
-	default boolean onlyInNmz()
-	{
-		return false;
-	}
-
-	@ConfigItem(
 		keyName = "useMouse",
 		name = "Use Mouse Button",
 		description = "Uses mouse button instead of /",
@@ -74,8 +63,7 @@ public interface AutoPrayFlickConfig extends Config
 	)
 	default Keybind hotkey2()
 	{
-		Keybind k = new Keybind(KeyEvent.VK_BACK_SLASH, 0);
-		return k;
+		return new Keybind(KeyEvent.VK_BACK_SLASH, 0);
 	}
 
 	@ConfigItem(
@@ -120,5 +108,27 @@ public interface AutoPrayFlickConfig extends Config
 	default boolean display()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		keyName = "mouseEvents",
+		name = "Use MouseEvents",
+		description = "This is a risky setting to enable, only enable if you accept the risks.",
+		position = 9
+	)
+	default boolean mouseEvents()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "onlyInNmz",
+		name = "Only flick in NMZ",
+		description = "If you leave nmz, it will stop working.",
+		position = 10
+	)
+	default boolean onlyInNmz()
+	{
+		return false;
 	}
 }

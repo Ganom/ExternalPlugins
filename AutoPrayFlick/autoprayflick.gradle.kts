@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "5.9.0"
+version = "5.10.0"
 
 project.extra["PluginName"] = "AutoPrayFlick"
 project.extra["PluginDescription"] = "Use plugin in PvP situations for best results."
@@ -32,6 +32,7 @@ project.extra["PluginDescription"] = "Use plugin in PvP situations for best resu
 dependencies {
     annotationProcessor(Libraries.lombok)
     annotationProcessor(Libraries.pf4j)
+    compileOnly(project(":ExtUtils"))
     compileOnly("com.github.open-osrs.runelite:runelite-api:-SNAPSHOT")
     compileOnly("com.github.open-osrs.runelite:runelite-client:-SNAPSHOT")
     compileOnly(Libraries.guice)
@@ -49,6 +50,7 @@ tasks {
                     "Plugin-Version" to project.version,
                     "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
                     "Plugin-Provider" to project.extra["PluginProvider"],
+                    "Plugin-Dependencies" to nameToId("extutils"),
                     "Plugin-Description" to project.extra["PluginDescription"],
                     "Plugin-License" to project.extra["PluginLicense"]
             ))
