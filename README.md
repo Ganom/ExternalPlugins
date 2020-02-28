@@ -11,7 +11,7 @@ Make sure it looks like this picture below.
 
 If you'd like to support what I do, feel free to subscribe to my patreon @https://www.patreon.com/ganom
 
-##Delays
+## Delays
 All delays values below are in milliseconds.
 * __Min__: The absolute minimum delay it can use.
 * __Max__: The absolute maximum delay it can use.
@@ -24,7 +24,7 @@ Blue is weighted distribution.
 Yellow is standard distribution.
 ![](https://i.imgur.com/sSewAuK.png)
 
-##Plugins
+## Plugins
 * __Auto Clicker__: This plugin will automatically click where you are hovering when you press the hotkey.
 * __Auto Pray Flick__: This plugin will attempt to automatically flick your prayers, simply place your cursor over the prayer orb, and press the hotkey.
 * __Custom Swapper__: One of the more robust plugins, this allows you to execute prebaked commands, such as Equip, Prayer, Cast, Remove, and so on. You can for instance, equip a set of gear, enable your prayer, then activate special all in one hotkey!
@@ -35,4 +35,4 @@ Yellow is standard distribution.
 * __Olm Swapper__: This will change your prayers during the Olm encounter at Chambers of Xeric.
 * __One Click__: Probably the most popular plugin, this plugin allows you to simplify quite a large variety of tasks by reducing the amount of clicks to... 1. For instance, instead of clicking a bone and using it on the altar, just click the altar, or set a custom one inventory one click in the config. You could for instance set it to use an Apple on an Orange in one click if you desired.
 
-#####If you'd like to see what other plugins I offer, make sure to check my discord channel #Platinum-Info
+##### If you'd like to see what other plugins I offer, make sure to check my discord channel #Platinum-Info
