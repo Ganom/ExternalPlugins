@@ -53,7 +53,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Custom Swapper",
 	description = "Use plugin in PvP situations for best results",
-	tags = {"op", "af"},
+	tags = {"op", "af", "ganom"},
 	type = PluginType.UTILITY
 )
 @Slf4j
@@ -236,6 +236,10 @@ public class CustomSwapper extends Plugin
 
 		for (String s : tmp)
 		{
+			if (s.startsWith("//"))
+			{
+				continue;
+			}
 			String[] split = s.split(":");
 			try
 			{
