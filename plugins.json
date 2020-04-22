@@ -2,6 +2,22 @@
   {
     "projectUrl": "https://discordapp.com/invite/hVPfVAR",
     "provider": "Ganom",
+    "name": "Anonymizer",
+    "description": "Anonymizes your rsn and others.",
+    "id": "anonymizer-plugin",
+    "releases": [
+      {
+        "date": "2020-04-22",
+        "sha512sum": "7AF99C26A758F994A9FAEAA0BB46A78942849327A6FE0D1657B95AE9F410FC74FBDDA901AFD0DB2868F0B9F1766BAB7E4B5C1BD39815F0A14ACE5A37C7BE29CD",
+        "version": "5.10.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/Anonymizer-5.10.0.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/hVPfVAR",
+    "provider": "Ganom",
     "name": "AutoClicker",
     "description": "What more is there to say?",
     "id": "autoclicker-plugin",
@@ -18,6 +34,13 @@
         "sha512sum": "AA9547A75676B46B59AE887E08B13C48A97A9F20DCE46243039623CC2655316E6BDC50535FBCC9A5366FA4F4600D737D5F0D5497A6F77C2A63BE193D331A4C57",
         "version": "5.10.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoClicker-5.10.0.jar?raw=true",
+        "requires": "0.0.1"
+      },
+      {
+        "date": "2020-04-22",
+        "sha512sum": "CA465BF738C76E5C112F90C6F4A7F65DFF118FFA51CC1D1B15D7E8B9B8FA6BFDA41F36E5AA871F1E682333A5F2298F219F613B7F0A7E53289516641F2D6AD3B1",
+        "version": "5.11.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoClicker-5.11.0.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
