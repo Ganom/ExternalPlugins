@@ -158,6 +158,13 @@
         "version": "5.10.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/CustomSwapper-5.10.0.jar?raw=true",
         "requires": "0.0.1"
+      },
+      {
+        "date": "2020-04-22",
+        "sha512sum": "F6956E04B122CF5A20CE5749FA21AFB6D1F81DAE6E19EBDBF0ABCBF2CEBA1962A3D6AB7D3BDE3FFEF0A43B655F18E58C5B4282C58646E645A57547A2FCFE3842",
+        "version": "5.11.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/CustomSwapper-5.11.0.jar?raw=true",
+        "requires": "0.0.1"
       }
     ]
   },
