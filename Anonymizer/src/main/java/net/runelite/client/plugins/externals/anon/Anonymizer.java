@@ -34,6 +34,8 @@ import org.pf4j.Extension;
 )
 public class Anonymizer extends Plugin
 {
+	private static final String SALT_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789";
+
 	@Inject
 	private Client client;
 
@@ -116,13 +118,12 @@ public class Anonymizer extends Plugin
 
 				if (child.getText().contains(name))
 				{
-					String SALTCHARS = "abcdefghijklmnopqrstuvwxyz0123456789";
 					StringBuilder salty = new StringBuilder();
 					Random rando = new Random();
 					while (salty.length() < 12)
 					{
-						int index = (int) (rando.nextFloat() * SALTCHARS.length());
-						salty.append(SALTCHARS.charAt(index));
+						int index = (int) (rando.nextFloat() * SALT_CHARS.length());
+						salty.append(SALT_CHARS.charAt(index));
 					}
 					String saltStr = salty.toString();
 					String t = child.getText().replace(name, saltStr);
