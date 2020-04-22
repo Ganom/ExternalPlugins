@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019-2020, ganom <https://github.com/Ganom>
+ * All rights reserved.
+ * Licensed under GPL3, see LICENSE for the full scope.
+ */
 package net.runelite.client.plugins.externals.anon;
 
 import net.runelite.client.config.Config;
@@ -33,7 +38,7 @@ public interface AnonConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "hideXp",
+		keyName = "hideRsn",
 		name = "Randomize RSN",
 		description = "This should work for every single widget in the game.",
 		position = 0,
