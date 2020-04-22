@@ -10,11 +10,13 @@ import com.google.inject.Provides;
 import java.text.NumberFormat;
 import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Actor;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Player;
 import net.runelite.api.events.BeforeRender;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.OverheadTextChanged;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -44,6 +46,7 @@ public class Anonymizer extends Plugin
 
 	private final NumberFormat format = NumberFormat.getInstance();
 	private String name = "";
+	private String fixedName = "";
 
 	@Provides
 	AnonConfig getConfig(ConfigManager configManager)
@@ -60,6 +63,25 @@ public class Anonymizer extends Plugin
 	@Override
 	public void shutDown()
 	{
+	}
+
+	@Subscribe
+	public void OverheadTextChanged(OverheadTextChanged event)
+	{
+		String oh = event.getOverheadText();
+
+		if (!oh.contains(name))
+		{
+			return;
+		}
+
+		Actor actor = event.getActor();
+
+		if (actor != null)
+		{
+			String text = oh.replace(name, saltStr());
+			actor.setOverheadText(text);
+		}
 	}
 
 	@Subscribe
@@ -109,28 +131,91 @@ public class Anonymizer extends Plugin
 				continue;
 			}
 
-			for (RSWidget child : parent)
+			for (RSWidget widget : parent)
 			{
-				if (child == null || child.isHidden() || child.isSelfHidden() || child.getText() == null)
+				parseWidget(widget);
+
+				if (widget.getDynamicChildren() != null && widget.getDynamicChildren().length > 0)
 				{
-					continue;
+					Widget[] dynamicChildren = widget.getDynamicChildren();
+					for (int i = 0; i < dynamicChildren.length; i++)
+					{
+						Widget dynamicChild = dynamicChildren[i];
+						if (dynamicChild.getId() == 10616890 && dynamicChild.getText().contains(name))
+						{
+							try
+							{
+								Widget text = dynamicChildren[i + 1];
+								String saltStr = parseWidget(dynamicChild);
+								int newX = (int) ((saltStr.length() + 1) * 7.5);
+								text.setOriginalX(newX);
+								text.setOriginalWidth(text.getOriginalWidth() - newX);
+								text.revalidate();
+							}
+							catch (Exception e)
+							{
+								parseWidget(dynamicChild);
+							}
+						}
+					}
 				}
 
-				if (child.getText().contains(name))
+				if (widget.getStaticChildren() != null && widget.getStaticChildren().length > 0)
 				{
-					StringBuilder salty = new StringBuilder();
-					Random rando = new Random();
-					while (salty.length() < 12)
+					for (Widget staticChild : widget.getStaticChildren())
 					{
-						int index = (int) (rando.nextFloat() * SALT_CHARS.length());
-						salty.append(SALT_CHARS.charAt(index));
+						parseWidget(staticChild);
 					}
-					String saltStr = salty.toString();
-					String t = child.getText().replace(name, saltStr);
-					child.setText(t);
-					child.revalidate();
+				}
+
+				if (widget.getNestedChildren() != null && widget.getNestedChildren().length > 0)
+				{
+					for (Widget nestedChild : widget.getNestedChildren())
+					{
+						parseWidget(nestedChild);
+					}
 				}
 			}
 		}
+	}
+
+	private String parseWidget(Widget widget)
+	{
+		if (widget == null || widget.isHidden() || widget.isSelfHidden())
+		{
+			return "";
+		}
+
+		if (widget.getText() != null && widget.getText().contains(name))
+		{
+			String saltStr = saltStr();
+			String text = widget.getText().replace(name, saltStr);
+			widget.setText(text);
+			widget.revalidate();
+			return saltStr;
+		}
+
+		return "";
+	}
+
+	private String saltStr()
+	{
+		if (config.fixedName() && !fixedName.equals(""))
+		{
+			return fixedName;
+		}
+		StringBuilder salty = new StringBuilder();
+		Random rando = new Random();
+		while (salty.length() < 12)
+		{
+			int index = (int) (rando.nextFloat() * SALT_CHARS.length());
+			salty.append(SALT_CHARS.charAt(index));
+		}
+		String s = salty.toString();
+		if (config.fixedName())
+		{
+			fixedName = s;
+		}
+		return s;
 	}
 }

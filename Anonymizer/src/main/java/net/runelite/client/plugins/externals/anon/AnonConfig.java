@@ -29,7 +29,7 @@ public interface AnonConfig extends Config
 		keyName = "hideXp",
 		name = "Randomize XP Tracker",
 		description = "Only works for canvas xp tracker.",
-		position = 0,
+		position = 1,
 		titleSection = "anonConfig"
 	)
 	default boolean hideXp()
@@ -41,11 +41,23 @@ public interface AnonConfig extends Config
 		keyName = "hideRsn",
 		name = "Randomize RSN",
 		description = "This should work for every single widget in the game.",
-		position = 0,
+		position = 2,
 		titleSection = "anonConfig"
 	)
 	default boolean hideRsn()
 	{
 		return true;
+	}
+
+	@ConfigItem(
+		keyName = "fixedName",
+		name = "Fixed RSN",
+		description = "One a random salted name is generated, it will always be used.",
+		position = 3,
+		titleSection = "anonConfig"
+	)
+	default boolean fixedName()
+	{
+		return false;
 	}
 }
