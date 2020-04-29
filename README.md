@@ -1,5 +1,5 @@
 # ExternalPlugins
-[![Discord](https://discordapp.com/api/guilds/597985733403475982/widget.png?style=shield)](https://discord.gg/hVPfVAR)
+[![Discord](https://discordapp.com/api/guilds/597985733403475982/widget.png?style=shield)](https://discordapp.com/invite/gsoft)
 [![GitHub issues](https://img.shields.io/github/issues/Ganom/ExternalPlugins.svg)](https://github.com/Ganom/ExternalPlugins/issues)
 
 External plugins for use with OpenOSRS, this is a seperate entity, not OpenOSRS.
