@@ -32,16 +32,16 @@ project.extra["PluginDescription"] = "Anonymizes your rsn and others."
 dependencies {
     annotationProcessor(Libraries.lombok)
     annotationProcessor(Libraries.pf4j)
-    compileOnly("com.github.open-osrs.runelite:runelite-api:-SNAPSHOT")
-    compileOnly("com.github.open-osrs.runelite:runelite-client:-SNAPSHOT")
-    compileOnly("com.github.open-osrs.runelite:runescape-api:-SNAPSHOT")
-    compileOnly("com.github.open-osrs.runelite:runescape-client:-SNAPSHOT")
-    compileOnly(Libraries.guice)
-    compileOnly(Libraries.lombok)
-    compileOnly(Libraries.pf4j)
-    compileOnly(Libraries.okhttp3)
-    compileOnly(Libraries.apacheCommonsText)
-    compileOnly(Libraries.rxjava)
+    implementation(group = "com.openosrs", name = "runelite-client", version = "3.3.0")
+    implementation(group = "com.openosrs", name = "runelite-api", version = "3.3.0")
+    implementation(group = "com.openosrs.rs", name = "runescape-client", version = "3.3.0")
+    implementation(group = "com.openosrs.rs", name = "runescape-api", version = "3.3.0")
+    implementation(Libraries.guice)
+    implementation(Libraries.lombok)
+    implementation(Libraries.pf4j)
+    implementation(Libraries.okhttp3)
+    implementation(Libraries.apacheCommonsText)
+    implementation(Libraries.rxjava)
 }
 
 tasks {

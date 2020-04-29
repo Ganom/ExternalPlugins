@@ -32,14 +32,14 @@ project.extra["PluginDescription"] = "OP One Click methods."
 dependencies {
     annotationProcessor(Libraries.lombok)
     annotationProcessor(Libraries.pf4j)
-    compileOnly("com.github.open-osrs.runelite:runelite-api:-SNAPSHOT")
-    compileOnly("com.github.open-osrs.runelite:runelite-client:-SNAPSHOT")
-    compileOnly(Libraries.guice)
-    compileOnly(Libraries.lombok)
-    compileOnly(Libraries.pf4j)
-    compileOnly(Libraries.okhttp3)
-    compileOnly(Libraries.apacheCommonsText)
-    compileOnly(Libraries.rxjava)
+    implementation(group = "com.openosrs", name = "runelite-client", version = "3.3.0")
+    implementation(group = "com.openosrs", name = "runelite-api", version = "3.3.0")
+    implementation(Libraries.guice)
+    implementation(Libraries.lombok)
+    implementation(Libraries.pf4j)
+    implementation(Libraries.okhttp3)
+    implementation(Libraries.apacheCommonsText)
+    implementation(Libraries.rxjava)
 }
 
 tasks {

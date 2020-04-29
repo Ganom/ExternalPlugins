@@ -23,7 +23,7 @@ subprojects {
         jcenter()
         mavenLocal()
         maven(url = "https://repo.runelite.net")
-        maven(url = "https://jitpack.io")
+        maven(url = "https://repo.openosrs.com/repository/maven")
     }
 
     apply<JavaPlugin>()

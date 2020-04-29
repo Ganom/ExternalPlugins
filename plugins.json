@@ -26,6 +26,13 @@
         "version": "5.12.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/Anonymizer-5.12.0.jar?raw=true",
         "requires": "0.0.1"
+      },
+      {
+        "date": "2020-04-29",
+        "sha512sum": "CD793762886D029E9C62AA3F0706A9CE38DD2498387D4FC1D84A00C59BB611ED3835BEAC2F44AB7716A09B4F693FB2004918B50B5FC343F51D0AD0626F386C3E",
+        "version": "5.13.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/Anonymizer-5.13.0.jar?raw=true",
+        "requires": "0.0.1"
       }
     ]
   },
