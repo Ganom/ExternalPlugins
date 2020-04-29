@@ -16,7 +16,7 @@ subprojects {
     group = "com.openosrs.externals"
 
     project.extra["PluginProvider"] = "Ganom"
-    project.extra["ProjectUrl"] = "https://discordapp.com/invite/hVPfVAR"
+    project.extra["ProjectUrl"] = "https://discordapp.com/invite/gsoft"
     project.extra["PluginLicense"] = "GNU General Public License v3.0"
 
     repositories {
