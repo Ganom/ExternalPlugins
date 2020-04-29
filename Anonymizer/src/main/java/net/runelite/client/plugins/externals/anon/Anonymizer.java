@@ -8,7 +8,6 @@ package net.runelite.client.plugins.externals.anon;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import java.text.NumberFormat;
-import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Actor;
 import net.runelite.api.Client;
@@ -36,8 +35,7 @@ import org.pf4j.Extension;
 )
 public class Anonymizer extends Plugin
 {
-	private static final String SALT_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789";
-
+	private static final String ANON = "------------";
 	@Inject
 	private Client client;
 
@@ -46,7 +44,6 @@ public class Anonymizer extends Plugin
 
 	private final NumberFormat format = NumberFormat.getInstance();
 	private String name = "";
-	private String fixedName = "";
 
 	@Provides
 	AnonConfig getConfig(ConfigManager configManager)
@@ -79,7 +76,7 @@ public class Anonymizer extends Plugin
 
 		if (actor != null)
 		{
-			String text = oh.replace(name, saltStr());
+			String text = oh.replace(name, ANON);
 			actor.setOverheadText(text);
 		}
 	}
@@ -102,8 +99,7 @@ public class Anonymizer extends Plugin
 
 			if (xp != null && xp.getText() != null && !xp.isHidden())
 			{
-				int ran = (int) (Math.random() * 600000000);
-				xp.setText(format.format(ran));
+				xp.setText("123,456,789");
 				xp.revalidate();
 			}
 		}
@@ -141,20 +137,18 @@ public class Anonymizer extends Plugin
 					for (int i = 0; i < dynamicChildren.length; i++)
 					{
 						Widget dynamicChild = dynamicChildren[i];
+
 						if (dynamicChild.getId() == 10616890 && dynamicChild.getText().contains(name))
 						{
+							parseWidget(dynamicChild);
 							try
 							{
 								Widget text = dynamicChildren[i + 1];
-								String saltStr = parseWidget(dynamicChild);
-								int newX = (int) ((saltStr.length() + 1) * 7.5);
-								text.setOriginalX(newX);
-								text.setOriginalWidth(text.getOriginalWidth() - newX);
+								text.setOriginalX(80);
 								text.revalidate();
 							}
-							catch (Exception e)
+							catch (Exception ignored)
 							{
-								parseWidget(dynamicChild);
 							}
 						}
 					}
@@ -179,43 +173,18 @@ public class Anonymizer extends Plugin
 		}
 	}
 
-	private String parseWidget(Widget widget)
+	private void parseWidget(Widget widget)
 	{
 		if (widget == null || widget.isHidden() || widget.isSelfHidden())
 		{
-			return "";
+			return;
 		}
 
 		if (widget.getText() != null && widget.getText().contains(name))
 		{
-			String saltStr = saltStr();
-			String text = widget.getText().replace(name, saltStr);
+			String text = widget.getText().replace(name, ANON);
 			widget.setText(text);
 			widget.revalidate();
-			return saltStr;
 		}
-
-		return "";
-	}
-
-	private String saltStr()
-	{
-		if (config.fixedName() && !fixedName.equals(""))
-		{
-			return fixedName;
-		}
-		StringBuilder salty = new StringBuilder();
-		Random rando = new Random();
-		while (salty.length() < 12)
-		{
-			int index = (int) (rando.nextFloat() * SALT_CHARS.length());
-			salty.append(SALT_CHARS.charAt(index));
-		}
-		String s = salty.toString();
-		if (config.fixedName())
-		{
-			fixedName = s;
-		}
-		return s;
 	}
 }

@@ -48,16 +48,4 @@ public interface AnonConfig extends Config
 	{
 		return true;
 	}
-
-	@ConfigItem(
-		keyName = "fixedName",
-		name = "Fixed RSN",
-		description = "One a random salted name is generated, it will always be used.",
-		position = 3,
-		titleSection = "anonConfig"
-	)
-	default boolean fixedName()
-	{
-		return false;
-	}
 }
