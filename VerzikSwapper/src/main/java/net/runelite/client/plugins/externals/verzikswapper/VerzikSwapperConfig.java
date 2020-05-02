@@ -16,11 +16,11 @@ public interface VerzikSwapperConfig extends Config
 {
 
 	@ConfigItem(
-			keyName = "testRange",
-			name = "Test Range Projectile",
-			description = "",
-			position = 0,
-			titleSection = "hotkeys"
+		keyName = "testRange",
+		name = "Test Range Projectile",
+		description = "",
+		position = 0,
+		titleSection = "hotkeys"
 	)
 	default Keybind testRange()
 	{
@@ -28,11 +28,11 @@ public interface VerzikSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "testMage",
-			name = "Test Mage Projectile",
-			description = "",
-			position = 1,
-			titleSection = "hotkeys"
+		keyName = "testMage",
+		name = "Test Mage Projectile",
+		description = "",
+		position = 1,
+		titleSection = "hotkeys"
 	)
 	default Keybind testMage()
 	{
