@@ -1,17 +1,15 @@
 rootProject.name = "public"
 
+include(":Anonymizer")
+include(":AutoClicker")
 include(":AutoPrayFlick")
+include(":BossSwapper")
 include(":CustomSwapper")
+include(":ExtUtils")
 include(":ItemDropper")
 include(":LeftClickCast")
 include(":NeverLog")
-include(":NyloSwapper")
-include(":OlmSwapper")
-include(":VerzikSwapper")
 include(":OneClick")
-include(":ExtUtils")
-include(":AutoClicker")
-include(":Anonymizer")
 
 for (project in rootProject.children) {
     project.apply {

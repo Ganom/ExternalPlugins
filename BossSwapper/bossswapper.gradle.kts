@@ -26,21 +26,12 @@
 
 version = "5.11.0"
 
-project.extra["PluginName"] = "NyloSwapper"
-project.extra["PluginDescription"] = "Nylo Swapper."
+project.extra["PluginName"] = "BossSwapper"
+project.extra["PluginDescription"] = "Does stuff and things."
+
 
 dependencies {
-    annotationProcessor(Libraries.lombok)
-    annotationProcessor(Libraries.pf4j)
     implementation(project(":ExtUtils"))
-    implementation(group = "com.openosrs", name = "runelite-client", version = "3.3.0")
-    implementation(group = "com.openosrs", name = "runelite-api", version = "3.3.0")
-    implementation(Libraries.guice)
-    implementation(Libraries.lombok)
-    implementation(Libraries.pf4j)
-    implementation(Libraries.okhttp3)
-    implementation(Libraries.apacheCommonsText)
-    implementation(Libraries.rxjava)
 }
 
 tasks {
