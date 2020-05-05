@@ -50,15 +50,15 @@
   {
     "projectUrl": "https://discordapp.com/invite/gsoft",
     "provider": "Ganom",
-    "name": "BossSwapper",
+    "name": "BasicBossSwapper",
     "description": "Does stuff and things.",
-    "id": "bossswapper-plugin",
+    "id": "basicbossswapper-plugin",
     "releases": [
       {
-        "date": "2020-05-04",
-        "sha512sum": "39228B1665ED68635A1A469C6662764CD29ABDCB15CE671D4BBE6B6EA2E6735D304679C9AF7910F5837D33B64D197C82767159E15283B6533BFED6DB34EA8BA2",
-        "version": "5.11.0",
-        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/BossSwapper-5.11.0.jar?raw=true",
+        "date": "2020-05-05",
+        "sha512sum": "CAF98319E16A3938D3524539B7641D630A99F0C0F6905AB1AEBCD76C42A86C389D9C1B12FD7CAA6BDA1E202D6BC2B876C4363D92DDEC97EBA0FB5E0F4259A7CE",
+        "version": "5.12.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/BossSwapper-5.12.0.jar?raw=true",
         "requires": "0.0.1"
       }
     ]

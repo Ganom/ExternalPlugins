@@ -4,7 +4,7 @@
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
-package net.runelite.client.plugins.externals.bossswapper;
+package net.runelite.client.plugins.externals.basicbossswapper;
 
 import com.google.inject.Provides;
 import java.awt.AWTException;
@@ -51,7 +51,7 @@ import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
-	name = "Boss Swapper",
+	name = "Basic Boss Swapper",
 	description = "Automatically swaps prayers for Olm, Nylo, and Verzik",
 	tags = {"prayer", "olm", "bot", "swap"},
 	type = PluginType.UTILITY
@@ -59,7 +59,7 @@ import org.pf4j.Extension;
 @Slf4j
 @SuppressWarnings("unused")
 @PluginDependency(ExtUtils.class)
-public class BossSwapper extends Plugin
+public class BasicBossSwapper extends Plugin
 {
 	private static final String MAGE = "the great olm fires a sphere of magical power your way";
 	private static final String RANGE = "the great olm fires a sphere of accuracy and dexterity your way";
@@ -69,7 +69,7 @@ public class BossSwapper extends Plugin
 	private Client client;
 
 	@Inject
-	private BossSwapperConfig config;
+	private BasicBossSwapperConfig config;
 
 	@Inject
 	private EventBus eventBus;
@@ -90,9 +90,9 @@ public class BossSwapper extends Plugin
 	private int prevNylo;
 
 	@Provides
-	BossSwapperConfig getConfig(ConfigManager configManager)
+	BasicBossSwapperConfig getConfig(ConfigManager configManager)
 	{
-		return configManager.getConfig(BossSwapperConfig.class);
+		return configManager.getConfig(BasicBossSwapperConfig.class);
 	}
 
 	private final HotkeyListener toggle = new HotkeyListener(() -> config.toggle())
