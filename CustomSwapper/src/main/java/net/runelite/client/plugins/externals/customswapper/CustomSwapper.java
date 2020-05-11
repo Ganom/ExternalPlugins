@@ -363,6 +363,58 @@ public class CustomSwapper extends Plugin
 					rectPairs.add(Pair.of(Tab.COMBAT, widget.getBounds()));
 				}
 				break;
+				case "style1":
+				{
+					final Widget widget = client.getWidget(593, 4);
+
+					if (widget == null)
+					{
+						log.debug("Style 1: Can't find valid widget");
+						continue;
+					}
+
+					rectPairs.add(Pair.of(Tab.COMBAT, widget.getBounds()));
+				}
+				break;
+				case "style2":
+				{
+					final Widget widget = client.getWidget(593, 8);
+
+					if (widget == null)
+					{
+						log.debug("Style 2: Can't find valid widget");
+						continue;
+					}
+
+					rectPairs.add(Pair.of(Tab.COMBAT, widget.getBounds()));
+				}
+				break;
+				case "style3":
+				{
+					final Widget widget = client.getWidget(593, 12);
+
+					if (widget == null)
+					{
+						log.debug("Style 3: Can't find valid widget");
+						continue;
+					}
+
+					rectPairs.add(Pair.of(Tab.COMBAT, widget.getBounds()));
+				}
+				break;
+				case "style4":
+				{
+					final Widget widget = client.getWidget(593, 16);
+
+					if (widget == null)
+					{
+						log.debug("Style 4: Can't find valid widget");
+						continue;
+					}
+
+					rectPairs.add(Pair.of(Tab.COMBAT, widget.getBounds()));
+				}
+				break;
 			}
 		}
 
