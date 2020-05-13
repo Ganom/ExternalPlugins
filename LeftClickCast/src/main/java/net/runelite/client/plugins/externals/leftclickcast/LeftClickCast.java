@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019-2020, ganom <https://github.com/Ganom>
+ * Copyright (c) 2020, andrewterra <https://github.com/andrewterra>
  * All rights reserved.
  * Licensed under GPL3, see LICENSE for the full scope.
  */
@@ -12,6 +13,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
@@ -27,6 +29,10 @@ import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.util.Text;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.client.chat.ChatColorType;
+import net.runelite.client.chat.ChatMessageBuilder;
+import net.runelite.client.chat.ChatMessageManager;
+import net.runelite.client.chat.QueuedMessage;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -57,11 +63,33 @@ public class LeftClickCast extends Plugin
 	private LeftClickConfig config;
 	@Inject
 	private KeyManager keyManager;
+	@Inject
+	private ChatMessageManager chatMessageManager;
 
 	private final Set<Integer> whitelist = new HashSet<>();
 
 	private boolean isMage;
+	private boolean enableLeftClickCast = true;
 	private Spells currentSpell = Spells.ICE_BARRAGE;
+
+	private final HotkeyListener leftClickCastToggleHotkeyListener = new HotkeyListener(() -> config.leftClickCastToggleHotkey())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			enableLeftClickCast = !enableLeftClickCast;
+
+			String enableString = !enableLeftClickCast ? "De-Activated" : "Activated";
+
+			chatMessageManager.queue(QueuedMessage.builder().type(ChatMessageType.CONSOLE).runeLiteFormattedMessage(
+					new ChatMessageBuilder()
+							.append(ChatColorType.HIGHLIGHT)
+							.append("Left Click Cast ")
+							.append(enableString)
+							.build())
+					.build());
+		}
+	};
 
 	private final HotkeyListener spellOneSwap = new HotkeyListener(() -> config.spellOneSwap())
 	{
@@ -128,6 +156,7 @@ public class LeftClickCast extends Plugin
 	{
 		if (client.getGameState() == GameState.LOGGED_IN)
 		{
+			keyManager.registerKeyListener(leftClickCastToggleHotkeyListener);
 			keyManager.registerKeyListener(spellOneSwap);
 			keyManager.registerKeyListener(spellTwoSwap);
 			keyManager.registerKeyListener(spellThreeSwap);
@@ -141,6 +170,7 @@ public class LeftClickCast extends Plugin
 	@Override
 	public void shutDown()
 	{
+		keyManager.registerKeyListener(leftClickCastToggleHotkeyListener);
 		keyManager.unregisterKeyListener(spellOneSwap);
 		keyManager.unregisterKeyListener(spellTwoSwap);
 		keyManager.unregisterKeyListener(spellThreeSwap);
@@ -154,6 +184,7 @@ public class LeftClickCast extends Plugin
 	{
 		if (event.getGameState() != GameState.LOGGED_IN)
 		{
+			keyManager.registerKeyListener(leftClickCastToggleHotkeyListener);
 			keyManager.unregisterKeyListener(spellOneSwap);
 			keyManager.unregisterKeyListener(spellTwoSwap);
 			keyManager.unregisterKeyListener(spellThreeSwap);
@@ -162,6 +193,7 @@ public class LeftClickCast extends Plugin
 			keyManager.unregisterKeyListener(spellSixSwap);
 			return;
 		}
+		keyManager.registerKeyListener(leftClickCastToggleHotkeyListener);
 		keyManager.registerKeyListener(spellOneSwap);
 		keyManager.registerKeyListener(spellTwoSwap);
 		keyManager.registerKeyListener(spellThreeSwap);
@@ -179,7 +211,7 @@ public class LeftClickCast extends Plugin
 	@Subscribe
 	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
-		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && isMage)
+		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && isMage && enableLeftClickCast)
 		{
 			final String name = Text.standardize(event.getTarget(), true);
 
@@ -205,7 +237,7 @@ public class LeftClickCast extends Plugin
 			setSelectSpell(currentSpell.getSpell());
 			event.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ");
 		}
-		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && isMage)
+		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && isMage && enableLeftClickCast)
 		{
 			try
 			{
@@ -234,7 +266,7 @@ public class LeftClickCast extends Plugin
 	@Subscribe
 	public void onMenuOptionClicked(MenuOptionClicked event)
 	{
-		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && isMage)
+		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && isMage && enableLeftClickCast)
 		{
 			final String name = Text.standardize(event.getTarget(), true);
 
@@ -259,7 +291,7 @@ public class LeftClickCast extends Plugin
 			setSelectSpell(currentSpell.getSpell());
 			event.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ");
 		}
-		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && isMage)
+		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && isMage && enableLeftClickCast)
 		{
 			try
 			{
