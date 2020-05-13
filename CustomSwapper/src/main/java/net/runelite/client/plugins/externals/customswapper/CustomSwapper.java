@@ -363,7 +363,7 @@ public class CustomSwapper extends Plugin
 					rectPairs.add(Pair.of(Tab.COMBAT, widget.getBounds()));
 				}
 				break;
-				case "style1":
+				case "1":
 				{
 					final Widget widget = client.getWidget(593, 4);
 
@@ -376,7 +376,7 @@ public class CustomSwapper extends Plugin
 					rectPairs.add(Pair.of(Tab.COMBAT, widget.getBounds()));
 				}
 				break;
-				case "style2":
+				case "2":
 				{
 					final Widget widget = client.getWidget(593, 8);
 
@@ -389,7 +389,7 @@ public class CustomSwapper extends Plugin
 					rectPairs.add(Pair.of(Tab.COMBAT, widget.getBounds()));
 				}
 				break;
-				case "style3":
+				case "3":
 				{
 					final Widget widget = client.getWidget(593, 12);
 
@@ -402,7 +402,7 @@ public class CustomSwapper extends Plugin
 					rectPairs.add(Pair.of(Tab.COMBAT, widget.getBounds()));
 				}
 				break;
-				case "style4":
+				case "4":
 				{
 					final Widget widget = client.getWidget(593, 16);
 
