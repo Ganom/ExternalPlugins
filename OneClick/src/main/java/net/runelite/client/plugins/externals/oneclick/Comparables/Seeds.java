@@ -41,7 +41,8 @@ public class Seeds implements ClickComparable
 
 		else if (event.getTarget().toLowerCase().contains("tithe"))
 		{
-			if (plugin.findItem(SEED_SET).getLeft() == -1) {
+			if (plugin.findItem(SEED_SET).getLeft() == -1)
+			{
 				return;
 			}
 
