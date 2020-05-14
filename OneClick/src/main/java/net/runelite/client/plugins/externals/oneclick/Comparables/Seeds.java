@@ -27,7 +27,8 @@ public class Seeds implements ClickComparable
 	@Override
 	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
 	{
-		if(event.getTarget().toLowerCase().contains("water barrel")){
+		if (event.getTarget().toLowerCase().contains("water barrel"))
+		{
 			if (plugin.findItem(WATERING_CANS).getLeft() == -1)
 			{
 				return;
@@ -38,7 +39,8 @@ public class Seeds implements ClickComparable
 			event.setForceLeftClick(true);
 		}
 
-		else if(event.getTarget().toLowerCase().contains("tithe")){
+		else if (event.getTarget().toLowerCase().contains("tithe"))
+		{
 			if (plugin.findItem(SEED_SET).getLeft() == -1) {
 				return;
 			}
