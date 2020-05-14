@@ -21,20 +21,32 @@ public class Seeds implements ClickComparable
 	public boolean isEntryValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuOpcode.EXAMINE_OBJECT.getId() &&
-			event.getTarget().toLowerCase().contains("tithe");
+			event.getTarget().toLowerCase().contains("tithe") || event.getTarget().toLowerCase().contains("water barrel");
 	}
 
 	@Override
 	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
 	{
-		if (plugin.findItem(SEED_SET).getLeft() == -1)
-		{
-			return;
+		if(event.getTarget().toLowerCase().contains("water barrel")){
+			if (plugin.findItem(WATERING_CANS).getLeft() == -1)
+			{
+				return;
+			}
+
+			event.setOption("Use");
+			event.setTarget("<col=ff9040>Watering can<col=ffffff> -> " + event.getTarget());
+			event.setForceLeftClick(true);
 		}
 
-		event.setOption("Use");
-		event.setTarget("<col=ff9040>Seed<col=ffffff> -> " + event.getTarget());
-		event.setForceLeftClick(true);
+		else if(event.getTarget().toLowerCase().contains("tithe")){
+			if (plugin.findItem(SEED_SET).getLeft() == -1) {
+				return;
+			}
+
+			event.setOption("Use");
+			event.setTarget("<col=ff9040>Seed<col=ffffff> -> " + event.getTarget());
+			event.setForceLeftClick(true);
+		}
 	}
 
 	@Override
