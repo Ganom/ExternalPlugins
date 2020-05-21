@@ -396,6 +396,12 @@ public class OneClickPlugin extends Plugin
 					menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
 					client.setLeftClickMenuEntry(menuEntry);
 				}
+				if (event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId())
+				{
+					MenuEntry menuEntry = client.getLeftClickMenuEntry();
+					menuEntry.setOpcode(MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId());
+					client.setLeftClickMenuEntry(menuEntry);
+				}
 				break;
 			default:
 				break;
