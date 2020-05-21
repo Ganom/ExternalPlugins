@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Plugin-Version: 5.14.0
+Plugin-Id: anonymizer-plugin
+Plugin-Provider: Ganom
+Plugin-Description: Anonymizes your rsn and others.
+Plugin-License: GNU General Public License v3.0
+

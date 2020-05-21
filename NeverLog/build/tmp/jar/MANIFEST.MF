@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Plugin-Version: 5.11.0
+Plugin-Id: neverlog-plugin
+Plugin-Provider: Ganom
+Plugin-Description: This makes it so you'll never logout during the 6h p
+ eriod.
+Plugin-License: GNU General Public License v3.0
+

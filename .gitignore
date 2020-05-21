@@ -1,5 +1,2 @@
-*.iml
 .idea
 .github.idea\
-build\
-release\

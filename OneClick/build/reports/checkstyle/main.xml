@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.25">
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\ClickItem.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Birdhouses.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Blank.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Bones.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\ClickComparable.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Compost.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\DarkEssence.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Darts.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Farming.java">
+<error line="11" column="49" severity="error" message="&apos;{&apos; at column 49 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="28" column="54" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="35" column="73" severity="error" message="&apos;{&apos; at column 66 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="36" column="63" severity="error" message="&apos;{&apos; at column 49 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="37" column="74" severity="error" message="&apos;{&apos; at column 53 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="45" column="17" severity="error" message="&apos;}&apos; at column 3 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="45" column="78" severity="error" message="&apos;{&apos; at column 64 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="46" column="71" severity="error" message="&apos;{&apos; at column 50 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="56" column="54" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="62" column="73" severity="error" message="&apos;{&apos; at column 66 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="63" column="90" severity="error" message="&apos;{&apos; at column 76 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="67" column="17" severity="error" message="&apos;}&apos; at column 3 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="68" column="69" severity="error" message="&apos;{&apos; at column 41 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Firemaking.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Healer.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Herbtar.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Karambwans.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Runes.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Seeds.java">
+<error line="11" column="47" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="36" column="54" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="46" column="73" severity="error" message="&apos;{&apos; at column 66 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="47" column="64" severity="error" message="&apos;{&apos; at column 50 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="48" column="72" severity="error" message="&apos;{&apos; at column 51 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="56" column="17" severity="error" message="&apos;}&apos; at column 3 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="56" column="77" severity="error" message="&apos;{&apos; at column 63 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="57" column="77" severity="error" message="&apos;{&apos; at column 56 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="65" column="17" severity="error" message="&apos;}&apos; at column 3 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="65" column="76" severity="error" message="&apos;{&apos; at column 62 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="66" column="77" severity="error" message="&apos;{&apos; at column 56 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="77" column="54" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="86" column="73" severity="error" message="&apos;{&apos; at column 66 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="87" column="85" severity="error" message="&apos;{&apos; at column 71 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="91" column="17" severity="error" message="&apos;}&apos; at column 3 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="92" column="75" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="95" column="17" severity="error" message="&apos;}&apos; at column 3 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="96" column="67" severity="error" message="&apos;{&apos; at column 46 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Spell.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Comparables\Tiara.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\OneClickConfig.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\OneClickPlugin.java">
+<error line="15" severity="error" message="Multiline imports are disallowed if they are not static" source="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck"/>
+<error line="16" severity="error" message="Multiline imports are disallowed if they are not static" source="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck"/>
+<error line="32" severity="error" message="Multiline imports are disallowed if they are not static" source="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck"/>
+<error line="46" column="44" severity="error" message="&apos;{&apos; at column 44 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="76" column="67" severity="error" message="&apos;{&apos; at column 60 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="81" column="34" severity="error" message="&apos;{&apos; at column 27 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="86" column="42" severity="error" message="&apos;{&apos; at column 28 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="88" column="17" severity="error" message="&apos;}&apos; at column 3 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="88" column="24" severity="error" message="&apos;{&apos; at column 10 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="94" column="35" severity="error" message="&apos;{&apos; at column 28 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="99" column="64" severity="error" message="&apos;{&apos; at column 57 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="100" column="75" severity="error" message="&apos;{&apos; at column 61 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="106" column="58" severity="error" message="&apos;{&apos; at column 51 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="107" column="58" severity="error" message="&apos;{&apos; at column 44 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="112" column="50" severity="error" message="&apos;{&apos; at column 29 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="114" column="25" severity="error" message="&apos;}&apos; at column 4 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="114" column="32" severity="error" message="&apos;{&apos; at column 11 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="121" column="54" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="122" column="45" severity="error" message="&apos;{&apos; at column 31 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="133" column="48" severity="error" message="&apos;{&apos; at column 41 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="136" column="46" severity="error" message="&apos;{&apos; at column 32 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="139" column="73" severity="error" message="&apos;{&apos; at column 52 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="141" column="25" severity="error" message="&apos;}&apos; at column 4 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="141" column="32" severity="error" message="&apos;{&apos; at column 11 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="148" column="52" severity="error" message="&apos;{&apos; at column 45 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="151" column="41" severity="error" message="&apos;{&apos; at column 27 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="157" column="86" severity="error" message="&apos;{&apos; at column 72 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="160" column="44" severity="error" message="&apos;{&apos; at column 23 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="164" column="49" severity="error" message="&apos;{&apos; at column 28 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="169" column="96" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="178" column="96" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="187" column="96" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="196" column="96" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="205" column="96" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="214" column="96" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="223" column="96" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="232" column="96" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="241" column="96" severity="error" message="&apos;{&apos; at column 47 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="254" column="43" severity="error" message="&apos;{&apos; at column 22 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="260" column="86" severity="error" message="&apos;{&apos; at column 65 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="261" column="45" severity="error" message="&apos;{&apos; at column 17 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="263" column="33" severity="error" message="&apos;}&apos; at column 5 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="263" column="40" severity="error" message="&apos;{&apos; at column 12 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="272" column="49" severity="error" message="&apos;{&apos; at column 28 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="313" column="60" severity="error" message="&apos;{&apos; at column 53 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="317" column="94" severity="error" message="&apos;{&apos; at column 80 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="318" column="113" severity="error" message="&apos;{&apos; at column 92 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="320" column="49" severity="error" message="&apos;{&apos; at column 21 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="331" column="31" severity="error" message="&apos;{&apos; at column 17 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="334" column="83" severity="error" message="&apos;{&apos; at column 55 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="339" column="103" severity="error" message="&apos;{&apos; at column 75 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="349" column="41" severity="error" message="&apos;{&apos; at column 27 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="354" column="63" severity="error" message="&apos;{&apos; at column 49 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="358" column="53" severity="error" message="&apos;{&apos; at column 39 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="365" column="66" severity="error" message="&apos;{&apos; at column 59 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="366" column="27" severity="error" message="&apos;{&apos; at column 13 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="371" column="48" severity="error" message="&apos;{&apos; at column 34 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="379" column="19" severity="error" message="&apos;{&apos; at column 5 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="384" column="41" severity="error" message="&apos;{&apos; at column 27 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="389" column="53" severity="error" message="&apos;{&apos; at column 39 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="393" column="53" severity="error" message="&apos;{&apos; at column 39 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="398" column="51" severity="error" message="&apos;{&apos; at column 44 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="400" column="43" severity="error" message="&apos;{&apos; at column 29 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="409" column="68" severity="error" message="&apos;{&apos; at column 61 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="411" column="43" severity="error" message="&apos;{&apos; at column 29 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="420" column="56" severity="error" message="&apos;{&apos; at column 49 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="424" column="64" severity="error" message="&apos;{&apos; at column 50 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="426" column="49" severity="error" message="&apos;{&apos; at column 28 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="434" column="73" severity="error" message="&apos;{&apos; at column 66 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="438" column="64" severity="error" message="&apos;{&apos; at column 50 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="440" column="57" severity="error" message="&apos;{&apos; at column 36 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="448" column="34" severity="error" message="&apos;{&apos; at column 27 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="451" column="38" severity="error" message="&apos;{&apos; at column 24 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="452" column="49" severity="error" message="&apos;{&apos; at column 28 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="458" column="29" severity="error" message="&apos;{&apos; at column 8 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="461" column="79" severity="error" message="&apos;{&apos; at column 51 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+<error line="466" column="25" severity="error" message="&apos;}&apos; at column 4 should be alone on a line." source="com.puppycrawl.tools.checkstyle.checks.blocks.RightCurlyCheck"/>
+<error line="466" column="47" severity="error" message="&apos;{&apos; at column 26 should be on a new line." source="com.puppycrawl.tools.checkstyle.checks.blocks.LeftCurlyCheck"/>
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Spells.java">
+</file>
+<file name="C:\Users\SeaPound\Desktop\Programming\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Types.java">
+<error line="15" severity="error" message="Multiline imports are disallowed if they are not static" source="com.puppycrawl.tools.checkstyle.checks.regexp.RegexpSinglelineJavaCheck"/>
+</file>
+</checkstyle>

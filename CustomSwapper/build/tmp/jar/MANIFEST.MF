@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Plugin-Version: 5.12.0
+Plugin-Id: customswapper-plugin
+Plugin-Provider: Ganom
+Plugin-Dependencies: extutils-plugin
+Plugin-Description: Use plugin in PvP situations for best results.
+Plugin-License: GNU General Public License v3.0
+

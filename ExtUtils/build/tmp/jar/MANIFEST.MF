@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Plugin-Version: 5.11.0
+Plugin-Id: extutils-plugin
+Plugin-Provider: Ganom
+Plugin-Description: Utils required for plugins to function.
+Plugin-License: GNU General Public License v3.0
+
