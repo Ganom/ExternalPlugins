@@ -1,7 +1,0 @@
-Manifest-Version: 1.0
-Plugin-Version: 5.11.0
-Plugin-Id: oneclick-plugin
-Plugin-Provider: Ganom
-Plugin-Description: OP One Click methods.
-Plugin-License: GNU General Public License v3.0
-

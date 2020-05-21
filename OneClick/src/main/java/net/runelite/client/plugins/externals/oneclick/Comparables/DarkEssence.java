@@ -11,7 +11,7 @@ public class DarkEssence implements ClickComparable
 	public boolean isEntryValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-				event.getIdentifier() == ItemID.CHISEL;
+			event.getIdentifier() == ItemID.CHISEL;
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class DarkEssence implements ClickComparable
 	public boolean isClickValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-				event.getTarget().contains("<col=ff9040>Chisel<col=ffffff> ->");
+			event.getTarget().contains("<col=ff9040>Chisel<col=ffffff> ->");
 	}
 
 	@Override

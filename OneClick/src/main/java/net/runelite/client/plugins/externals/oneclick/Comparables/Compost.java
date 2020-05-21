@@ -11,7 +11,7 @@ public class Compost implements ClickComparable
 	public boolean isEntryValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-				event.getIdentifier() == ItemID.COMPOST;
+			event.getIdentifier() == ItemID.COMPOST;
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class Compost implements ClickComparable
 	public boolean isClickValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-				event.getIdentifier() == ItemID.COMPOST;
+			event.getIdentifier() == ItemID.COMPOST;
 	}
 
 	@Override

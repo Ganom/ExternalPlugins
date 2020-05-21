@@ -13,19 +13,19 @@ public class Farming implements ClickComparable
 	private static final Set<Integer> HERB_SEEDS = ImmutableSet.of(
 			ItemID.RANARR_SEED
 	);
-
+	
 	private static final Set<Integer> COMPOST = ImmutableSet.of(
 			ItemID.BOTTOMLESS_COMPOST_BUCKET_22997, ItemID.SUPERCOMPOST, ItemID.ULTRACOMPOST
 	);
-
+	
 	private static final Set<String> FARM_PATCHES = ImmutableSet.of(
 			"<col=ffff>Herb patch"
 	);
-
+	
 	private static final Set<String> FARM_PATCHES_COMPOST = ImmutableSet.of(
 			"<col=ffff>Herbs"
 	);
-
+	
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
@@ -34,7 +34,7 @@ public class Farming implements ClickComparable
 				event.getOpcode() == MenuOpcode.GAME_OBJECT_SECOND_OPTION.getId() &&
 						FARM_PATCHES_COMPOST.contains(event.getTarget());
 	}
-
+	
 	@Override
 	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
 	{
@@ -48,11 +48,8 @@ public class Farming implements ClickComparable
 			event.setTarget("<col=ff9040>Herb seed<col=ffffff> -> " + plugin.getTargetMap().get(event.getIdentifier()));
 			event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			event.setForceLeftClick(true);
-
-		}
-
-		else if (FARM_PATCHES_COMPOST.contains(event.getTarget()))
-
+			
+		} else if (FARM_PATCHES_COMPOST.contains(event.getTarget()))
 		{
 			if (plugin.findItem(COMPOST).getLeft() == -1)
 			{
@@ -64,7 +61,7 @@ public class Farming implements ClickComparable
 			event.setForceLeftClick(true);
 		}
 	}
-
+	
 	@Override
 	public boolean isClickValid(MenuEntry event)
 	{
@@ -72,7 +69,7 @@ public class Farming implements ClickComparable
 				event.getTarget().contains("<col=ff9040>Herb seed<col=ffffff> -> ") ||
 				event.getTarget().contains("<col=ff9040>Compost<col=ffffff> -> "));
 	}
-
+	
 	@Override
 	public void modifyClick(OneClickPlugin plugin, MenuEntry event)
 	{
@@ -80,13 +77,11 @@ public class Farming implements ClickComparable
 		{
 			if (plugin.updateSelectedItem(HERB_SEEDS))
 				event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
-
-		}
-
-		else if (event.getTarget().contains("<col=ff9040>Compost<col=ffffff> -> "))
+			
+		} else if (event.getTarget().contains("<col=ff9040>Compost<col=ffffff> -> ") &&
+				plugin.updateSelectedItem(COMPOST))
 		{
-			if (plugin.updateSelectedItem(COMPOST))
-				event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+			event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 		}
 	}
 }

@@ -20,8 +20,8 @@ public class Runes implements ClickComparable
 	public boolean isEntryValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-				event.getOption().equals("Craft-rune") &&
-				event.getTarget().equals("<col=ffff>Altar");
+			event.getOption().equals("Craft-rune") &&
+			event.getTarget().equals("<col=ffff>Altar");
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class Runes implements ClickComparable
 	public boolean isClickValid(MenuEntry event)
 	{
 		return (event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getTarget().equals(rune)) ||
-				(event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getTarget().equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"));
+			(event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getTarget().equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"));
 	}
 
 	@Override
@@ -61,9 +61,7 @@ public class Runes implements ClickComparable
 				event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			}
 		}
-
 		else if (event.getTarget().equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
-
 		{
 			event.setIdentifier(1);
 			event.setOpcode(MenuOpcode.CC_OP.getId());
