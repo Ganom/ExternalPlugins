@@ -11,20 +11,8 @@ import lombok.Getter;
 import static net.runelite.api.ItemID.AIR_RUNE;
 import static net.runelite.api.ItemID.EARTH_RUNE;
 import static net.runelite.api.ItemID.WATER_RUNE;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Birdhouses;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Blank;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Bones;
-import net.runelite.client.plugins.externals.oneclick.Comparables.ClickComparable;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Compost;
-import net.runelite.client.plugins.externals.oneclick.Comparables.DarkEssence;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Darts;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Firemaking;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Healer;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Herbtar;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Karambwans;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Runes;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Seeds;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Tiara;
+
+import net.runelite.client.plugins.externals.oneclick.Comparables.*;
 
 @AllArgsConstructor
 @Getter
@@ -45,6 +33,7 @@ public enum Types
 	TIARA("Tiara", new Tiara()),
 	SPELL("Spell Casting", new Blank()),
 	BA_HEALER("BA Healer", new Healer()),
+	FARMING_HERBS("Herb Patches", new Farming()),
 	NONE("None", new Blank());
 
 	private String name;
