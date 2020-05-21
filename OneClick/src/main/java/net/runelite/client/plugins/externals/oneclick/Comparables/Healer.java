@@ -11,10 +11,10 @@ import net.runelite.client.plugins.externals.oneclick.OneClickPlugin;
 public class Healer implements ClickComparable
 {
 	private static final ImmutableMap<String, Integer> ITEMS = ImmutableMap.<String, Integer>builder()
-		.put("Pois. Worms", ItemID.POISONED_WORMS)
-		.put("Pois. Tofu", ItemID.POISONED_TOFU)
-		.put("Pois. Meat", ItemID.POISONED_MEAT)
-		.build();
+			.put("Pois. Worms", ItemID.POISONED_WORMS)
+			.put("Pois. Tofu", ItemID.POISONED_TOFU)
+			.put("Pois. Meat", ItemID.POISONED_MEAT)
+			.build();
 
 	@Override
 	public boolean isEntryValid(MenuEntry event)
@@ -26,9 +26,9 @@ public class Healer implements ClickComparable
 	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
 	{
 		if (plugin.getRoleText() == null ||
-			plugin.getRoleText().isBlank() ||
-			plugin.getRoleText().isEmpty() ||
-			plugin.getRoleText().equals("- - -"))
+				plugin.getRoleText().isBlank() ||
+				plugin.getRoleText().isEmpty() ||
+				plugin.getRoleText().equals("- - -"))
 		{
 			return;
 		}

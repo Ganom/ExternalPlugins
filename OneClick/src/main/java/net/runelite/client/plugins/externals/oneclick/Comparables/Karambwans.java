@@ -11,7 +11,7 @@ public class Karambwans implements ClickComparable
 	public boolean isEntryValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			event.getOption().equals("Cook");
+				event.getOption().equals("Cook");
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class Karambwans implements ClickComparable
 	public boolean isClickValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			event.getTarget().contains("<col=ff9040>Raw karambwan<col=ffffff> -> ");
+				event.getTarget().contains("<col=ff9040>Raw karambwan<col=ffffff> -> ");
 	}
 
 	@Override

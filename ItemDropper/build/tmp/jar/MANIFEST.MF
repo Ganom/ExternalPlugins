@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Plugin-Version: 5.11.0
+Plugin-Id: itemdropper-plugin
+Plugin-Provider: Ganom
+Plugin-Dependencies: extutils-plugin
+Plugin-Description: Drops Items.
+Plugin-License: GNU General Public License v3.0
+

@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Plugin-Version: 5.11.0
+Plugin-Id: leftclickcast-plugin
+Plugin-Provider: Ganom
+Plugin-Description: Casting made even easier.
+Plugin-License: GNU General Public License v3.0
+

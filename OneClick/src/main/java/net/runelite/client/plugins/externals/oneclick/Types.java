@@ -32,30 +32,30 @@ import static net.runelite.api.ItemID.WATER_RUNE;
 @Getter
 public enum Types
 {
-    COMPOST("Compost", new Compost()),
-    DARTS("Darts", new Darts()),
-    FIREMAKING("Firemaking", new Firemaking()),
-    BIRDHOUSES("Birdhouses", new Birdhouses()),
-    HERB_TAR("Herb Tar", new Herbtar()),
-    LAVA_RUNES("Lava Runes", new Runes("Earth rune", EARTH_RUNE)),
-    STEAM_RUNES("Steam Runes", new Runes("Water rune", WATER_RUNE)),
-    SMOKE_RUNES("Smoke Runes", new Runes("Air rune", AIR_RUNE)),
-    BONES("Bones", new Bones()),
-    KARAMBWANS("Karambwans", new Karambwans()),
-    DARK_ESSENCE("Dark Essence", new DarkEssence()),
-    SEED_SET("Tithe Farm", new Seeds()),
-    TIARA("Tiara", new Tiara()),
-    SPELL("Spell Casting", new Blank()),
-    BA_HEALER("BA Healer", new Healer()),
-    FARMING_HERBS("Herb Patches", new Farming()),
-    NONE("None", new Blank());
+	COMPOST("Compost", new Compost()),
+	DARTS("Darts", new Darts()),
+	FIREMAKING("Firemaking", new Firemaking()),
+	BIRDHOUSES("Birdhouses", new Birdhouses()),
+	HERB_TAR("Herb Tar", new Herbtar()),
+	LAVA_RUNES("Lava Runes", new Runes("Earth rune", EARTH_RUNE)),
+	STEAM_RUNES("Steam Runes", new Runes("Water rune", WATER_RUNE)),
+	SMOKE_RUNES("Smoke Runes", new Runes("Air rune", AIR_RUNE)),
+	BONES("Bones", new Bones()),
+	KARAMBWANS("Karambwans", new Karambwans()),
+	DARK_ESSENCE("Dark Essence", new DarkEssence()),
+	SEED_SET("Tithe Farm", new Seeds()),
+	TIARA("Tiara", new Tiara()),
+	SPELL("Spell Casting", new Blank()),
+	BA_HEALER("BA Healer", new Healer()),
+	FARMING_HERBS("Herb Patches", new Farming()),
+	NONE("None", new Blank());
 
-    private String name;
-    private ClickComparable comparable;
+	private String name;
+	private ClickComparable comparable;
 
-    @Override
-    public String toString()
-    {
-        return getName();
-    }
+	@Override
+	public String toString()
+	{
+		return getName();
+	}
 }
