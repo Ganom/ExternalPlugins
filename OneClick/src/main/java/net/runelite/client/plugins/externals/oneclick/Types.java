@@ -30,21 +30,21 @@ import net.runelite.client.plugins.externals.oneclick.Comparables.Tiara;
 @Getter
 public enum Types
 {
+	BA_HEALER("BA Healer", new Healer()),
+	BIRDHOUSES("Birdhouses", new Birdhouses()),
+	BONES("Bones", new Bones()),
 	COMPOST("Compost", new Compost()),
+	DARK_ESSENCE("Dark Essence", new DarkEssence()),
 	DARTS("Darts", new Darts()),
 	FIREMAKING("Firemaking", new Firemaking()),
-	BIRDHOUSES("Birdhouses", new Birdhouses()),
 	HERB_TAR("Herb Tar", new Herbtar()),
-	LAVA_RUNES("Lava Runes", new Runes("Earth rune", EARTH_RUNE)),
-	STEAM_RUNES("Steam Runes", new Runes("Water rune", WATER_RUNE)),
-	SMOKE_RUNES("Smoke Runes", new Runes("Air rune", AIR_RUNE)),
-	BONES("Bones", new Bones()),
 	KARAMBWANS("Karambwans", new Karambwans()),
-	DARK_ESSENCE("Dark Essence", new DarkEssence()),
+	LAVA_RUNES("Lava Runes", new Runes("Earth rune", EARTH_RUNE)),
 	SEED_SET("Tithe Farm", new Seeds()),
-	TIARA("Tiara", new Tiara()),
+	SMOKE_RUNES("Smoke Runes", new Runes("Air rune", AIR_RUNE)),
 	SPELL("Spell Casting", new Blank()),
-	BA_HEALER("BA Healer", new Healer()),
+	STEAM_RUNES("Steam Runes", new Runes("Water rune", WATER_RUNE)),
+	TIARA("Tiara", new Tiara()),
 	NONE("None", new Blank());
 
 	private String name;
