@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "5.11.0"
+version = "5.12.0"
 
 project.extra["PluginName"] = "AutoPrayFlick"
 project.extra["PluginDescription"] = "Use plugin in PvP situations for best results."

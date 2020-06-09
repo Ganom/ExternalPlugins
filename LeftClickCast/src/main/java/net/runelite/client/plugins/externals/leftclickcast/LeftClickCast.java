@@ -31,6 +31,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.game.ClanManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -51,12 +52,18 @@ public class LeftClickCast extends Plugin
 {
 	@Inject
 	private Client client;
+
 	@Inject
 	private EventBus eventBus;
+
 	@Inject
 	private LeftClickConfig config;
+
 	@Inject
 	private KeyManager keyManager;
+
+	@Inject
+	private ClanManager clanManager;
 
 	private final Set<Integer> whitelist = new HashSet<>();
 
@@ -184,7 +191,7 @@ public class LeftClickCast extends Plugin
 			final String name = Text.standardize(event.getTarget(), true);
 
 			if (!config.disableFriendlyRegionChecks() && (client.getVar(Varbits.LMS_IN_GAME) == 0 && (client.isFriended(name, false) ||
-				client.isClanMember(name))))
+				clanManager.isClanMember(name))))
 			{
 				return;
 			}
@@ -239,7 +246,7 @@ public class LeftClickCast extends Plugin
 			final String name = Text.standardize(event.getTarget(), true);
 
 			if (!config.disableFriendlyRegionChecks() && (client.getVar(Varbits.LMS_IN_GAME) == 0 && (client.isFriended(name, false) ||
-				client.isClanMember(name))))
+				clanManager.isClanMember(name))))
 			{
 				return;
 			}
@@ -352,7 +359,6 @@ public class LeftClickCast extends Plugin
 		client.setSelectedSpellWidget(widget.getId());
 		client.setSelectedSpellChildIndex(-1);
 	}
-
 
 	/**
 	 * This method is not ideal, as its going to create a ton of junk

@@ -63,7 +63,7 @@ public class Anonymizer extends Plugin
 	}
 
 	@Subscribe
-	public void OverheadTextChanged(OverheadTextChanged event)
+	public void onOverheadTextChanged(OverheadTextChanged event)
 	{
 		String oh = event.getOverheadText();
 
