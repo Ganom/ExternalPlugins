@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "5.14.0"
+version = "5.15.0"
 
 project.extra["PluginName"] = "BasicBossSwapper"
 project.extra["PluginDescription"] = "Does stuff and things."

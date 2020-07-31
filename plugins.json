@@ -26,6 +26,13 @@
         "version": "5.16.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/Anonymizer-5.16.0.jar?raw=true",
         "requires": "0.0.1"
+      },
+      {
+        "date": "2020-07-31",
+        "sha512sum": "DBF037735E6C078BA9CFC0F4F5BAAA1F597251EB70321E163FD1D3E30996CD9EA2A19368B24FD5C876D411093BCFB46DD5F167BB07385D11ADF522C027313449",
+        "version": "5.17.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/Anonymizer-5.17.0.jar?raw=true",
+        "requires": "0.0.1"
       }
     ]
   },
@@ -55,6 +62,13 @@
         "sha512sum": "5F1F846C708A41FB0CF9A5C7CADB8C8B98E45E36D6AB2F6078A274D480E7F0AE15F27712974EFA542B080B24D50AE0EF47EBFBE11842CE525F9324B4056AB3DE",
         "version": "5.14.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoClicker-5.14.0.jar?raw=true",
+        "requires": "0.0.1"
+      },
+      {
+        "date": "2020-07-31",
+        "sha512sum": "4DB24C2C50D47011175CB5AF27FFF4A893663D373EFC6BF14587371C7763FDE7316EB55A855BD08D9E4F51838DC3AC45C8296F950AB283A56FE173AB29499130",
+        "version": "5.15.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoClicker-5.15.0.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -86,6 +100,13 @@
         "version": "5.13.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoPrayFlick-5.13.0.jar?raw=true",
         "requires": "0.0.1"
+      },
+      {
+        "date": "2020-07-31",
+        "sha512sum": "3C52FEA4845617321C25F46FAFC249217F9EF7675AA2C3455ECD228C55A03995F4A59C6BA6B449117A95B8930FD90687E167FF192379B9614EAC6EBDC501546F",
+        "version": "5.14.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoPrayFlick-5.14.0.jar?raw=true",
+        "requires": "0.0.1"
       }
     ]
   },
@@ -115,6 +136,13 @@
         "sha512sum": "499B9D887C5B56B256001ACC521C2FC1EAA2D94448F391D2352A84D8BD46BA0821203F85180215217368DA268BDD92C04DC92F63EC8F2F008B322FEAC7D99CF8",
         "version": "5.14.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/BossSwapper-5.14.0.jar?raw=true",
+        "requires": "0.0.1"
+      },
+      {
+        "date": "2020-07-31",
+        "sha512sum": "3F75B9927004091B869503692B735022A068EED4C10C49781474B30829E1F33921A0AE447860BE6A619D3DE8278C983A1E1C0A38FE5FC3B0C271E6D6EE44B970",
+        "version": "5.15.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/BossSwapper-5.15.0.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -146,6 +174,13 @@
         "version": "5.14.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/CustomSwapper-5.14.0.jar?raw=true",
         "requires": "0.0.1"
+      },
+      {
+        "date": "2020-07-31",
+        "sha512sum": "C6CD49601927BF69EACC13F164C16BDA241163EEE851C163E7846F752982AA541C71E59218871F5713B26DFB6996B07488459496B1A09A183F7EAB57422D58DE",
+        "version": "5.15.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/CustomSwapper-5.15.0.jar?raw=true",
+        "requires": "0.0.1"
       }
     ]
   },
@@ -175,6 +210,13 @@
         "sha512sum": "84F2B1DEEC7793960320120F4729F627A7228F1E467AA466833022FEA24E21AC6CCD9097479D7C2CF5E7D8FF7F9206F180260ADEA7C6BA37FF68D611DA074E60",
         "version": "5.13.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/ExtUtils-5.13.0.jar?raw=true",
+        "requires": "0.0.1"
+      },
+      {
+        "date": "2020-07-31",
+        "sha512sum": "32B39D574BA6598BF52D7170D134F513701AB6CB4D8E91A1B561228D3B0A07674316AC0579205B172C888B56BA54F7BE14D9C533D3C4C757E7ACC53E995B7CF1",
+        "version": "5.14.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/ExtUtils-5.14.0.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -206,6 +248,13 @@
         "version": "5.13.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/ItemDropper-5.13.0.jar?raw=true",
         "requires": "0.0.1"
+      },
+      {
+        "date": "2020-07-31",
+        "sha512sum": "C1FBB350A14C3C758F93BB3B8B37213AFA793886B4D5AC4CB3C5E32E580F813578C4B4978689C8CC4D54C2179371759FE9FD8CB2D4E5D556A62C6B7D0DA9AA61",
+        "version": "5.14.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/ItemDropper-5.14.0.jar?raw=true",
+        "requires": "0.0.1"
       }
     ]
   },
@@ -235,6 +284,13 @@
         "sha512sum": "B3737933EB9076C29902AEC2885D9CD66962DBADFB8930F4BB4C314FE50B6BBCEB5E9F3837D9550FBC619AD2A5ADB4C29535C836449A5F334F5C50E28B452D70",
         "version": "5.13.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/LeftClickCast-5.13.0.jar?raw=true",
+        "requires": "0.0.1"
+      },
+      {
+        "date": "2020-07-31",
+        "sha512sum": "BB2DF570180D09F5DEC88DD247D51E585CF6FD14C4DE20869C6661897AE0BFE3D0AF9347867B90E4C9BDB21D440579929A2E5A7365DB0B4CE049A47DBD4DC93D",
+        "version": "5.14.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/LeftClickCast-5.14.0.jar?raw=true",
         "requires": "0.0.1"
       }
     ]
@@ -266,6 +322,13 @@
         "version": "5.13.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/NeverLog-5.13.0.jar?raw=true",
         "requires": "0.0.1"
+      },
+      {
+        "date": "2020-07-31",
+        "sha512sum": "A1676242ECE52CF7C643F5DEDBA12C995494F8DEDF7D1C97247DB7771BC800F8D35FABC968274969A9281297D1CB478DD3B8F427B8536A4A66E6887A19B4FBB3",
+        "version": "5.14.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/NeverLog-5.14.0.jar?raw=true",
+        "requires": "0.0.1"
       }
     ]
   },
@@ -295,6 +358,13 @@
         "sha512sum": "866434FF9A036012688005495316D4E98920D9F389DA87698E0B06483E557EE36953FAE5C16B19ABBC1769007C355D56D4F99A156B5AD1DBB39B29A4F074F5EF",
         "version": "5.13.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/OneClick-5.13.0.jar?raw=true",
+        "requires": "0.0.1"
+      },
+      {
+        "date": "2020-07-31",
+        "sha512sum": "10DCE42F79733EAF0E927316A009471C5F0F7A996DF8CC92DC65FF97E211463616C549AF265F760A61DF7499DA838F1E4F8F08E56CFE22D4969F3AAD144B45E3",
+        "version": "5.14.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/OneClick-5.14.0.jar?raw=true",
         "requires": "0.0.1"
       }
     ]

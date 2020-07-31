@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "5.16.0"
+version = "5.17.0"
 
 project.extra["PluginName"] = "Anonymizer"
 project.extra["PluginDescription"] = "Anonymizes your rsn and others."

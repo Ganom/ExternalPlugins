@@ -467,6 +467,11 @@ public class CustomSwapper extends Plugin
 	{
 		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
 
+		if (inventoryWidget == null)
+		{
+			return null;
+		}
+
 		for (WidgetItem item : inventoryWidget.getWidgetItems())
 		{
 			if (item.getId() == id)
@@ -483,6 +488,11 @@ public class CustomSwapper extends Plugin
 		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
 		final List<Rectangle> bounds = new ArrayList<>();
 
+		if (inventoryWidget == null)
+		{
+			return bounds;
+		}
+
 		for (WidgetItem item : inventoryWidget.getWidgetItems())
 		{
 			if (item.getId() == id)
@@ -497,6 +507,11 @@ public class CustomSwapper extends Plugin
 	private Rectangle equipBounds(int id)
 	{
 		final Widget equipmentWidget = client.getWidget(WidgetInfo.EQUIPMENT);
+
+		if (equipmentWidget == null)
+		{
+			return null;
+		}
 
 		if (equipmentWidget.getStaticChildren() == null)
 		{
