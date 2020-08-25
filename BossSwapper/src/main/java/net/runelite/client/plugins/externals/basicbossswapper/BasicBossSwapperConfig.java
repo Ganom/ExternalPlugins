@@ -86,11 +86,11 @@ public interface BasicBossSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-			position = 1,
-			keyName = "ticksToWaitToSwapOlm",
-			name = "Ticks to Wait To Pray Switch",
-			description = "How many ticks to wait before switching prayers.",
-			titleSection = "olmConfig"
+		position = 1,
+		keyName = "ticksToWaitToSwapOlm",
+		name = "Ticks to Wait To Pray Switch",
+		description = "How many ticks to wait before switching prayers.",
+		titleSection = "olmConfig"
 	)
 	default int ticksToWaitToSwapOlm()
 	{
@@ -99,10 +99,10 @@ public interface BasicBossSwapperConfig extends Config
 
 
 	@ConfigTitleSection(
-			position = 2,
-			keyName = "verzikConfig",
-			name = "Verzik Config",
-			description = ""
+		position = 2,
+		keyName = "verzikConfig",
+		name = "Verzik Config",
+		description = ""
 	)
 	default Title verzikConfig()
 	{
@@ -110,11 +110,11 @@ public interface BasicBossSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-			position = 0,
-			keyName = "swapAutos",
-			name = "Swap on Auto Attacks",
-			description = "This will swap prayers for verzik's auto attacks as-well.",
-			titleSection = "verzikConfig"
+		position = 0,
+		keyName = "swapAutos",
+		name = "Swap on Auto Attacks",
+		description = "This will swap prayers for verzik's auto attacks as-well.",
+		titleSection = "verzikConfig"
 	)
 	default boolean swapAutosVerzik()
 	{
@@ -122,11 +122,11 @@ public interface BasicBossSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-			position = 1,
-			keyName = "ticksToWaitToSwapVerzik",
-			name = "Ticks to Wait To Pray Switch",
-			description = "How many ticks to wait before switching prayers.",
-			titleSection = "verzikConfig"
+		position = 1,
+		keyName = "ticksToWaitToSwapVerzik",
+		name = "Ticks to Wait To Pray Switch",
+		description = "How many ticks to wait before switching prayers.",
+		titleSection = "verzikConfig"
 	)
 	default int ticksToWaitToSwapVerzik()
 	{

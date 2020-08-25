@@ -153,7 +153,7 @@ public class BasicBossSwapper extends Plugin
 			swapMelee = false;
 		}
 
-		if(timeout != 0)
+		if (timeout != 0)
 		{
 			timeout--;
 		}
