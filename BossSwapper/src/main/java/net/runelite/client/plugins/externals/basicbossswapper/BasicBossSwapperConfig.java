@@ -85,8 +85,56 @@ public interface BasicBossSwapperConfig extends Config
 		return false;
 	}
 
+	@ConfigItem(
+			position = 1,
+			keyName = "ticksToWaitToSwapOlm",
+			name = "Ticks to Wait To Pray Switch",
+			description = "How many ticks to wait before switching prayers.",
+			titleSection = "olmConfig"
+	)
+	default int ticksToWaitToSwapOlm()
+	{
+		return 0;
+	}
+
+
 	@ConfigTitleSection(
-		position = 2,
+			position = 2,
+			keyName = "verzikConfig",
+			name = "Verzik Config",
+			description = ""
+	)
+	default Title verzikConfig()
+	{
+		return new Title();
+	}
+
+	@ConfigItem(
+			position = 0,
+			keyName = "swapAutos",
+			name = "Swap on Auto Attacks",
+			description = "This will swap prayers for verzik's auto attacks as-well.",
+			titleSection = "verzikConfig"
+	)
+	default boolean swapAutosVerzik()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+			position = 1,
+			keyName = "ticksToWaitToSwapVerzik",
+			name = "Ticks to Wait To Pray Switch",
+			description = "How many ticks to wait before switching prayers.",
+			titleSection = "verzikConfig"
+	)
+	default int ticksToWaitToSwapVerzik()
+	{
+		return 0;
+	}
+
+	@ConfigTitleSection(
+		position = 3,
 		keyName = "nyloConfig",
 		name = "Nylo Config",
 		description = ""

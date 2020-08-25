@@ -88,6 +88,7 @@ public class BasicBossSwapper extends Plugin
 	private NPC nylo;
 	private boolean run;
 	private int prevNylo;
+	private int timeout = 0;
 
 	@Provides
 	BasicBossSwapperConfig getConfig(ConfigManager configManager)
@@ -121,6 +122,7 @@ public class BasicBossSwapper extends Plugin
 		executor = Executors.newSingleThreadExecutor();
 		keyManager.registerKeyListener(toggle);
 		robot = new Robot();
+		timeout = 0;
 	}
 
 	@Override
@@ -129,25 +131,31 @@ public class BasicBossSwapper extends Plugin
 		executor.shutdown();
 		keyManager.unregisterKeyListener(toggle);
 		robot = null;
+		timeout = 0;
 	}
 
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
-		if (swapMage)
+		if (swapMage && timeout == 0)
 		{
 			clickPrayer(Prayer.PROTECT_FROM_MAGIC);
 			swapMage = false;
 		}
-		else if (swapRange)
+		else if (swapRange && timeout == 0)
 		{
 			clickPrayer(Prayer.PROTECT_FROM_MISSILES);
 			swapRange = false;
 		}
-		else if (swapMelee)
+		else if (swapMelee && timeout == 0)
 		{
 			clickPrayer(Prayer.PROTECT_FROM_MELEE);
 			swapMelee = false;
+		}
+
+		if(timeout != 0)
+		{
+			timeout--;
 		}
 
 		if (nylo != null && run)
@@ -202,14 +210,17 @@ public class BasicBossSwapper extends Plugin
 		if (msg.startsWith(MAGE))
 		{
 			swapMage = true;
+			timeout = config.ticksToWaitToSwapOlm();
 		}
 		else if (msg.startsWith(RANGE))
 		{
 			swapRange = true;
+			timeout = config.ticksToWaitToSwapOlm();
 		}
 		else if (msg.startsWith(MELEE))
 		{
 			swapMelee = true;
+			timeout = config.ticksToWaitToSwapOlm();
 		}
 	}
 
@@ -229,24 +240,28 @@ public class BasicBossSwapper extends Plugin
 				if (config.swapAutos() && !client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
 				{
 					swapMage = true;
+					timeout = config.ticksToWaitToSwapOlm();
 				}
 				break;
 			case 1594:
-				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
+				if (config.swapAutosVerzik() && !client.isPrayerActive(Prayer.PROTECT_FROM_MAGIC))
 				{
 					swapMage = true;
+					timeout = config.ticksToWaitToSwapVerzik();
 				}
 				break;
 			case 1340:
 				if (config.swapAutos() && !client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
 				{
 					swapRange = true;
+					timeout = config.ticksToWaitToSwapOlm();
 				}
 				break;
 			case 1593:
-				if (!client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
+				if (config.swapAutosVerzik() && !client.isPrayerActive(Prayer.PROTECT_FROM_MISSILES))
 				{
 					swapRange = true;
+					timeout = config.ticksToWaitToSwapVerzik();
 				}
 				break;
 		}
