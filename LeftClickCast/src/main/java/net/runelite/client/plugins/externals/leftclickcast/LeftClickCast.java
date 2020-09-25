@@ -320,7 +320,7 @@ public class LeftClickCast extends Plugin
 		for (Item item : ic.getItems())
 		{
 			final String name = client.getItemDefinition(item.getId()).getName().toLowerCase();
-			if (name.contains("staff") || name.contains("wand"))
+			if (name.contains("staff") || name.contains("wand") || name.contains("sceptre") || name.contains("trident"))
 			{
 				isMage = true;
 				break;
