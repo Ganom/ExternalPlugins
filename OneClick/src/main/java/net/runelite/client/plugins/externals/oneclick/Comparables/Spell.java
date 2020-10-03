@@ -21,7 +21,7 @@ public class Spell implements ClickComparable
 	{
 		this.spell = spell;
 		this.cast = (event) -> event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-			event.getOption().equals("Cast") &&
+			(event.getOption().equals("Cast") || event.getOption().equals("Reanimate")) &&
 			event.getTarget().contains("<col=00ff00>" + spell + "</col><col=ffffff> -> ");
 		this.reset = (event) -> event.getOpcode() == MenuOpcode.RUNELITE.getId() &&
 			event.getIdentifier() == -1;
@@ -32,7 +32,7 @@ public class Spell implements ClickComparable
 	public boolean isEntryValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-			event.getOption().equals("Cast") &&
+			(event.getOption().equals("Cast") || event.getOption().equals("Reanimate")) &&
 			event.getTarget().equals("<col=00ff00>" + spell + "</col>");
 	}
 
@@ -44,7 +44,6 @@ public class Spell implements ClickComparable
 			return;
 		}
 
-		event.setOption("Cast");
 		event.setTarget("<col=00ff00>" + spell + "</col>" + "<col=ffffff> -> " + plugin.getClickItem().getName());
 		event.setForceLeftClick(true);
 	}
@@ -86,5 +85,11 @@ public class Spell implements ClickComparable
 			final String itemName = event.getTarget().split("->")[1];
 			plugin.setClickItem(new ClickItem(itemName, event.getIdentifier()));
 		}
+	}
+
+	@Override
+	public String toString()
+	{
+		return spell;
 	}
 }

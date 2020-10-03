@@ -23,9 +23,6 @@ import net.runelite.api.GameState;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
 import static net.runelite.api.MenuOpcode.MENU_ACTION_DEPRIORITIZE_OFFSET;
-import net.runelite.api.Skill;
-import net.runelite.api.SpriteID;
-import net.runelite.api.Varbits;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
@@ -194,107 +191,10 @@ public class OneClickPlugin extends Plugin
 		{
 			final Widget spell = client.getWidget(spellSelection.getWidgetInfo());
 
-			if (spell == null)
+			if (spell == null || !spellSelection.isValid(spell, client))
 			{
+				clickItem = null;
 				return;
-			}
-
-			switch (spellSelection)
-			{
-				case HIGH_ALCH:
-					if (spell.getSpriteId() != SpriteID.SPELL_HIGH_LEVEL_ALCHEMY ||
-						spell.getSpriteId() == SpriteID.SPELL_HIGH_LEVEL_ALCHEMY_DISABLED ||
-						client.getBoostedSkillLevel(Skill.MAGIC) < 55 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
-					{
-						clickItem = null;
-						return;
-					}
-					break;
-				case SUPERHEAT:
-					if (spell.getSpriteId() != SpriteID.SPELL_SUPERHEAT_ITEM ||
-						spell.getSpriteId() == SpriteID.SPELL_SUPERHEAT_ITEM_DISABLED ||
-						client.getBoostedSkillLevel(Skill.MAGIC) < 43 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
-					{
-						clickItem = null;
-						return;
-					}
-					break;
-				case ENCHANT_SAPPHIRE:
-					if (spell.getSpriteId() != SpriteID.SPELL_LVL_1_ENCHANT ||
-						spell.getSpriteId() == SpriteID.SPELL_LVL_1_ENCHANT_DISABLED ||
-						client.getBoostedSkillLevel(Skill.MAGIC) < 7 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
-					{
-						clickItem = null;
-						return;
-					}
-					break;
-				case ENCHANT_EMERALD:
-					if (spell.getSpriteId() != SpriteID.SPELL_LVL_2_ENCHANT ||
-						spell.getSpriteId() == SpriteID.SPELL_LVL_2_ENCHANT_DISABLED ||
-						client.getBoostedSkillLevel(Skill.MAGIC) < 27 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
-					{
-						clickItem = null;
-						return;
-					}
-					break;
-				case ENCHANT_RUBY:
-					if (spell.getSpriteId() != SpriteID.SPELL_LVL_3_ENCHANT ||
-						spell.getSpriteId() == SpriteID.SPELL_LVL_3_ENCHANT_DISABLED ||
-						client.getBoostedSkillLevel(Skill.MAGIC) < 49 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
-					{
-						clickItem = null;
-						return;
-					}
-					break;
-				case ENCHANT_DIAMOND:
-					if (spell.getSpriteId() != SpriteID.SPELL_LVL_4_ENCHANT ||
-						spell.getSpriteId() == SpriteID.SPELL_LVL_4_ENCHANT_DISABLED ||
-						client.getBoostedSkillLevel(Skill.MAGIC) < 57 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
-					{
-						clickItem = null;
-						return;
-					}
-					break;
-				case ENCHANT_DRAGONSTONE:
-					if (spell.getSpriteId() != SpriteID.SPELL_LVL_5_ENCHANT ||
-						spell.getSpriteId() == SpriteID.SPELL_LVL_5_ENCHANT_DISABLED ||
-						client.getBoostedSkillLevel(Skill.MAGIC) < 68 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
-					{
-						clickItem = null;
-						return;
-					}
-					break;
-				case ENCHANT_ONYX:
-					if (spell.getSpriteId() != SpriteID.SPELL_LVL_6_ENCHANT ||
-						spell.getSpriteId() == SpriteID.SPELL_LVL_6_ENCHANT_DISABLED ||
-						client.getBoostedSkillLevel(Skill.MAGIC) < 87 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
-					{
-						clickItem = null;
-						return;
-					}
-					break;
-				case ENCHANT_ZENYTE:
-					if (spell.getSpriteId() != SpriteID.SPELL_LVL_7_ENCHANT ||
-						spell.getSpriteId() == SpriteID.SPELL_LVL_7_ENCHANT_DISABLED ||
-						client.getBoostedSkillLevel(Skill.MAGIC) < 93 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
-					{
-						clickItem = null;
-						return;
-					}
-					break;
-				default:
-					clickItem = null;
-					break;
-
 			}
 
 			final int itemId = firstEntry.getIdentifier();
@@ -321,38 +221,7 @@ public class OneClickPlugin extends Plugin
 			final MenuEntry setTargetItem = new MenuEntry();
 			final boolean set = clickItem != null && clickItem.getId() == firstEntry.getIdentifier();
 			setTargetItem.setOption(set ? "Unset" : "Set");
-
-			switch (spellSelection)
-			{
-				case HIGH_ALCH:
-					setTargetItem.setTarget("<col=00ff00>High Alchemy Item <col=ffffff> -> " + firstEntry.getTarget());
-					break;
-				case SUPERHEAT:
-					setTargetItem.setTarget("<col=00ff00>Superheat Item <col=ffffff> -> " + firstEntry.getTarget());
-					break;
-				case ENCHANT_SAPPHIRE:
-					setTargetItem.setTarget("<col=00ff00>Lvl-1 Enchant <col=ffffff> -> " + firstEntry.getTarget());
-					break;
-				case ENCHANT_EMERALD:
-					setTargetItem.setTarget("<col=00ff00>Lvl-2 Enchant <col=ffffff> -> " + firstEntry.getTarget());
-					break;
-				case ENCHANT_RUBY:
-					setTargetItem.setTarget("<col=00ff00>Lvl-3 Enchant <col=ffffff> -> " + firstEntry.getTarget());
-					break;
-				case ENCHANT_DIAMOND:
-					setTargetItem.setTarget("<col=00ff00>Lvl-4 Enchant <col=ffffff> -> " + firstEntry.getTarget());
-					break;
-				case ENCHANT_DRAGONSTONE:
-					setTargetItem.setTarget("<col=00ff00>Lvl-5 Enchant <col=ffffff> -> " + firstEntry.getTarget());
-					break;
-				case ENCHANT_ONYX:
-					setTargetItem.setTarget("<col=00ff00>Lvl-6 Enchant <col=ffffff> -> " + firstEntry.getTarget());
-					break;
-				case ENCHANT_ZENYTE:
-					setTargetItem.setTarget("<col=00ff00>Lvl-7 Enchant <col=ffffff> -> " + firstEntry.getTarget());
-					break;
-			}
-
+			setTargetItem.setTarget(String.format("<col=00ff00>%s <col=ffffff> -> %s", spellSelection.getComparable(), firstEntry.getTarget()));
 			setTargetItem.setIdentifier(set ? -1 : firstEntry.getIdentifier());
 			setTargetItem.setOpcode(MenuOpcode.RUNELITE.getId());
 			setTargetItem.setParam1(widgetId);
