@@ -1,11 +1,11 @@
-package net.runelite.client.plugins.externals.oneclick.Comparables;
+package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
-import net.runelite.client.plugins.externals.oneclick.OneClickPlugin;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
-public class DarkEssence implements ClickComparable
+public class DarkEssence extends ClickCompare
 {
 	@Override
 	public boolean isEntryValid(MenuEntry event)
@@ -15,15 +15,17 @@ public class DarkEssence implements ClickComparable
 	}
 
 	@Override
-	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
+	public void modifyEntry(MenuEntry event)
 	{
-		if (plugin.findItem(ItemID.DARK_ESSENCE_BLOCK).getLeft() == -1)
+		if (findItem(ItemID.DARK_ESSENCE_BLOCK).getLeft() == -1)
 		{
 			return;
 		}
 
-		event.setTarget("<col=ff9040>Chisel<col=ffffff> -> <col=ff9040>Dark essence block");
-		event.setForceLeftClick(true);
+		MenuEntry e = event.clone();
+		e.setTarget("<col=ff9040>Chisel<col=ffffff> -> <col=ff9040>Dark essence block");
+		e.setForceLeftClick(true);
+		insert(e);
 	}
 
 	@Override
@@ -34,9 +36,9 @@ public class DarkEssence implements ClickComparable
 	}
 
 	@Override
-	public void modifyClick(OneClickPlugin plugin, MenuEntry event)
+	public void modifyClick(MenuEntry event)
 	{
-		if (plugin.updateSelectedItem(ItemID.DARK_ESSENCE_BLOCK))
+		if (updateSelectedItem(ItemID.DARK_ESSENCE_BLOCK))
 		{
 			event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 		}

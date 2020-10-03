@@ -1,13 +1,13 @@
-package net.runelite.client.plugins.externals.oneclick.Comparables;
+package net.runelite.client.plugins.externals.oneclick.comparables.misc;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
-import net.runelite.client.plugins.externals.oneclick.OneClickPlugin;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
-public class Herbtar implements ClickComparable
+public class Herbtar extends ClickCompare
 {
 	private static final Set<Integer> HERBS = ImmutableSet.of(
 		ItemID.GUAM_LEAF, ItemID.MARRENTILL, ItemID.TARROMIN, ItemID.HARRALANDER
@@ -21,16 +21,18 @@ public class Herbtar implements ClickComparable
 	}
 
 	@Override
-	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
+	public void modifyEntry(MenuEntry event)
 	{
-		if (plugin.findItem(ItemID.SWAMP_TAR).getLeft() == -1 ||
-			plugin.findItem(ItemID.PESTLE_AND_MORTAR).getLeft() == -1
+		if (findItem(ItemID.SWAMP_TAR).getLeft() == -1 ||
+			findItem(ItemID.PESTLE_AND_MORTAR).getLeft() == -1
 		)
 		{
 			return;
 		}
-		event.setTarget("<col=ff9040>Swamp tar<col=ffffff> -> " + plugin.getTargetMap().get(event.getIdentifier()));
-		event.setForceLeftClick(true);
+		MenuEntry e = event.clone();
+		e.setTarget("<col=ff9040>Swamp tar<col=ffffff> -> " + getTargetMap().get(event.getIdentifier()));
+		e.setForceLeftClick(true);
+		insert(e);
 	}
 
 	@Override
@@ -41,9 +43,9 @@ public class Herbtar implements ClickComparable
 	}
 
 	@Override
-	public void modifyClick(OneClickPlugin plugin, MenuEntry event)
+	public void modifyClick(MenuEntry event)
 	{
-		if (plugin.updateSelectedItem(ItemID.SWAMP_TAR))
+		if (updateSelectedItem(ItemID.SWAMP_TAR))
 		{
 			event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 		}

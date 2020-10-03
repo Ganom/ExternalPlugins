@@ -1,11 +1,11 @@
-package net.runelite.client.plugins.externals.oneclick.Comparables;
+package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
-import net.runelite.client.plugins.externals.oneclick.OneClickPlugin;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
-public class Karambwans implements ClickComparable
+public class Karambwans extends ClickCompare
 {
 	@Override
 	public boolean isEntryValid(MenuEntry event)
@@ -15,16 +15,17 @@ public class Karambwans implements ClickComparable
 	}
 
 	@Override
-	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
+	public void modifyEntry(MenuEntry event)
 	{
-
-		if (plugin.findItem(ItemID.RAW_KARAMBWAN).getLeft() == -1)
+		if (findItem(ItemID.RAW_KARAMBWAN).getLeft() == -1)
 		{
 			return;
 		}
-		event.setOption("Use");
-		event.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + event.getTarget());
-		event.setForceLeftClick(true);
+		MenuEntry e = event.clone();
+		e.setOption("Use");
+		e.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + event.getTarget());
+		e.setForceLeftClick(true);
+		insert(e);
 	}
 
 	@Override
@@ -35,9 +36,9 @@ public class Karambwans implements ClickComparable
 	}
 
 	@Override
-	public void modifyClick(OneClickPlugin plugin, MenuEntry event)
+	public void modifyClick(MenuEntry event)
 	{
-		if (plugin.updateSelectedItem(ItemID.RAW_KARAMBWAN))
+		if (updateSelectedItem(ItemID.RAW_KARAMBWAN) && plugin != null)
 		{
 			event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			plugin.setTick(true);

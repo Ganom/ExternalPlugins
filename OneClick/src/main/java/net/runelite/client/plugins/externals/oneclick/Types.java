@@ -11,20 +11,20 @@ import lombok.Getter;
 import static net.runelite.api.ItemID.AIR_RUNE;
 import static net.runelite.api.ItemID.EARTH_RUNE;
 import static net.runelite.api.ItemID.WATER_RUNE;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Birdhouses;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Blank;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Bones;
-import net.runelite.client.plugins.externals.oneclick.Comparables.ClickComparable;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Compost;
-import net.runelite.client.plugins.externals.oneclick.Comparables.DarkEssence;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Darts;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Firemaking;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Healer;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Herbtar;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Karambwans;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Runes;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Seeds;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Tiara;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
+import net.runelite.client.plugins.externals.oneclick.comparables.misc.Blank;
+import net.runelite.client.plugins.externals.oneclick.comparables.misc.Compost;
+import net.runelite.client.plugins.externals.oneclick.comparables.misc.Healer;
+import net.runelite.client.plugins.externals.oneclick.comparables.misc.Herbtar;
+import net.runelite.client.plugins.externals.oneclick.comparables.misc.Seeds;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Birdhouses;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Bones;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.DarkEssence;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Darts;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Firemaking;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Karambwans;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Runes;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Tiara;
 
 @AllArgsConstructor
 @Getter
@@ -47,8 +47,8 @@ public enum Types
 	BA_HEALER("BA Healer", new Healer()),
 	NONE("None", new Blank());
 
-	private String name;
-	private ClickComparable comparable;
+	private final String name;
+	private final ClickCompare comparable;
 
 	@Override
 	public String toString()

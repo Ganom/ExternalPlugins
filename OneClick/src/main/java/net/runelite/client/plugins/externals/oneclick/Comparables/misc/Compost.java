@@ -1,11 +1,11 @@
-package net.runelite.client.plugins.externals.oneclick.Comparables;
+package net.runelite.client.plugins.externals.oneclick.comparables.misc;
 
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
-import net.runelite.client.plugins.externals.oneclick.OneClickPlugin;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
-public class Compost implements ClickComparable
+public class Compost extends ClickCompare
 {
 	@Override
 	public boolean isEntryValid(MenuEntry event)
@@ -15,15 +15,17 @@ public class Compost implements ClickComparable
 	}
 
 	@Override
-	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
+	public void modifyEntry(MenuEntry event)
 	{
-		if (plugin.findItem(ItemID.COMPOST).getLeft() == -1)
+		if (findItem(ItemID.COMPOST).getLeft() == -1)
 		{
 			return;
 		}
 
-		event.setTarget("<col=ff9040>Saltpetre<col=ffffff> -> " + plugin.getTargetMap().get(event.getIdentifier()));
-		event.setForceLeftClick(true);
+		MenuEntry e = event.clone();
+		e.setTarget("<col=ff9040>Saltpetre<col=ffffff> -> " + getTargetMap().get(event.getIdentifier()));
+		e.setForceLeftClick(true);
+		insert(e);
 	}
 
 	@Override
@@ -34,9 +36,9 @@ public class Compost implements ClickComparable
 	}
 
 	@Override
-	public void modifyClick(OneClickPlugin plugin, MenuEntry event)
+	public void modifyClick(MenuEntry event)
 	{
-		if (plugin.updateSelectedItem(ItemID.SALTPETRE))
+		if (updateSelectedItem(ItemID.SALTPETRE))
 		{
 			event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 		}

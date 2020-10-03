@@ -3,9 +3,9 @@ package net.runelite.client.plugins.externals.oneclick;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Blank;
-import net.runelite.client.plugins.externals.oneclick.Comparables.ClickComparable;
-import net.runelite.client.plugins.externals.oneclick.Comparables.Spell;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
+import net.runelite.client.plugins.externals.oneclick.comparables.misc.Blank;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Spell;
 
 @AllArgsConstructor
 @Getter
@@ -22,9 +22,9 @@ public enum Spells
 	ENCHANT_ZENYTE("Zenyte", WidgetInfo.SPELL_LVL_7_ENCHANT, new Spell("Lvl-7 Enchant")),
 	NONE("None", null, new Blank());
 
-	private String spells;
-	private WidgetInfo widgetInfo;
-	private ClickComparable comparable;
+	private final String spells;
+	private final WidgetInfo widgetInfo;
+	private final ClickCompare comparable;
 
 	@Override
 	public String toString()

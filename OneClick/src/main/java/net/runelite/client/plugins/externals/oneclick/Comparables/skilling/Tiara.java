@@ -1,11 +1,11 @@
-package net.runelite.client.plugins.externals.oneclick.Comparables;
+package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
-import net.runelite.client.plugins.externals.oneclick.OneClickPlugin;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
-public class Tiara implements ClickComparable
+public class Tiara extends ClickCompare
 {
 	@Override
 	public boolean isEntryValid(MenuEntry event)
@@ -16,15 +16,17 @@ public class Tiara implements ClickComparable
 	}
 
 	@Override
-	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
+	public void modifyEntry(MenuEntry event)
 	{
-		if (plugin.findItem(ItemID.TIARA).getLeft() == -1)
+		if (findItem(ItemID.TIARA).getLeft() == -1)
 		{
 			return;
 		}
-		event.setOption("Use");
-		event.setTarget("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar");
-		event.setForceLeftClick(true);
+		MenuEntry e = event.clone();
+		e.setOption("Use");
+		e.setTarget("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar");
+		e.setForceLeftClick(true);
+		insert(e);
 	}
 
 	@Override
@@ -35,9 +37,9 @@ public class Tiara implements ClickComparable
 	}
 
 	@Override
-	public void modifyClick(OneClickPlugin plugin, MenuEntry event)
+	public void modifyClick(MenuEntry event)
 	{
-		if (plugin.updateSelectedItem(ItemID.TIARA))
+		if (updateSelectedItem(ItemID.TIARA))
 		{
 			event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 		}

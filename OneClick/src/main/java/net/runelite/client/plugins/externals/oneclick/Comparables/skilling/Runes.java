@@ -1,11 +1,11 @@
-package net.runelite.client.plugins.externals.oneclick.Comparables;
+package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.client.plugins.externals.oneclick.OneClickPlugin;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
-public class Runes implements ClickComparable
+public class Runes extends ClickCompare
 {
 	private final String rune;
 	private final int id;
@@ -25,23 +25,27 @@ public class Runes implements ClickComparable
 	}
 
 	@Override
-	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
+	public void modifyEntry(MenuEntry event)
 	{
-		if (plugin.findItem(id).getLeft() == -1)
+		if (findItem(id).getLeft() == -1 || plugin == null)
 		{
 			return;
 		}
 
 		if (!plugin.isImbue() && plugin.isEnableImbue())
 		{
-			event.setOption("Use");
-			event.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
-			event.setForceLeftClick(true);
+			MenuEntry e = event.clone();
+			e.setOption("Use");
+			e.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+			e.setForceLeftClick(true);
+			insert(e);
 			return;
 		}
-		event.setOption("Use");
-		event.setTarget(rune);
-		event.setForceLeftClick(true);
+		MenuEntry e = event.clone();
+		e.setOption("Use");
+		e.setTarget(rune);
+		e.setForceLeftClick(true);
+		insert(e);
 	}
 
 	@Override
@@ -52,11 +56,11 @@ public class Runes implements ClickComparable
 	}
 
 	@Override
-	public void modifyClick(OneClickPlugin plugin, MenuEntry event)
+	public void modifyClick(MenuEntry event)
 	{
 		if (event.getTarget().equals(rune))
 		{
-			if (plugin.updateSelectedItem(id))
+			if (updateSelectedItem(id))
 			{
 				event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			}
