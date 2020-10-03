@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         gradlePluginPortal()
+        mavenLocal()
     }
 }
 
@@ -20,22 +21,32 @@ subprojects {
     project.extra["PluginLicense"] = "GNU General Public License v3.0"
 
     repositories {
-        maven {
-            url = uri("https://dl.bintray.com")
+        jcenter {
+            content {
+                excludeGroupByRegex("com\\.openosrs.*")
+                excludeGroupByRegex("com\\.runelite.*")
+            }
         }
-        jcenter()
-        maven(url = "https://repo.runelite.net")
-        mavenLocal()
-        mavenCentral()
+
         exclusiveContent {
             forRepository {
                 maven {
-                    url = uri("https://raw.githubusercontent.com/open-osrs/hosting/master")
+                    url = uri("https://repo.runelite.net")
                 }
             }
             filter {
-                includeModule("net.runelite", "fernflower")
-                includeModule("com.openosrs.rxrelay3", "rxrelay")
+                includeModule("net.runelite", "discord")
+                includeModule("net.runelite.jogl", "jogl-all")
+                includeModule("net.runelite.gluegen", "gluegen-rt")
+            }
+        }
+
+        exclusiveContent {
+            forRepository {
+                mavenLocal()
+            }
+            filter {
+                includeGroupByRegex("com\\.openosrs.*")
             }
         }
     }
@@ -50,12 +61,12 @@ subprojects {
         implementation(group = "com.google.code.gson", name = "gson", version = "2.8.6")
         implementation(group = "com.google.guava", name = "guava", version = "28.2-jre")
         implementation(group = "com.google.inject", name = "guice", version = "4.2.3", classifier = "no_aop")
-        implementation(group = "com.openosrs", name = "http-api", version = "3.4.1")
-        implementation(group = "com.openosrs", name = "injected-client", version = "3.4.1")
-        implementation(group = "com.openosrs", name = "runelite-api", version = "3.4.1")
-        implementation(group = "com.openosrs", name = "runelite-client", version = "3.4.1")
-        implementation(group = "com.openosrs.rs", name = "runescape-api", version = "3.4.1")
-        implementation(group = "com.openosrs.rs", name = "runescape-client", version = "3.4.1")
+        implementation(group = "com.openosrs", name = "http-api", version = "3.4.5")
+        implementation(group = "com.openosrs", name = "injected-client", version = "3.4.5")
+        implementation(group = "com.openosrs", name = "runelite-api", version = "3.4.5")
+        implementation(group = "com.openosrs", name = "runelite-client", version = "3.4.5")
+        implementation(group = "com.openosrs.rs", name = "runescape-api", version = "3.4.5")
+        implementation(group = "com.openosrs.rs", name = "runescape-client", version = "3.4.5")
         implementation(group = "com.squareup.okhttp3", name = "okhttp", version = "4.5.0")
         implementation(group = "com.squareup.okhttp3", name = "okhttp", version = "4.5.0")
         implementation(group = "io.reactivex.rxjava3", name = "rxjava", version = "3.0.2")

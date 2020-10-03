@@ -1,4 +1,4 @@
-name: ExternalPlugins - CI (push)
+name: ExternalPlugins - CI (Push)
 
 on:
   push:
@@ -11,43 +11,217 @@ jobs:
     name: Build
 
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/cache@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1.4.2
+        with:
+          java-version: 11
+
+      - uses: actions/checkout@v2.3.1
+        with:
+          path: external-plugins
+
+      - uses: actions/checkout@v2.3.1
+        with:
+          repository: open-osrs/runelite
+          ref: master
+          path: OpenOSRS
+
+      - uses: actions/cache@v2.1.1
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Assembling
-        run: ./gradlew assemble --console=plain
-      - name: Building
-        run: ./gradlew build --stacktrace --console=plain
 
-  checkstyleMain:
-    name: Checkstyle main
+      - name: Make gradlew executable (client)
+        run: chmod +x ./gradlew
+        working-directory: OpenOSRS
+
+      - name: Assembling client
+        run: ./gradlew assemble --console=plain
+        working-directory: OpenOSRS
+
+      - name: Building client
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
+        working-directory: OpenOSRS
+
+      - name: Upload client artifacts to local maven
+        run: ./gradlew publishToMavenLocal --console=plain
+        working-directory: OpenOSRS
+
+      - name: Make gradlew executable (plugins)
+        run: chmod +x ./gradlew
+        working-directory: external-plugins
+
+      - name: Assembling plugins
+        run: ./gradlew assemble --console=plain
+        working-directory: external-plugins
+
+      - name: Building plugins
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
+        working-directory: external-plugins
+
+  test:
     runs-on: ubuntu-latest
+    name: Test
 
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/cache@v1
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1.4.2
+        with:
+          java-version: 11
+
+      - uses: actions/checkout@v2.3.1
+        with:
+          path: external-plugins
+
+      - uses: actions/checkout@v2.3.1
+        with:
+          repository: open-osrs/runelite
+          ref: master
+          path: OpenOSRS
+
+      - uses: actions/cache@v2.1.1
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Make gradlew executable
+
+      - name: Make gradlew executable (client)
         run: chmod +x ./gradlew
+        working-directory: OpenOSRS
+
+      - name: Assembling client
+        run: ./gradlew assemble --console=plain
+        working-directory: OpenOSRS
+
+      - name: Building client
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
+        working-directory: OpenOSRS
+
+      - name: Upload client artifacts to local maven
+        run: ./gradlew publishToMavenLocal --console=plain
+        working-directory: OpenOSRS
+
+      - name: Make gradlew executable (plugins)
+        run: chmod +x ./gradlew
+        working-directory: external-plugins
+
+      - name: Assembling plugins
+        run: ./gradlew assemble --console=plain
+        working-directory: external-plugins
+
+      - name: Testing plugins
+        run: ./gradlew test --stacktrace -x test -x checkstyleMain --console=plain
+        working-directory: external-plugins
+
+  checkstyleMain:
+    runs-on: ubuntu-latest
+    name: Checkstyle main
+
+    steps:
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v1.4.2
         with:
           java-version: 11
-      - name: Assembling
+
+      - uses: actions/checkout@v2.3.1
+        with:
+          path: external-plugins
+
+      - uses: actions/checkout@v2.3.1
+        with:
+          repository: open-osrs/runelite
+          ref: master
+          path: OpenOSRS
+
+      - uses: actions/cache@v2.1.1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable (client)
+        run: chmod +x ./gradlew
+        working-directory: OpenOSRS
+
+      - name: Assembling client
         run: ./gradlew assemble --console=plain
-      - name: Checking code conventions
+        working-directory: OpenOSRS
+
+      - name: Building client
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
+        working-directory: OpenOSRS
+
+      - name: Upload client artifacts to local maven
+        run: ./gradlew publishToMavenLocal --console=plain
+        working-directory: OpenOSRS
+
+      - name: Make gradlew executable (plugins)
+        run: chmod +x ./gradlew
+        working-directory: external-plugins
+
+      - name: Assembling plugins
+        run: ./gradlew assemble --console=plain
+        working-directory: external-plugins
+
+      - name: Checking plugins code conventions (Main)
         run: ./gradlew checkstyleMain --console=plain
+        working-directory: external-plugins
+
+  checkstyleTest:
+    runs-on: ubuntu-latest
+    name: Checkstyle test
+
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1.4.2
+        with:
+          java-version: 11
+
+      - uses: actions/checkout@v2.3.1
+        with:
+          path: external-plugins
+
+      - uses: actions/checkout@v2.3.1
+        with:
+          repository: open-osrs/runelite
+          ref: master
+          path: OpenOSRS
+
+      - uses: actions/cache@v2.1.1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Make gradlew executable (client)
+        run: chmod +x ./gradlew
+        working-directory: OpenOSRS
+
+      - name: Assembling client
+        run: ./gradlew assemble --console=plain
+        working-directory: OpenOSRS
+
+      - name: Building client
+        run: ./gradlew build --stacktrace -x test -x checkstyleMain --console=plain
+        working-directory: OpenOSRS
+
+      - name: Upload client artifacts to local maven
+        run: ./gradlew publishToMavenLocal --console=plain
+        working-directory: OpenOSRS
+
+      - name: Make gradlew executable (plugins)
+        run: chmod +x ./gradlew
+        working-directory: external-plugins
+
+      - name: Assembling plugins
+        run: ./gradlew assemble --console=plain
+        working-directory: external-plugins
+
+      - name: Checking plugins code conventions (Test)
+        run: ./gradlew checkstyleTest --console=plain
+        working-directory: external-plugins
