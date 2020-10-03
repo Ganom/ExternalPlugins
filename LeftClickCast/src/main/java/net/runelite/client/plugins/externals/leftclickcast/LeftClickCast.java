@@ -17,6 +17,7 @@ import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
 import net.runelite.api.NPC;
 import net.runelite.api.Varbits;
@@ -186,6 +187,11 @@ public class LeftClickCast extends Plugin
 	@Subscribe
 	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
+		if (event.isForceLeftClick())
+		{
+			return;
+		}
+
 		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && isMage)
 		{
 			final String name = Text.standardize(event.getTarget(), true);
@@ -208,9 +214,11 @@ public class LeftClickCast extends Plugin
 				}
 			}
 
-			event.setModified();
 			setSelectSpell(currentSpell.getSpell());
-			event.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ");
+			MenuEntry e = event.clone();
+			e.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ");
+			e.setForceLeftClick(true);
+			insert(e);
 		}
 		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && isMage)
 		{
@@ -228,9 +236,11 @@ public class LeftClickCast extends Plugin
 					return;
 				}
 
-				event.setModified();
 				setSelectSpell(currentSpell.getSpell());
-				event.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ");
+				MenuEntry e = event.clone();
+				e.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ");
+				e.setForceLeftClick(true);
+				insert(e);
 			}
 			catch (IndexOutOfBoundsException ignored)
 			{
@@ -241,56 +251,6 @@ public class LeftClickCast extends Plugin
 	@Subscribe
 	public void onMenuOptionClicked(MenuOptionClicked event)
 	{
-		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && isMage)
-		{
-			final String name = Text.standardize(event.getTarget(), true);
-
-			if (!config.disableFriendlyRegionChecks() && (client.getVar(Varbits.LMS_IN_GAME) == 0 && (client.isFriended(name, false) ||
-				friendsManager.isMember(name))))
-			{
-				return;
-			}
-
-			if (!config.disableFriendlyRegionChecks())
-			{
-				try
-				{
-					boolean b = (!PvPUtil.isAttackable(client, client.getCachedPlayers()[event.getIdentifier()]));
-				}
-				catch (IndexOutOfBoundsException ex)
-				{
-					return;
-				}
-			}
-
-			setSelectSpell(currentSpell.getSpell());
-			event.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ");
-		}
-		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && isMage)
-		{
-			try
-			{
-				NPC npc = validateNpc(event.getIdentifier());
-
-				if (npc == null)
-				{
-					return;
-				}
-
-				if (config.disableStaffChecks() && !whitelist.contains(npc.getId()))
-				{
-					return;
-				}
-
-				setSelectSpell(currentSpell.getSpell());
-				event.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ");
-			}
-			catch (IndexOutOfBoundsException ex)
-			{
-				return;
-			}
-		}
-
 		if (event.getOption().contains("(P)"))
 		{
 			event.setOpcode(15);
@@ -320,7 +280,7 @@ public class LeftClickCast extends Plugin
 		for (Item item : ic.getItems())
 		{
 			final String name = client.getItemDefinition(item.getId()).getName().toLowerCase();
-			if (name.contains("staff") || name.contains("wand"))
+			if (name.contains("staff") || name.contains("wand") || name.contains("sceptre") || name.contains("trident"))
 			{
 				isMage = true;
 				break;
@@ -358,6 +318,19 @@ public class LeftClickCast extends Plugin
 		client.setSelectedSpellName("<col=00ff00>" + widget.getName() + "</col>");
 		client.setSelectedSpellWidget(widget.getId());
 		client.setSelectedSpellChildIndex(-1);
+	}
+
+	private void insert(MenuEntry e)
+	{
+		client.insertMenuItem(
+			e.getOption(),
+			e.getTarget(),
+			e.getOpcode(),
+			e.getIdentifier(),
+			e.getParam0(),
+			e.getParam1(),
+			true
+		);
 	}
 
 	/**
