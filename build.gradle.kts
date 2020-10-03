@@ -21,22 +21,32 @@ subprojects {
     project.extra["PluginLicense"] = "GNU General Public License v3.0"
 
     repositories {
-        maven {
-            url = uri("https://dl.bintray.com")
+        jcenter {
+            content {
+                excludeGroupByRegex("com\\.openosrs.*")
+                excludeGroupByRegex("com\\.runelite.*")
+            }
         }
-        jcenter()
-        maven(url = "https://repo.runelite.net")
-        mavenLocal()
-        mavenCentral()
+
         exclusiveContent {
             forRepository {
                 maven {
-                    url = uri("https://raw.githubusercontent.com/open-osrs/hosting/master")
+                    url = uri("https://repo.runelite.net")
                 }
             }
             filter {
-                includeModule("net.runelite", "fernflower")
-                includeModule("com.openosrs.rxrelay3", "rxrelay")
+                includeModule("net.runelite", "discord")
+                includeModule("net.runelite.jogl", "jogl-all")
+                includeModule("net.runelite.gluegen", "gluegen-rt")
+            }
+        }
+
+        exclusiveContent {
+            forRepository {
+                mavenLocal()
+            }
+            filter {
+                includeGroupByRegex("com\\.openosrs.*")
             }
         }
     }

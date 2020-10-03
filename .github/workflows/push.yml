@@ -46,7 +46,7 @@ jobs:
         working-directory: OpenOSRS
 
       - name: Upload client artifacts to local maven
-        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal --console=plain
+        run: ./gradlew publishToMavenLocal --console=plain
         working-directory: OpenOSRS
 
       - name: Make gradlew executable (plugins)
@@ -101,7 +101,7 @@ jobs:
         working-directory: OpenOSRS
 
       - name: Upload client artifacts to local maven
-        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal --console=plain
+        run: ./gradlew publishToMavenLocal --console=plain
         working-directory: OpenOSRS
 
       - name: Make gradlew executable (plugins)
@@ -156,7 +156,7 @@ jobs:
         working-directory: OpenOSRS
 
       - name: Upload client artifacts to local maven
-        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal --console=plain
+        run: ./gradlew publishToMavenLocal --console=plain
         working-directory: OpenOSRS
 
       - name: Make gradlew executable (plugins)
@@ -211,7 +211,7 @@ jobs:
         working-directory: OpenOSRS
 
       - name: Upload client artifacts to local maven
-        run: ./gradlew :http-api:publishToMavenLocal :runelite-api:publishToMavenLocal :runelite-client:publishToMavenLocal --console=plain
+        run: ./gradlew publishToMavenLocal --console=plain
         working-directory: OpenOSRS
 
       - name: Make gradlew executable (plugins)
