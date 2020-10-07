@@ -73,9 +73,6 @@ class AutoPrayFlickOverlay extends Overlay
 			return null;
 		}
 
-		int orbInnerHeight = (int) bounds.getHeight();
-		int orbInnerWidth = orbInnerHeight;
-
 		int orbInnerX = (int) (bounds.getX() + 24);//x pos of the inside of the prayer orb
 		int orbInnerY = (int) (bounds.getY() - 1);//y pos of the inside of the prayer orb
 
