@@ -1,13 +1,13 @@
-package net.runelite.client.plugins.externals.oneclick.Comparables;
+package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
-import net.runelite.client.plugins.externals.oneclick.OneClickPlugin;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
-public class Bones implements ClickComparable
+public class Bones extends ClickCompare
 {
 	private static final Set<Integer> BONE_SET = ImmutableSet.of(
 		ItemID.BONES, ItemID.WOLF_BONE, ItemID.BURNT_BONES, ItemID.MONKEY_BONES, ItemID.BAT_BONES,
@@ -26,15 +26,17 @@ public class Bones implements ClickComparable
 	}
 
 	@Override
-	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
+	public void modifyEntry(MenuEntry event)
 	{
-		if (plugin.findItem(BONE_SET).getLeft() == -1)
+		if (findItem(BONE_SET).getLeft() == -1)
 		{
 			return;
 		}
-		event.setOption("Use");
-		event.setTarget("<col=ff9040>Bones<col=ffffff> -> " + event.getTarget());
-		event.setForceLeftClick(true);
+		MenuEntry e = event.clone();
+		e.setOption("Use");
+		e.setTarget("<col=ff9040>Bones<col=ffffff> -> " + event.getTarget());
+		e.setForceLeftClick(true);
+		insert(e);
 	}
 
 	@Override
@@ -46,9 +48,9 @@ public class Bones implements ClickComparable
 	}
 
 	@Override
-	public void modifyClick(OneClickPlugin plugin, MenuEntry event)
+	public void modifyClick(MenuEntry event)
 	{
-		if (plugin.updateSelectedItem(BONE_SET))
+		if (updateSelectedItem(BONE_SET))
 		{
 			event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 		}

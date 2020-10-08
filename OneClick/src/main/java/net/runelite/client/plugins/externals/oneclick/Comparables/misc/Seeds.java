@@ -1,13 +1,13 @@
-package net.runelite.client.plugins.externals.oneclick.Comparables;
+package net.runelite.client.plugins.externals.oneclick.comparables.misc;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
-import net.runelite.client.plugins.externals.oneclick.OneClickPlugin;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
-public class Seeds implements ClickComparable
+public class Seeds extends ClickCompare
 {
 	private static final Set<Integer> SEED_SET = ImmutableSet.of(
 		ItemID.GOLOVANOVA_SEED, ItemID.BOLOGANO_SEED, ItemID.LOGAVANO_SEED
@@ -25,16 +25,18 @@ public class Seeds implements ClickComparable
 	}
 
 	@Override
-	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
+	public void modifyEntry(MenuEntry event)
 	{
-		if (plugin.findItem(SEED_SET).getLeft() == -1)
+		if (findItem(SEED_SET).getLeft() == -1)
 		{
 			return;
 		}
 
-		event.setOption("Use");
-		event.setTarget("<col=ff9040>Seed<col=ffffff> -> " + event.getTarget());
-		event.setForceLeftClick(true);
+		MenuEntry e = event.clone();
+		e.setOption("Use");
+		e.setTarget("<col=ff9040>Seed<col=ffffff> -> " + event.getTarget());
+		e.setForceLeftClick(true);
+		insert(e);
 	}
 
 	@Override
@@ -49,18 +51,18 @@ public class Seeds implements ClickComparable
 	}
 
 	@Override
-	public void modifyClick(OneClickPlugin plugin, MenuEntry event)
+	public void modifyClick(MenuEntry event)
 	{
 		if (event.getTarget().toLowerCase().contains("tithe"))
 		{
-			if (plugin.updateSelectedItem(SEED_SET))
+			if (updateSelectedItem(SEED_SET))
 			{
 				event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			}
 		}
 		else if (event.getTarget().toLowerCase().contains("water barrel"))
 		{
-			if (plugin.updateSelectedItem(WATERING_CANS))
+			if (updateSelectedItem(WATERING_CANS))
 			{
 				event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
 			}

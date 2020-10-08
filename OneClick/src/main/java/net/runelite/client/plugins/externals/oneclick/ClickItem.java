@@ -13,6 +13,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class ClickItem
 {
-	private String name;
-	private int id;
+	private final String name;
+	private final int id;
 }

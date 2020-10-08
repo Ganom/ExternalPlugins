@@ -1,13 +1,15 @@
-package net.runelite.client.plugins.externals.oneclick.Comparables;
+package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
-import net.runelite.client.plugins.externals.oneclick.OneClickPlugin;
+import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
-public class Firemaking implements ClickComparable
+@Slf4j
+public class Firemaking extends ClickCompare
 {
 	private static final Set<Integer> LOG_ID = ImmutableSet.of(
 		ItemID.LOGS, ItemID.OAK_LOGS, ItemID.WILLOW_LOGS, ItemID.TEAK_LOGS,
@@ -23,14 +25,16 @@ public class Firemaking implements ClickComparable
 	}
 
 	@Override
-	public void modifyEntry(OneClickPlugin plugin, MenuEntry event)
+	public void modifyEntry(MenuEntry event)
 	{
-		if (plugin.findItem(ItemID.TINDERBOX).getLeft() == -1)
+		if (findItem(ItemID.TINDERBOX).getLeft() == -1 || event.isForceLeftClick())
 		{
 			return;
 		}
-		event.setTarget("<col=ff9040>Tinderbox<col=ffffff> -> " + plugin.getTargetMap().get(event.getIdentifier()));
-		event.setForceLeftClick(true);
+		MenuEntry e = event.clone();
+		e.setTarget("<col=ff9040>Tinderbox<col=ffffff> -> " + getTargetMap().get(event.getIdentifier()));
+		e.setForceLeftClick(true);
+		insert(e);
 	}
 
 	@Override
@@ -41,9 +45,9 @@ public class Firemaking implements ClickComparable
 	}
 
 	@Override
-	public void modifyClick(OneClickPlugin plugin, MenuEntry event)
+	public void modifyClick(MenuEntry event)
 	{
-		if (plugin.updateSelectedItem(ItemID.TINDERBOX))
+		if (updateSelectedItem(ItemID.TINDERBOX))
 		{
 			event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
 		}
