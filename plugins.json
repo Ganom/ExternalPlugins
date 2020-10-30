@@ -107,6 +107,13 @@
         "version": "5.14.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoPrayFlick-5.14.0.jar?raw=true",
         "requires": "0.0.1"
+      },
+      {
+        "date": "2020-10-30",
+        "sha512sum": "0EA260A1ABBDDADF05F85B181FD570DA843932305D771ED0919AAF03F89C3337E12CE32061A5FD7589A826C12CF23097F02D7793FEB1DB728CDB24A729330BB3",
+        "version": "5.15.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/AutoPrayFlick-5.15.0.jar?raw=true",
+        "requires": "0.0.1"
       }
     ]
   },
