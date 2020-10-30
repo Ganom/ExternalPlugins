@@ -38,7 +38,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -49,7 +48,6 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
@@ -85,9 +83,6 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	private MouseManager mouseManager;
 
 	@Inject
-	private EventBus eventBus;
-
-	@Inject
 	private AutoPrayFlickConfig config;
 
 	@Inject
@@ -99,10 +94,11 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	@Inject
 	private ExtUtils extUtils;
 
+	private ScheduledExecutorService executor;
 	private Rectangle bounds;
 	private boolean held;
 	private boolean firstFlick;
-	@Getter(AccessLevel.PACKAGE)
+	@Getter
 	private boolean toggleFlick;
 
 	@Provides
@@ -117,6 +113,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		keyManager.registerKeyListener(this);
 		mouseManager.registerMouseListener(this);
 		overlayManager.add(autoPrayFlickOverlay);
+		executor = Executors.newSingleThreadScheduledExecutor();
 	}
 
 	@Override
@@ -124,6 +121,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 	{
 		keyManager.unregisterKeyListener(this);
 		overlayManager.remove(autoPrayFlickOverlay);
+		executor.shutdownNow();
 	}
 
 	@Subscribe
@@ -153,10 +151,11 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 			}
 			if (p == 29 && !firstFlick)
 			{
-				singleClick();
+				schedule(randomDelay(1, 9));
 				return;
 			}
-			doubleClick();
+			schedule(randomDelay(1, 9));
+			schedule(randomDelay(90, 100));
 			if (firstFlick)
 			{
 				firstFlick = false;
@@ -164,7 +163,7 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		}
 		if (toggleFlick && !config.clicks())
 		{
-			singleClick();
+			schedule(randomDelay(1, 9));
 		}
 	}
 
@@ -178,29 +177,9 @@ public class AutoPrayFlickPlugin extends Plugin implements KeyListener, MouseLis
 		}
 	}
 
-	private void doubleClick()
+	private void schedule(int delay)
 	{
-		delayFirstClick();
-		delaySecondClick();
-	}
-
-	private void singleClick()
-	{
-		delayFirstClick();
-	}
-
-	private void delayFirstClick()
-	{
-		final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-		service.schedule(this::simLeftClick, randomDelay(1, 9), TimeUnit.MILLISECONDS);
-		service.shutdown();
-	}
-
-	private void delaySecondClick()
-	{
-		final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
-		service.schedule(this::simLeftClick, randomDelay(90, 100), TimeUnit.MILLISECONDS);
-		service.shutdown();
+		executor.schedule(this::simLeftClick, delay, TimeUnit.MILLISECONDS);
 	}
 
 	private void simLeftClick()
