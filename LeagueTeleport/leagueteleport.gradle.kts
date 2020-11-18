@@ -24,10 +24,10 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "5.15.0"
+version = "5.14.0"
 
-project.extra["PluginName"] = "LeftClickCast"
-project.extra["PluginDescription"] = "Casting made even easier."
+project.extra["PluginName"] = "League Teleport"
+project.extra["PluginDescription"] = "Adds widgets directly to screen so you can teleport without navigating 500 menus."
 
 tasks {
     jar {

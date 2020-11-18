@@ -268,6 +268,22 @@
   {
     "projectUrl": "https://discordapp.com/invite/gsoft",
     "provider": "Ganom",
+    "name": "League Teleport",
+    "description": "Adds widgets directly to screen so you can teleport without navigating 500 menus.",
+    "id": "leagueteleport-plugin",
+    "releases": [
+      {
+        "date": "2020-11-18",
+        "sha512sum": "8E293569A653A1A13C61D93427CF773856DB0098F8DC5957D797C3552FF8B0E2145408ACD17B667A5F360910B9A7BE338411042332EEEC8F324BB734DDF7E3B8",
+        "version": "5.14.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/LeagueTeleport-5.14.0.jar?raw=true",
+        "requires": "0.0.1"
+      }
+    ]
+  },
+  {
+    "projectUrl": "https://discordapp.com/invite/gsoft",
+    "provider": "Ganom",
     "name": "LeftClickCast",
     "description": "Casting made even easier.",
     "id": "leftclickcast-plugin",
@@ -298,6 +314,13 @@
         "sha512sum": "BB2DF570180D09F5DEC88DD247D51E585CF6FD14C4DE20869C6661897AE0BFE3D0AF9347867B90E4C9BDB21D440579929A2E5A7365DB0B4CE049A47DBD4DC93D",
         "version": "5.14.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/LeftClickCast-5.14.0.jar?raw=true",
+        "requires": "0.0.1"
+      },
+      {
+        "date": "2020-11-18",
+        "sha512sum": "8409657563E8C4C122E17323FB6A53C3D8490809DBC4277CF12DC6E908F13FCA40D0368202F5FF2F5BC3BAA5438FC456361E342E4F53EA88D1472745CBCD2673",
+        "version": "5.15.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/LeftClickCast-5.15.0.jar?raw=true",
         "requires": "0.0.1"
       }
     ]

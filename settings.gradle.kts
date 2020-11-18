@@ -10,6 +10,7 @@ include(":ItemDropper")
 include(":LeftClickCast")
 include(":NeverLog")
 include(":OneClick")
+include(":LeagueTeleport")
 
 for (project in rootProject.children) {
     project.apply {
