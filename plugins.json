@@ -278,6 +278,13 @@
         "version": "5.14.0",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/LeagueTeleport-5.14.0.jar?raw=true",
         "requires": "0.0.1"
+      },
+      {
+        "date": "2020-11-18",
+        "sha512sum": "8186B3D62D1B37CAC00D29BE726BC2BCF7B99998D27BB5962561282A84A22682BF136CFABCBD43E081A47462016951565C28CAE807B4562C15F162D5E3CE444D",
+        "version": "5.15.0",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/LeagueTeleport-5.15.0.jar?raw=true",
+        "requires": "0.0.1"
       }
     ]
   },

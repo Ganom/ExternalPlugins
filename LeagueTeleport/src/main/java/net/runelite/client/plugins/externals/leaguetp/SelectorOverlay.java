@@ -77,7 +77,7 @@ public class SelectorOverlay extends OverlayPanel
 			{
 				continue;
 			}
-			int s = config.scale();
+			double s = config.scale();
 			int scaledWidth = (int) ((double) image.getWidth() * (s / 100));
 			int scaledHeight = (int) ((double) image.getHeight() * (s / 100));
 			image = ImageUtil.resizeImage(image, scaledWidth, scaledHeight);
