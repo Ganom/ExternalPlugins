@@ -11,7 +11,7 @@ public class Trouble brew extends ClickCompare
 	public boolean isEntryValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			event.getOption().equals("Use") &&
+			event.getOption().equals("Examine") &&
 			event.getTarget().equals("<col=ffff>Hopper");
 	}
 
