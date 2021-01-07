@@ -5,7 +5,7 @@ import net.runelite.api.MenuEntry;
 import net.runelite.api.MenuOpcode;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
-public class Tiara extends ClickCompare
+public class Trouble brew extends ClickCompare
 {
 	@Override
 	public boolean isEntryValid(MenuEntry event)
