@@ -24,7 +24,8 @@ import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Darts
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Firemaking;
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Karambwans;
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Runes;
-import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Tiara;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Troublebrew;
+
 
 @AllArgsConstructor
 @Getter
@@ -43,6 +44,7 @@ public enum Types
 	DARK_ESSENCE("Dark Essence", new DarkEssence()),
 	SEED_SET("Tithe Farm", new Seeds()),
 	TIARA("Tiara", new Tiara()),
+	TROUBLEBREW("Troublebrew", new Troublebrew()),
 	SPELL("Spell Casting", new Blank()),
 	BA_HEALER("BA Healer", new Healer()),
 	NONE("None", new Blank());
