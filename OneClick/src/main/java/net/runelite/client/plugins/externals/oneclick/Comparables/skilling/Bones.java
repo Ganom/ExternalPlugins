@@ -21,7 +21,7 @@ public class Bones extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuAction.GAME_OBJECT_FIRST_OPTION.getId() &&
+		return event.getOpcode() == MenuAction.GAME_OBJECT_FIRST_OPTION.getId() && !event.isForceLeftClick() &&
 			event.getOption().toLowerCase().contains("pray") &&
 			event.getTarget().toLowerCase().contains("altar");
 	}
@@ -35,7 +35,7 @@ public class Bones extends ClickCompare
 		}
 		MenuEntry e = event.clone();
 		e.setOption("Use");
-		e.setTarget("<col=ff9040>Bones<col=ffffff> -> " + event.getTarget());
+		e.setTarget("<col=ff9040>Bones<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
 		e.setForceLeftClick(true);
 		insert(e);
 	}
@@ -65,7 +65,7 @@ public class Bones extends ClickCompare
 			return;
 		}
 		e.setOption("Use");
-		e.setTarget("<col=ff9040>Bones<col=ffffff> -> " + e.getTarget());
+		e.setTarget("<col=ff9040>Bones<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
 		e.setForceLeftClick(true);
 	}
 }

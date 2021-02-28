@@ -24,7 +24,7 @@ public class Birdhouses extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuAction.GAME_OBJECT_SECOND_OPTION.getId() &&
+		return event.getOpcode() == MenuAction.GAME_OBJECT_SECOND_OPTION.getId() && !event.isForceLeftClick() &&
 			BIRD_HOUSES_NAMES.contains(event.getTarget());
 	}
 

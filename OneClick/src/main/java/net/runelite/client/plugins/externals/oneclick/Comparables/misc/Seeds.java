@@ -21,7 +21,7 @@ public class Seeds extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuAction.EXAMINE_OBJECT.getId() &&
+		return event.getOpcode() == MenuAction.EXAMINE_OBJECT.getId() && !event.isForceLeftClick() &&
 			event.getTarget().toLowerCase().contains("tithe");
 	}
 
@@ -35,7 +35,7 @@ public class Seeds extends ClickCompare
 
 		MenuEntry e = event.clone();
 		e.setOption("Use");
-		e.setTarget("<col=ff9040>Seed<col=ffffff> -> " + event.getTarget());
+		e.setTarget("<col=ff9040>Seed<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
 		e.setForceLeftClick(true);
 		insert(e);
 	}
@@ -79,7 +79,7 @@ public class Seeds extends ClickCompare
 		}
 
 		e.setOption("Use");
-		e.setTarget("<col=ff9040>Seed<col=ffffff> -> " + e.getTarget());
+		e.setTarget("<col=ff9040>Seed<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
 		e.setForceLeftClick(true);
 		insert(e);
 	}

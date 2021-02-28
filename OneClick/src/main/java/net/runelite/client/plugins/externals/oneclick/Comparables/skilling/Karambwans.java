@@ -11,7 +11,7 @@ public class Karambwans extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuAction.GAME_OBJECT_FIRST_OPTION.getId() &&
+		return event.getOpcode() == MenuAction.GAME_OBJECT_FIRST_OPTION.getId() && !event.isForceLeftClick() &&
 			event.getOption().equals("Cook");
 	}
 
@@ -24,7 +24,7 @@ public class Karambwans extends ClickCompare
 		}
 		MenuEntry e = event.clone();
 		e.setOption("Use");
-		e.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + event.getTarget());
+		e.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
 		e.setForceLeftClick(true);
 		insert(e);
 	}
@@ -54,7 +54,7 @@ public class Karambwans extends ClickCompare
 			return;
 		}
 		e.setOption("Use");
-		e.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + e.getTarget());
+		e.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
 		e.setForceLeftClick(true);
 		insert(e);
 	}

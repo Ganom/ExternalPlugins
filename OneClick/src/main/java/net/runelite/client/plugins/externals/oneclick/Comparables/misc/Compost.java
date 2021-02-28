@@ -11,7 +11,7 @@ public class Compost extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuAction.ITEM_USE.getId() &&
+		return event.getOpcode() == MenuAction.ITEM_USE.getId() && !event.isForceLeftClick() &&
 			event.getIdentifier() == ItemID.COMPOST;
 	}
 

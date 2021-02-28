@@ -20,7 +20,7 @@ public class Runes extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuAction.GAME_OBJECT_FIRST_OPTION.getId() &&
+		return event.getOpcode() == MenuAction.GAME_OBJECT_FIRST_OPTION.getId() && !event.isForceLeftClick() &&
 			event.getOption().equals("Craft-rune") &&
 			event.getTarget().equals("<col=ffff>Altar");
 	}

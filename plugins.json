@@ -457,6 +457,13 @@
         "version": "6.0.1",
         "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/OneClick-6.0.1.jar?raw=true",
         "requires": "^1.0.0"
+      },
+      {
+        "date": "2021-02-28",
+        "sha512sum": "3EDFC7E79E5A1E8C876B4F2E9DEFB804859ACA1EB39B6EB4609094968D3181BA8C013B613ECF163383D30F65E150297C1815B4A7873DCD311FF2862C91866F22",
+        "version": "6.0.2",
+        "url": "https://github.com/Ganom/ExternalPlugins/blob/master/release/OneClick-6.0.2.jar?raw=true",
+        "requires": "^1.0.0"
       }
     ]
   }

@@ -24,7 +24,7 @@ public class Healer extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == 1003 && event.getTarget().contains("Penance Healer");
+		return event.getOpcode() == 1003 && !event.isForceLeftClick() && event.getTarget().contains("Penance Healer");
 	}
 
 	@Override

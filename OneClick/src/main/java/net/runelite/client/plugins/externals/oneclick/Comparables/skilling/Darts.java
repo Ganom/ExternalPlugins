@@ -24,7 +24,7 @@ public class Darts extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuAction.ITEM_USE.getId() &&
+		return event.getOpcode() == MenuAction.ITEM_USE.getId() && !event.isForceLeftClick() &&
 			(DART_TIPS.contains(event.getIdentifier()) || BOLTS.contains(event.getIdentifier()));
 	}
 

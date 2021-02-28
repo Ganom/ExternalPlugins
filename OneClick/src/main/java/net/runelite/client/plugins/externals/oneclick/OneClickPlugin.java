@@ -148,7 +148,10 @@ public class OneClickPlugin extends Plugin
 	@Subscribe
 	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
-		targetMap.put(event.getIdentifier(), event.getTarget());
+		if (!event.isForceLeftClick())
+		{
+			targetMap.put(event.getIdentifier(), event.getTarget());
+		}
 
 		//todo unsure if this is actually needed now that we insert entries.
 		/*switch (type)
