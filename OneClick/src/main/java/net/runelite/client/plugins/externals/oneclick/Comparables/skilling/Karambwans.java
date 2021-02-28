@@ -45,4 +45,17 @@ public class Karambwans extends ClickCompare
 			plugin.setTick(true);
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (findItem(ItemID.RAW_KARAMBWAN).getLeft() == -1)
+		{
+			return;
+		}
+		e.setOption("Use");
+		e.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + e.getTarget());
+		e.setForceLeftClick(true);
+		insert(e);
+	}
 }

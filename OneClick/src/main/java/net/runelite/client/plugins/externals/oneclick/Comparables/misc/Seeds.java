@@ -69,4 +69,18 @@ public class Seeds extends ClickCompare
 			}
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (findItem(SEED_SET).getLeft() == -1)
+		{
+			return;
+		}
+
+		e.setOption("Use");
+		e.setTarget("<col=ff9040>Seed<col=ffffff> -> " + e.getTarget());
+		e.setForceLeftClick(true);
+		insert(e);
+	}
 }

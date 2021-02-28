@@ -33,6 +33,8 @@ public abstract class ClickCompare
 
 	public abstract void modifyClick(MenuOptionClicked event);
 
+	public abstract void backupEntryModify(MenuEntry e);
+
 	protected Map<Integer, String> getTargetMap()
 	{
 		if (plugin == null)

@@ -44,4 +44,16 @@ public class DarkEssence extends ClickCompare
 			event.setMenuAction(MenuAction.ITEM_USE_ON_WIDGET_ITEM);
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (findItem(ItemID.DARK_ESSENCE_BLOCK).getLeft() == -1)
+		{
+			return;
+		}
+
+		e.setTarget("<col=ff9040>Chisel<col=ffffff> -> <col=ff9040>Dark essence block");
+		e.setForceLeftClick(true);
+	}
 }

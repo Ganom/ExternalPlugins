@@ -70,4 +70,28 @@ public class Healer extends ClickCompare
 			}
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (roleText == null ||
+			roleText.isBlank() ||
+			roleText.isEmpty() ||
+			roleText.equals("- - -"))
+		{
+			return;
+		}
+
+		int id = ITEMS.getOrDefault(roleText, -1);
+
+		if (id == -1)
+		{
+			log.error("This shouldn't be possible, bad string: {}", roleText);
+			return;
+		}
+
+		e.setOption("Use");
+		e.setTarget("<col=ff9040>Food<col=ffffff> -> <col=ffff00>Penance Healer");
+		e.setForceLeftClick(true);
+	}
 }

@@ -56,4 +56,16 @@ public class Bones extends ClickCompare
 			event.setMenuAction(MenuAction.ITEM_USE_ON_GAME_OBJECT);
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (findItem(BONE_SET).getLeft() == -1)
+		{
+			return;
+		}
+		e.setOption("Use");
+		e.setTarget("<col=ff9040>Bones<col=ffffff> -> " + e.getTarget());
+		e.setForceLeftClick(true);
+	}
 }

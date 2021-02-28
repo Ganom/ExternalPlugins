@@ -71,6 +71,20 @@ public class Custom extends ClickCompare
 		}
 	}
 
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (client == null || e.isForceLeftClick())
+		{
+			return;
+		}
+		int id = e.getIdentifier();
+		int item = findItem(customClickMap.get(id)).getLeft();
+		final String name = client.getItemComposition(item).getName();
+		e.setTarget("<col=ff9040>" + name + "<col=ffffff> -> " + getTargetMap().get(id));
+		e.setForceLeftClick(true);
+	}
+
 	public void updateMap(String swaps)
 	{
 		final Iterable<String> tmp = NEWLINE_SPLITTER.split(swaps);

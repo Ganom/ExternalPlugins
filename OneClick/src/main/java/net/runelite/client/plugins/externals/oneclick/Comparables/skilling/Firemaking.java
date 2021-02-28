@@ -53,4 +53,16 @@ public class Firemaking extends ClickCompare
 			event.setMenuAction(MenuAction.ITEM_USE_ON_WIDGET_ITEM);
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (findItem(ItemID.TINDERBOX).getLeft() == -1 || e.isForceLeftClick())
+		{
+			return;
+		}
+
+		e.setTarget("<col=ff9040>Tinderbox<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
+		e.setForceLeftClick(true);
+	}
 }

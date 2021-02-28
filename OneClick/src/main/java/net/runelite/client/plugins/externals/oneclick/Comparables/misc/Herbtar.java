@@ -51,4 +51,17 @@ public class Herbtar extends ClickCompare
 			event.setMenuAction(MenuAction.ITEM_USE_ON_WIDGET_ITEM);
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (findItem(ItemID.SWAMP_TAR).getLeft() == -1 ||
+			findItem(ItemID.PESTLE_AND_MORTAR).getLeft() == -1
+		)
+		{
+			return;
+		}
+		e.setTarget("<col=ff9040>Swamp tar<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
+		e.setForceLeftClick(true);
+	}
 }

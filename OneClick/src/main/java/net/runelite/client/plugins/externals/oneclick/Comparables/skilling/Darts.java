@@ -57,4 +57,16 @@ public class Darts extends ClickCompare
 			event.setMenuAction(MenuAction.ITEM_USE_ON_WIDGET_ITEM);
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (findItem(ItemID.FEATHER).getLeft() == -1)
+		{
+			return;
+		}
+
+		e.setTarget("<col=ff9040>Feather<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
+		e.setForceLeftClick(true);
+	}
 }

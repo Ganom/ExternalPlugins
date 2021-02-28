@@ -45,4 +45,16 @@ public class Tiara extends ClickCompare
 			event.setMenuAction(MenuAction.ITEM_USE_ON_GAME_OBJECT);
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (findItem(ItemID.TIARA).getLeft() == -1)
+		{
+			return;
+		}
+		e.setOption("Use");
+		e.setTarget("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar");
+		e.setForceLeftClick(true);
+	}
 }

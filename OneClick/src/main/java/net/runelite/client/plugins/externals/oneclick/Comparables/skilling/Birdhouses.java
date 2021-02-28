@@ -56,4 +56,18 @@ public class Birdhouses extends ClickCompare
 	{
 		updateSelectedItem(HOPS_SEED);
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (findItem(HOPS_SEED).getLeft() == -1)
+		{
+			return;
+		}
+
+		e.setOption("Use");
+		e.setTarget("<col=ff9040>Hops seed<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
+		e.setOpcode(MenuAction.ITEM_USE_ON_GAME_OBJECT.getId());
+		e.setForceLeftClick(true);
+	}
 }

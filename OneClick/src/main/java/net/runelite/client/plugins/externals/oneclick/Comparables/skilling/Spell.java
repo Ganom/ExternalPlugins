@@ -293,4 +293,17 @@ public class Spell extends ClickCompare
 			clickItem = new ClickItem(itemName, event.getId());
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (plugin == null || clickItem == null)
+		{
+			return;
+		}
+
+		e.setOption("Cast");
+		e.setTarget("<col=00ff00>" + spell + "</col>" + "<col=ffffff> -> " + clickItem.getName());
+		e.setForceLeftClick(true);
+	}
 }

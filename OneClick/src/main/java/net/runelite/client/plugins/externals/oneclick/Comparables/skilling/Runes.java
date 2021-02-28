@@ -74,4 +74,24 @@ public class Runes extends ClickCompare
 			event.setWidgetId(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
 		}
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+		if (findItem(id).getLeft() == -1 || plugin == null)
+		{
+			return;
+		}
+
+		if (!plugin.isImbue() && plugin.isEnableImbue())
+		{
+			e.setOption("Use");
+			e.setTarget("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself");
+			e.setForceLeftClick(true);
+			return;
+		}
+		e.setOption("Use");
+		e.setTarget(rune);
+		e.setForceLeftClick(true);
+	}
 }

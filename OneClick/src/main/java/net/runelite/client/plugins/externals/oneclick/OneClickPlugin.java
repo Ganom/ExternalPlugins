@@ -15,6 +15,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.MenuEntry;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
@@ -210,6 +211,29 @@ public class OneClickPlugin extends Plugin
 		if (comparable.isClickValid(event))
 		{
 			comparable.modifyClick(event);
+			return;
+		}
+
+		MenuEntry old = new MenuEntry(
+			event.getMenuOption(), event.getMenuTarget(), event.getId(), event.getMenuAction().getId(), event.getActionParam(), event.getWidgetId(), false
+		);
+		MenuEntry tmp = old.clone();
+		boolean updated = false;
+
+		if (comparable.isEntryValid(tmp))
+		{
+			comparable.backupEntryModify(tmp);
+			event.setMenuEntry(tmp);
+			updated = true;
+		}
+
+		if (comparable.isClickValid(event) && updated)
+		{
+			comparable.modifyClick(event);
+		}
+		else if (!comparable.isClickValid(event) && updated)
+		{
+			event.setMenuEntry(old);
 		}
 	}
 

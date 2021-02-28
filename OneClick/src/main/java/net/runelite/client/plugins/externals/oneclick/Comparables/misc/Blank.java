@@ -29,4 +29,10 @@ public class Blank extends ClickCompare
 	{
 
 	}
+
+	@Override
+	public void backupEntryModify(MenuEntry e)
+	{
+
+	}
 }
