@@ -27,7 +27,6 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.queries.InventoryWidgetItemQuery;
-import net.runelite.api.util.Text;
 import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -38,7 +37,6 @@ import net.runelite.client.menus.MenuManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.externals.utils.ExtUtils;
 import net.runelite.client.util.HotkeyListener;
 import org.pf4j.Extension;
@@ -47,8 +45,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Item Dropper",
 	description = "Drops selected items for you.",
-	tags = {"item", "drop", "dropper", "bot"},
-	type = PluginType.UTILITY
+	tags = {"item", "drop", "dropper", "bot"}
 )
 @Slf4j
 @SuppressWarnings("unused")
@@ -72,14 +69,13 @@ public class ItemDropper extends Plugin
 
 	private final List<WidgetItem> items = new ArrayList<>();
 	private final Set<Integer> ids = new HashSet<>();
-	private final Set<String> names = new HashSet<>();
 
 	private boolean iterating;
 	private int iterTicks;
 
 	private Robot robot;
-	private BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
-	private ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 25, TimeUnit.SECONDS, queue,
+	private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(1);
+	private final ThreadPoolExecutor executorService = new ThreadPoolExecutor(1, 1, 25, TimeUnit.SECONDS, queue,
 		new ThreadPoolExecutor.DiscardPolicy());
 
 	private final HotkeyListener toggle = new HotkeyListener(() -> config.toggle())
@@ -139,7 +135,6 @@ public class ItemDropper extends Plugin
 				if (iterTicks > 10)
 				{
 					iterating = false;
-					clearNames();
 				}
 			}
 			else
@@ -177,7 +172,6 @@ public class ItemDropper extends Plugin
 		if (iterating && quant == 0)
 		{
 			iterating = false;
-			clearNames();
 		}
 	}
 
@@ -193,13 +187,6 @@ public class ItemDropper extends Plugin
 	private void dropItems(List<WidgetItem> dropList)
 	{
 		iterating = true;
-
-		for (String name : names)
-		{
-			menuManager.addPriorityEntry("drop", name);
-			menuManager.addPriorityEntry("release", name);
-			menuManager.addPriorityEntry("destroy", name);
-		}
 
 		List<Rectangle> rects = new ArrayList<>();
 
@@ -238,29 +225,6 @@ public class ItemDropper extends Plugin
 		for (int i : utils.stringToIntArray(config.items()))
 		{
 			ids.add(i);
-		}
-
-		clearNames();
-
-		if (client.getGameState() == GameState.LOGGED_IN)
-		{
-			names.clear();
-
-			for (int i : ids)
-			{
-				final String name = Text.standardize(itemManager.getItemDefinition(i).getName());
-				names.add(name);
-			}
-		}
-	}
-
-	private void clearNames()
-	{
-		for (String name : names)
-		{
-			menuManager.removePriorityEntry("drop", name);
-			menuManager.removePriorityEntry("release", name);
-			menuManager.removePriorityEntry("destroy", name);
 		}
 	}
 }

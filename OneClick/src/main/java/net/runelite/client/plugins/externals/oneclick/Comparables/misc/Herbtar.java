@@ -3,8 +3,9 @@ package net.runelite.client.plugins.externals.oneclick.comparables.misc;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import net.runelite.api.ItemID;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
 public class Herbtar extends ClickCompare
@@ -16,7 +17,7 @@ public class Herbtar extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
+		return event.getOpcode() == MenuAction.ITEM_USE.getId() &&
 			HERBS.contains(event.getIdentifier());
 	}
 
@@ -36,18 +37,18 @@ public class Herbtar extends ClickCompare
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			event.getTarget().contains("<col=ff9040>Swamp tar<col=ffffff> -> ");
+		return event.getMenuAction() == MenuAction.ITEM_USE &&
+			event.getMenuTarget().contains("<col=ff9040>Swamp tar<col=ffffff> -> ");
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
 		if (updateSelectedItem(ItemID.SWAMP_TAR))
 		{
-			event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			event.setMenuAction(MenuAction.ITEM_USE_ON_WIDGET_ITEM);
 		}
 	}
 }

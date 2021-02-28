@@ -41,7 +41,6 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.externals.utils.ExtUtils;
 import net.runelite.client.plugins.externals.utils.Tab;
 import net.runelite.client.util.ColorUtil;
@@ -53,8 +52,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Basic Boss Swapper",
 	description = "Automatically swaps prayers for Olm, Nylo, and Verzik",
-	tags = {"prayer", "olm", "bot", "swap"},
-	type = PluginType.UTILITY
+	tags = {"prayer", "olm", "bot", "swap"}
 )
 @Slf4j
 @SuppressWarnings("unused")
@@ -297,7 +295,7 @@ public class BasicBossSwapper extends Plugin
 
 		executor.submit(() ->
 		{
-			if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.PRAYER.getId())
+			if (client.getVar(VarClientInt.INVENTORY_TAB) != InterfaceTab.PRAYER.getId())
 			{
 				robot.keyPress(utils.getTabHotkey(Tab.PRAYER));
 				try
@@ -345,7 +343,7 @@ public class BasicBossSwapper extends Plugin
 
 		List<WidgetItem> inv = utils.getItems(utils.stringToIntArray(itemList));
 
-		if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.INVENTORY.getId())
+		if (client.getVar(VarClientInt.INVENTORY_TAB) != InterfaceTab.INVENTORY.getId())
 		{
 			executor.submit(() -> robot.keyPress(utils.getTabHotkey(Tab.INVENTORY)));
 		}

@@ -1,6 +1,7 @@
 package net.runelite.client.plugins.externals.oneclick.comparables.misc;
 
 import net.runelite.api.MenuEntry;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
 public class Blank extends ClickCompare
@@ -18,13 +19,13 @@ public class Blank extends ClickCompare
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
 		return false;
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
 
 	}

@@ -8,30 +8,25 @@ package net.runelite.client.plugins.externals.customswapper;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
-import net.runelite.client.config.ConfigTitleSection;
+import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Keybind;
-import net.runelite.client.config.Title;
 
 @ConfigGroup("customSwapper")
 public interface CustomSwapperConfig extends Config
 {
-
-	@ConfigTitleSection(
+	@ConfigSection(
 		keyName = "config",
 		name = "Config",
 		description = "",
 		position = 0
 	)
-	default Title config()
-	{
-		return new Title();
-	}
+	String config = "Config";
 
 	@ConfigItem(
 		keyName = "swapBack",
 		name = "Swap back to inventory",
 		description = "Once finished with a swap, should it swap back to inventory?",
-		titleSection = "config",
+		section = "config",
 		position = 1
 	)
 	default boolean swapBack()
@@ -43,7 +38,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "enablePrayCheck",
 		name = "Active Prayer Check",
 		description = "Enabling this will make it so you can't toggle prayers if they're on.",
-		titleSection = "config",
+		section = "config",
 		position = 2
 	)
 	default boolean enablePrayCheck()
@@ -55,7 +50,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "randLow",
 		name = "Minimum MS Delay",
 		description = "Dont set this too high.",
-		titleSection = "config",
+		section = "config",
 		position = 3
 	)
 	default int randLow()
@@ -67,7 +62,7 @@ public interface CustomSwapperConfig extends Config
 		keyName = "randLower",
 		name = "Maximum MS Delay",
 		description = "Dont set this too high.",
-		titleSection = "config",
+		section = "config",
 		position = 4
 	)
 	default int randHigh()
@@ -75,23 +70,20 @@ public interface CustomSwapperConfig extends Config
 		return 80;
 	}
 
-	@ConfigTitleSection(
+	@ConfigSection(
 		position = 1,
 		keyName = "mainConfig",
 		name = "Main Config",
 		description = ""
 	)
-	default Title mainConfig()
-	{
-		return new Title();
-	}
+	String mainConfig = "Main Config";
 
 	@ConfigItem(
 		keyName = "customSwapOne",
 		name = "Swap Set: One",
 		description = "",
 		position = 1,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapOne()
 	{
@@ -103,7 +95,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Two",
 		description = "",
 		position = 2,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapTwo()
 	{
@@ -115,7 +107,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Three",
 		description = "",
 		position = 3,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapThree()
 	{
@@ -127,7 +119,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Four",
 		description = "",
 		position = 4,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapFour()
 	{
@@ -139,7 +131,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Five",
 		description = "",
 		position = 5,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapFive()
 	{
@@ -151,7 +143,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Six",
 		description = "",
 		position = 6,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapSix()
 	{
@@ -163,7 +155,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Seven",
 		description = "",
 		position = 7,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapSeven()
 	{
@@ -175,7 +167,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Eight",
 		description = "",
 		position = 8,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapEight()
 	{
@@ -187,7 +179,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Nine",
 		description = "",
 		position = 9,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapNine()
 	{
@@ -199,7 +191,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Ten",
 		description = "",
 		position = 10,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapTen()
 	{
@@ -211,7 +203,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Eleven",
 		description = "",
 		position = 11,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapEleven()
 	{
@@ -223,7 +215,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Twelve",
 		description = "",
 		position = 12,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapTwelve()
 	{
@@ -235,7 +227,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Thirteen",
 		description = "",
 		position = 13,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapThirteen()
 	{
@@ -247,7 +239,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Fourteen",
 		description = "",
 		position = 14,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapFourteen()
 	{
@@ -259,7 +251,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Fifteen",
 		description = "",
 		position = 15,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapFifteen()
 	{
@@ -271,7 +263,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Sixteen",
 		description = "",
 		position = 16,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapSixteen()
 	{
@@ -283,7 +275,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Seventeen",
 		description = "",
 		position = 17,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapSeventeen()
 	{
@@ -295,7 +287,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Eighteen",
 		description = "",
 		position = 18,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapEighteen()
 	{
@@ -307,7 +299,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Nineteen",
 		description = "",
 		position = 19,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapNineteen()
 	{
@@ -319,30 +311,27 @@ public interface CustomSwapperConfig extends Config
 		name = "Swap Set: Twenty",
 		description = "",
 		position = 20,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default String customSwapTwenty()
 	{
 		return "";
 	}
 
-	@ConfigTitleSection(
+	@ConfigSection(
 		position = 21,
 		keyName = "hotkeys",
 		name = "Hotkeys",
 		description = ""
 	)
-	default Title hotkeys()
-	{
-		return new Title();
-	}
+	String hotkeys = "Hotkeys";
 
 	@ConfigItem(
 		keyName = "customOne",
 		name = "Execute One",
 		description = "",
 		position = 22,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customOne()
 	{
@@ -354,7 +343,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Two",
 		description = "",
 		position = 23,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customTwo()
 	{
@@ -366,7 +355,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Three",
 		description = "",
 		position = 24,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customThree()
 	{
@@ -378,7 +367,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Four",
 		description = "",
 		position = 25,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customFour()
 	{
@@ -390,7 +379,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Five",
 		description = "",
 		position = 26,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customFive()
 	{
@@ -402,7 +391,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Six",
 		description = "",
 		position = 27,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customSix()
 	{
@@ -414,7 +403,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Seven",
 		description = "",
 		position = 28,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customSeven()
 	{
@@ -426,7 +415,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Eight",
 		description = "",
 		position = 29,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customEight()
 	{
@@ -438,7 +427,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Nine",
 		description = "",
 		position = 30,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customNine()
 	{
@@ -450,7 +439,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Ten",
 		description = "",
 		position = 31,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customTen()
 	{
@@ -462,7 +451,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Eleven",
 		description = "",
 		position = 32,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customEleven()
 	{
@@ -474,7 +463,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Twelve",
 		description = "",
 		position = 33,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customTwelve()
 	{
@@ -486,7 +475,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Thirteen",
 		description = "",
 		position = 34,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customThirteen()
 	{
@@ -498,7 +487,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Fourteen",
 		description = "",
 		position = 35,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customFourteen()
 	{
@@ -510,7 +499,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Fifteen",
 		description = "",
 		position = 36,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customFifteen()
 	{
@@ -522,7 +511,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Sixteen",
 		description = "",
 		position = 37,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customSixteen()
 	{
@@ -534,7 +523,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Seventeen",
 		description = "",
 		position = 38,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customSeventeen()
 	{
@@ -546,7 +535,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Eighteen",
 		description = "",
 		position = 39,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customEighteen()
 	{
@@ -558,7 +547,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Nineteen",
 		description = "",
 		position = 40,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customNineteen()
 	{
@@ -570,7 +559,7 @@ public interface CustomSwapperConfig extends Config
 		name = "Execute Twenty",
 		description = "",
 		position = 41,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind customTwenty()
 	{

@@ -3,8 +3,9 @@ package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import net.runelite.api.ItemID;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
 public class Bones extends ClickCompare
@@ -20,7 +21,7 @@ public class Bones extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+		return event.getOpcode() == MenuAction.GAME_OBJECT_FIRST_OPTION.getId() &&
 			event.getOption().toLowerCase().contains("pray") &&
 			event.getTarget().toLowerCase().contains("altar");
 	}
@@ -40,19 +41,19 @@ public class Bones extends ClickCompare
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			event.getTarget().contains("<col=ff9040>Bones<col=ffffff> -> ") &&
-			event.getTarget().toLowerCase().contains("altar");
+		return event.getMenuAction() == MenuAction.GAME_OBJECT_FIRST_OPTION &&
+			event.getMenuTarget().contains("<col=ff9040>Bones<col=ffffff> -> ") &&
+			event.getMenuTarget().toLowerCase().contains("altar");
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
 		if (updateSelectedItem(BONE_SET))
 		{
-			event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+			event.setMenuAction(MenuAction.ITEM_USE_ON_GAME_OBJECT);
 		}
 	}
 }

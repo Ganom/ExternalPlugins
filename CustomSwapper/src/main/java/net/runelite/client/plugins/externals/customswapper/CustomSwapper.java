@@ -11,6 +11,8 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,10 +42,8 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.externals.utils.ExtUtils;
 import net.runelite.client.plugins.externals.utils.Tab;
-import net.runelite.client.util.Clipboard;
 import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.HotkeyListener;
 import org.apache.commons.lang3.tuple.Pair;
@@ -53,8 +53,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Custom Swapper",
 	description = "Use plugin in PvP situations for best results",
-	tags = {"op", "af", "ganom"},
-	type = PluginType.UTILITY
+	tags = {"op", "af", "ganom"}
 )
 @Slf4j
 @SuppressWarnings("unused")
@@ -223,8 +222,7 @@ public class CustomSwapper extends Plugin
 				sb.append("\n");
 			}
 
-			final String string = sb.toString();
-			Clipboard.store(string);
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(sb.toString()), null);
 		}
 	}
 
@@ -405,7 +403,7 @@ public class CustomSwapper extends Plugin
 		switch (pair.getLeft())
 		{
 			case COMBAT:
-				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.COMBAT.getId())
+				if (client.getVar(VarClientInt.INVENTORY_TAB) != InterfaceTab.COMBAT.getId())
 				{
 					robot.delay((int) getMillis());
 					robot.keyPress(utils.getTabHotkey(pair.getLeft()));
@@ -414,7 +412,7 @@ public class CustomSwapper extends Plugin
 				utils.click(pair.getRight());
 				break;
 			case EQUIPMENT:
-				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.EQUIPMENT.getId())
+				if (client.getVar(VarClientInt.INVENTORY_TAB) != InterfaceTab.EQUIPMENT.getId())
 				{
 					robot.delay((int) getMillis());
 					robot.keyPress(utils.getTabHotkey(pair.getLeft()));
@@ -423,7 +421,7 @@ public class CustomSwapper extends Plugin
 				utils.click(pair.getRight());
 				break;
 			case INVENTORY:
-				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.INVENTORY.getId())
+				if (client.getVar(VarClientInt.INVENTORY_TAB) != InterfaceTab.INVENTORY.getId())
 				{
 					robot.delay((int) getMillis());
 					robot.keyPress(utils.getTabHotkey(pair.getLeft()));
@@ -432,7 +430,7 @@ public class CustomSwapper extends Plugin
 				utils.click(pair.getRight());
 				break;
 			case PRAYER:
-				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.PRAYER.getId())
+				if (client.getVar(VarClientInt.INVENTORY_TAB) != InterfaceTab.PRAYER.getId())
 				{
 					robot.delay((int) getMillis());
 					robot.keyPress(utils.getTabHotkey(pair.getLeft()));
@@ -441,7 +439,7 @@ public class CustomSwapper extends Plugin
 				utils.click(pair.getRight());
 				break;
 			case SPELLBOOK:
-				if (client.getVar(VarClientInt.INTERFACE_TAB) != InterfaceTab.SPELLBOOK.getId())
+				if (client.getVar(VarClientInt.INVENTORY_TAB) != InterfaceTab.SPELLBOOK.getId())
 				{
 					robot.delay((int) getMillis());
 					robot.keyPress(utils.getTabHotkey(pair.getLeft()));

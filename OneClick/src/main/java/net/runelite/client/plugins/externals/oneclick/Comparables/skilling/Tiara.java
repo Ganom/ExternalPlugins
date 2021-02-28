@@ -1,8 +1,9 @@
 package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 
 import net.runelite.api.ItemID;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
 public class Tiara extends ClickCompare
@@ -10,7 +11,7 @@ public class Tiara extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+		return event.getOpcode() == MenuAction.GAME_OBJECT_FIRST_OPTION.getId() &&
 			event.getOption().equals("Craft-rune") &&
 			event.getTarget().equals("<col=ffff>Altar");
 	}
@@ -30,18 +31,18 @@ public class Tiara extends ClickCompare
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
-			event.getTarget().equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar");
+		return event.getMenuAction() == MenuAction.GAME_OBJECT_FIRST_OPTION &&
+			event.getMenuTarget().equals("<col=ff9040>Tiara<col=ffffff> -> <col=ffff>Altar");
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
 		if (updateSelectedItem(ItemID.TIARA))
 		{
-			event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+			event.setMenuAction(MenuAction.ITEM_USE_ON_GAME_OBJECT);
 		}
 	}
 }

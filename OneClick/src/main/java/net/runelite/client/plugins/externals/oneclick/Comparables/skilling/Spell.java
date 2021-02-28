@@ -3,12 +3,12 @@ package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 import java.util.function.Predicate;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
 import net.runelite.api.Skill;
 import net.runelite.api.SpriteID;
-import net.runelite.api.Varbits;
 import net.runelite.api.events.MenuOpened;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.plugins.externals.oneclick.ClickItem;
@@ -19,9 +19,9 @@ import org.apache.commons.lang3.tuple.Pair;
 @Slf4j
 public class Spell extends ClickCompare
 {
-	private final Predicate<MenuEntry> cast;
-	private final Predicate<MenuEntry> reset;
-	private final Predicate<MenuEntry> set;
+	private final Predicate<MenuOptionClicked> cast;
+	private final Predicate<MenuOptionClicked> reset;
+	private final Predicate<MenuOptionClicked> set;
 	private final String spell;
 	private ClickItem clickItem = null;
 	@Setter
@@ -30,12 +30,12 @@ public class Spell extends ClickCompare
 	public Spell(String spell)
 	{
 		this.spell = spell;
-		this.cast = (event) -> event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
-			event.getOption().equals("Cast") &&
-			event.getTarget().contains("<col=00ff00>" + spell + "</col><col=ffffff> -> ");
-		this.reset = (event) -> event.getOpcode() == MenuOpcode.RUNELITE.getId() &&
-			event.getIdentifier() == -1;
-		this.set = (event) -> event.getOpcode() == MenuOpcode.RUNELITE.getId();
+		this.cast = (event) -> event.getMenuAction() == MenuAction.WIDGET_TYPE_2 &&
+			event.getMenuOption().equals("Cast") &&
+			event.getMenuTarget().contains("<col=00ff00>" + spell + "</col><col=ffffff> -> ");
+		this.reset = (event) -> event.getMenuAction() == MenuAction.RUNELITE &&
+			event.getId() == -1;
+		this.set = (event) -> event.getMenuAction() == MenuAction.RUNELITE;
 	}
 
 	public void onMenuOpened(MenuOpened event)
@@ -69,7 +69,7 @@ public class Spell extends ClickCompare
 					if (spell.getSpriteId() != SpriteID.SPELL_HIGH_LEVEL_ALCHEMY ||
 						spell.getSpriteId() == SpriteID.SPELL_HIGH_LEVEL_ALCHEMY_DISABLED ||
 						client.getBoostedSkillLevel(Skill.MAGIC) < 55 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
+						client.getVarbitValue(4070) != 0)
 					{
 						clickItem = null;
 						return;
@@ -79,7 +79,7 @@ public class Spell extends ClickCompare
 					if (spell.getSpriteId() != SpriteID.SPELL_SUPERHEAT_ITEM ||
 						spell.getSpriteId() == SpriteID.SPELL_SUPERHEAT_ITEM_DISABLED ||
 						client.getBoostedSkillLevel(Skill.MAGIC) < 43 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
+						client.getVarbitValue(4070) != 0)
 					{
 						clickItem = null;
 						return;
@@ -89,7 +89,7 @@ public class Spell extends ClickCompare
 					if (spell.getSpriteId() != SpriteID.SPELL_LVL_1_ENCHANT ||
 						spell.getSpriteId() == SpriteID.SPELL_LVL_1_ENCHANT_DISABLED ||
 						client.getBoostedSkillLevel(Skill.MAGIC) < 7 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
+						client.getVarbitValue(4070) != 0)
 					{
 						clickItem = null;
 						return;
@@ -99,7 +99,7 @@ public class Spell extends ClickCompare
 					if (spell.getSpriteId() != SpriteID.SPELL_LVL_2_ENCHANT ||
 						spell.getSpriteId() == SpriteID.SPELL_LVL_2_ENCHANT_DISABLED ||
 						client.getBoostedSkillLevel(Skill.MAGIC) < 27 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
+						client.getVarbitValue(4070) != 0)
 					{
 						clickItem = null;
 						return;
@@ -109,7 +109,7 @@ public class Spell extends ClickCompare
 					if (spell.getSpriteId() != SpriteID.SPELL_LVL_3_ENCHANT ||
 						spell.getSpriteId() == SpriteID.SPELL_LVL_3_ENCHANT_DISABLED ||
 						client.getBoostedSkillLevel(Skill.MAGIC) < 49 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
+						client.getVarbitValue(4070) != 0)
 					{
 						clickItem = null;
 						return;
@@ -119,7 +119,7 @@ public class Spell extends ClickCompare
 					if (spell.getSpriteId() != SpriteID.SPELL_LVL_4_ENCHANT ||
 						spell.getSpriteId() == SpriteID.SPELL_LVL_4_ENCHANT_DISABLED ||
 						client.getBoostedSkillLevel(Skill.MAGIC) < 57 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
+						client.getVarbitValue(4070) != 0)
 					{
 						clickItem = null;
 						return;
@@ -129,7 +129,7 @@ public class Spell extends ClickCompare
 					if (spell.getSpriteId() != SpriteID.SPELL_LVL_5_ENCHANT ||
 						spell.getSpriteId() == SpriteID.SPELL_LVL_5_ENCHANT_DISABLED ||
 						client.getBoostedSkillLevel(Skill.MAGIC) < 68 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
+						client.getVarbitValue(4070) != 0)
 					{
 						clickItem = null;
 						return;
@@ -139,7 +139,7 @@ public class Spell extends ClickCompare
 					if (spell.getSpriteId() != SpriteID.SPELL_LVL_6_ENCHANT ||
 						spell.getSpriteId() == SpriteID.SPELL_LVL_6_ENCHANT_DISABLED ||
 						client.getBoostedSkillLevel(Skill.MAGIC) < 87 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
+						client.getVarbitValue(4070) != 0)
 					{
 						clickItem = null;
 						return;
@@ -149,7 +149,7 @@ public class Spell extends ClickCompare
 					if (spell.getSpriteId() != SpriteID.SPELL_LVL_7_ENCHANT ||
 						spell.getSpriteId() == SpriteID.SPELL_LVL_7_ENCHANT_DISABLED ||
 						client.getBoostedSkillLevel(Skill.MAGIC) < 93 ||
-						client.getVar(Varbits.SPELLBOOK) != 0)
+						client.getVarbitValue(4070) != 0)
 					{
 						clickItem = null;
 						return;
@@ -218,7 +218,7 @@ public class Spell extends ClickCompare
 			}
 
 			setTargetItem.setIdentifier(set ? -1 : firstEntry.getIdentifier());
-			setTargetItem.setOpcode(MenuOpcode.RUNELITE.getId());
+			setTargetItem.setOpcode(MenuAction.RUNELITE.getId());
 			setTargetItem.setParam1(widgetId);
 			setTargetItem.setForceLeftClick(false);
 			menuList[1] = setTargetItem;
@@ -230,7 +230,7 @@ public class Spell extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuOpcode.WIDGET_TYPE_2.getId() &&
+		return event.getOpcode() == MenuAction.WIDGET_TYPE_2.getId() &&
 			event.getOption().equals("Cast") &&
 			event.getTarget().equals("<col=00ff00>" + spell + "</col>");
 	}
@@ -251,13 +251,13 @@ public class Spell extends ClickCompare
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
 		return cast.test(event) || reset.test(event) || set.test(event);
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
 		if (plugin == null || client == null)
 		{
@@ -275,10 +275,10 @@ public class Spell extends ClickCompare
 
 			if (pair.getLeft() != -1)
 			{
-				event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET.getId());
-				event.setIdentifier(pair.getLeft());
-				event.setParam0(pair.getRight());
-				event.setParam1(WidgetInfo.INVENTORY.getId());
+				event.setMenuAction(MenuAction.ITEM_USE_ON_WIDGET);
+				event.setId(pair.getLeft());
+				event.setActionParam(pair.getRight());
+				event.setWidgetId(WidgetInfo.INVENTORY.getId());
 				client.setSelectedSpellName("<col=00ff00>" + spell + "</col>" + "<col=ffffff>");
 				client.setSelectedSpellWidget(spellSelection.getWidgetInfo().getId());
 			}
@@ -289,8 +289,8 @@ public class Spell extends ClickCompare
 		}
 		else if (set.test(event))
 		{
-			final String itemName = event.getTarget().split("->")[1];
-			clickItem = new ClickItem(itemName, event.getIdentifier());
+			final String itemName = event.getMenuTarget().split("->")[1];
+			clickItem = new ClickItem(itemName, event.getId());
 		}
 	}
 }

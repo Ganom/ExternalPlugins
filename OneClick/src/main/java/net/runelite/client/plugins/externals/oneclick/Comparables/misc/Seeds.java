@@ -3,8 +3,9 @@ package net.runelite.client.plugins.externals.oneclick.comparables.misc;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import net.runelite.api.ItemID;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
 public class Seeds extends ClickCompare
@@ -20,7 +21,7 @@ public class Seeds extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuOpcode.EXAMINE_OBJECT.getId() &&
+		return event.getOpcode() == MenuAction.EXAMINE_OBJECT.getId() &&
 			event.getTarget().toLowerCase().contains("tithe");
 	}
 
@@ -40,31 +41,31 @@ public class Seeds extends ClickCompare
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getOpcode() == MenuOpcode.EXAMINE_OBJECT.getId() && (
-			(event.getTarget().contains("<col=ff9040>Watering can<col=ffffff> -> ") &&
-				event.getTarget().toLowerCase().contains("water barrel")) ||
-				(event.getTarget().contains("<col=ff9040>Seed<col=ffffff> -> ") &&
-					event.getTarget().toLowerCase().contains("tithe"))
+		return event.getMenuAction() == MenuAction.EXAMINE_OBJECT && (
+			(event.getMenuTarget().contains("<col=ff9040>Watering can<col=ffffff> -> ") &&
+				event.getMenuTarget().toLowerCase().contains("water barrel")) ||
+				(event.getMenuTarget().contains("<col=ff9040>Seed<col=ffffff> -> ") &&
+					event.getMenuTarget().toLowerCase().contains("tithe"))
 		);
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
-		if (event.getTarget().toLowerCase().contains("tithe"))
+		if (event.getMenuTarget().toLowerCase().contains("tithe"))
 		{
 			if (updateSelectedItem(SEED_SET))
 			{
-				event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+				event.setMenuAction(MenuAction.ITEM_USE_ON_GAME_OBJECT);
 			}
 		}
-		else if (event.getTarget().toLowerCase().contains("water barrel"))
+		else if (event.getMenuTarget().toLowerCase().contains("water barrel"))
 		{
 			if (updateSelectedItem(WATERING_CANS))
 			{
-				event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+				event.setMenuAction(MenuAction.ITEM_USE_ON_GAME_OBJECT);
 			}
 		}
 	}

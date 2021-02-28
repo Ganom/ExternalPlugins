@@ -24,7 +24,6 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.externals.utils.ExtUtils;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.HotkeyListener;
@@ -33,8 +32,7 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "Auto Clicker",
-	enabledByDefault = false,
-	type = PluginType.UTILITY
+	enabledByDefault = false
 )
 @Slf4j
 public class AutoClick extends Plugin
@@ -90,7 +88,7 @@ public class AutoClick extends Plugin
 		random = null;
 	}
 
-	private HotkeyListener hotkeyListener = new HotkeyListener(() -> config.toggle())
+	private final HotkeyListener hotkeyListener = new HotkeyListener(() -> config.toggle())
 	{
 		@Override
 		public void hotkeyPressed()

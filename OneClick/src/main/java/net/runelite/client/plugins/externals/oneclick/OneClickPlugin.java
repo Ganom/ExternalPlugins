@@ -22,13 +22,11 @@ import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOpened;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 import net.runelite.client.plugins.externals.oneclick.comparables.misc.Blank;
 import net.runelite.client.plugins.externals.oneclick.comparables.misc.Custom;
@@ -39,8 +37,7 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "One Click",
-	description = "OP One Click methods.",
-	type = PluginType.UTILITY
+	description = "OP One Click methods."
 )
 @Getter
 @Slf4j
@@ -125,7 +122,7 @@ public class OneClickPlugin extends Plugin
 
 		if (comparable instanceof Healer)
 		{
-			Widget widget = client.getWidget(WidgetInfo.BA_HEAL_LISTEN_TEXT);
+			Widget widget = client.getWidget(488, 8);
 
 			if (widget != null && widget.getText() != null)
 			{
@@ -194,7 +191,7 @@ public class OneClickPlugin extends Plugin
 			return;
 		}
 
-		if (event.getTarget() == null)
+		if (event.getMenuTarget() == null)
 		{
 			return;
 		}

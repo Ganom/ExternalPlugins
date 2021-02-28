@@ -8,31 +8,27 @@ package net.runelite.client.plugins.externals.autoclicker;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
-import net.runelite.client.config.ConfigTitleSection;
+import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.config.Range;
-import net.runelite.client.config.Title;
 
 @ConfigGroup("autoClickerConfig")
 public interface AutoClickConfig extends Config
 {
-	@ConfigTitleSection(
+	@ConfigSection(
 		position = 0,
 		keyName = "mainConfig",
 		name = "Main Config",
 		description = ""
 	)
-	default Title mainConfig()
-	{
-		return new Title();
-	}
+	String mainConfig = "Main Config";
 
 	@ConfigItem(
 		keyName = "toggle",
 		name = "Toggle",
 		description = "Toggles the clicker.",
 		position = 0,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default Keybind toggle()
 	{
@@ -44,7 +40,7 @@ public interface AutoClickConfig extends Config
 		name = "Absolute Delay Min",
 		description = "",
 		position = 3,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default int min()
 	{
@@ -56,7 +52,7 @@ public interface AutoClickConfig extends Config
 		name = "Absolute Delay Max",
 		description = "",
 		position = 4,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default int max()
 	{
@@ -68,7 +64,7 @@ public interface AutoClickConfig extends Config
 		name = "Delay Target",
 		description = "",
 		position = 5,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default int target()
 	{
@@ -80,7 +76,7 @@ public interface AutoClickConfig extends Config
 		name = "Delay Deviation",
 		description = "",
 		position = 6,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default int deviation()
 	{
@@ -92,30 +88,27 @@ public interface AutoClickConfig extends Config
 		name = "Weighted Distribution",
 		description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
 		position = 7,
-		titleSection = "mainConfig"
+		section = "mainConfig"
 	)
 	default boolean weightedDistribution()
 	{
 		return false;
 	}
 
-	@ConfigTitleSection(
+	@ConfigSection(
 		position = 1,
 		keyName = "helperConfig",
 		name = "Helper Config",
 		description = ""
 	)
-	default Title helperConfig()
-	{
-		return new Title();
-	}
+	String helperConfig = "Helper Config";
 
 	@ConfigItem(
 		keyName = "autoDisable",
 		name = "Auto Disable at low HP",
 		description = "Automatically disables the clicker when you get to low hp.",
 		position = 0,
-		titleSection = "helperConfig"
+		section = "helperConfig"
 	)
 	default boolean autoDisableHp()
 	{
@@ -127,7 +120,7 @@ public interface AutoClickConfig extends Config
 		name = "Disable when Inv is full",
 		description = "Automatically disables the clicker when your inventory is full..",
 		position = 1,
-		titleSection = "helperConfig"
+		section = "helperConfig"
 	)
 	default boolean autoDisableInv()
 	{
@@ -145,7 +138,7 @@ public interface AutoClickConfig extends Config
 		position = 2,
 		hidden = true,
 		unhide = "autoDisable",
-		titleSection = "helperConfig"
+		section = "helperConfig"
 	)
 	default int hpThreshold()
 	{
@@ -159,7 +152,7 @@ public interface AutoClickConfig extends Config
 		position = 3,
 		hidden = true,
 		unhide = "autoDisable",
-		titleSection = "helperConfig"
+		section = "helperConfig"
 	)
 	default boolean flash()
 	{

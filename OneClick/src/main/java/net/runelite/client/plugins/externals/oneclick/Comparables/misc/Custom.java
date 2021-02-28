@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
 public class Custom extends ClickCompare
@@ -28,7 +29,7 @@ public class Custom extends ClickCompare
 		int id = event.getIdentifier();
 
 		if (customClickMap.get(id) != null &&
-			event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
+			event.getMenuAction() == MenuAction.ITEM_USE &&
 			customClickMap.containsKey(id)
 		)
 		{
@@ -47,7 +48,7 @@ public class Custom extends ClickCompare
 		}
 		int id = event.getIdentifier();
 		int item = findItem(customClickMap.get(id)).getLeft();
-		final String name = client.getItemDefinition(item).getName();
+		final String name = client.getItemComposition(item).getName();
 		MenuEntry e = event.clone();
 		e.setTarget("<col=ff9040>" + name + "<col=ffffff> -> " + getTargetMap().get(id));
 		e.setForceLeftClick(true);
@@ -55,18 +56,18 @@ public class Custom extends ClickCompare
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			customClickMap.containsKey(event.getIdentifier());
+		return event.getMenuAction() == MenuAction.ITEM_USE_ON_WIDGET_ITEM &&
+			customClickMap.containsKey(event.getId());
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
-		if (updateSelectedItem(customClickMap.get(event.getIdentifier())))
+		if (updateSelectedItem(customClickMap.get(event.getId())))
 		{
-			event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			event.setMenuAction(MenuAction.ITEM_USE_ON_WIDGET_ITEM);
 		}
 	}
 

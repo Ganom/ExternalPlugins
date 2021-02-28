@@ -4,8 +4,9 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ItemID;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
 @Slf4j
@@ -20,7 +21,7 @@ public class Firemaking extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
+		return event.getOpcode() == MenuAction.ITEM_USE.getId() &&
 			LOG_ID.contains(event.getIdentifier());
 	}
 
@@ -38,18 +39,18 @@ public class Firemaking extends ClickCompare
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getOpcode() == MenuOpcode.ITEM_USE.getId() &&
-			event.getTarget().contains("<col=ff9040>Tinderbox<col=ffffff> -> ");
+		return event.getMenuAction() == MenuAction.ITEM_USE &&
+			event.getMenuTarget().contains("<col=ff9040>Tinderbox<col=ffffff> -> ");
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
 		if (updateSelectedItem(ItemID.TINDERBOX))
 		{
-			event.setOpcode(MenuOpcode.ITEM_USE_ON_WIDGET_ITEM.getId());
+			event.setMenuAction(MenuAction.ITEM_USE_ON_WIDGET_ITEM);
 		}
 	}
 }

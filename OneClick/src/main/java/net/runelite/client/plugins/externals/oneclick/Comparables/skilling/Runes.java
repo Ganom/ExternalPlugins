@@ -1,7 +1,8 @@
 package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
@@ -19,7 +20,7 @@ public class Runes extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() &&
+		return event.getOpcode() == MenuAction.GAME_OBJECT_FIRST_OPTION.getId() &&
 			event.getOption().equals("Craft-rune") &&
 			event.getTarget().equals("<col=ffff>Altar");
 	}
@@ -49,28 +50,28 @@ public class Runes extends ClickCompare
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return (event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getTarget().equals(rune)) ||
-			(event.getOpcode() == MenuOpcode.GAME_OBJECT_FIRST_OPTION.getId() && event.getTarget().equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"));
+		return (event.getMenuAction() == MenuAction.GAME_OBJECT_FIRST_OPTION && event.getMenuTarget().equals(rune)) ||
+			(event.getMenuAction() == MenuAction.GAME_OBJECT_FIRST_OPTION && event.getMenuTarget().equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"));
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
-		if (event.getTarget().equals(rune))
+		if (event.getMenuTarget().equals(rune))
 		{
 			if (updateSelectedItem(id))
 			{
-				event.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+				event.setMenuAction(MenuAction.ITEM_USE_ON_GAME_OBJECT);
 			}
 		}
-		else if (event.getTarget().equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
+		else if (event.getMenuTarget().equals("<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself"))
 		{
-			event.setIdentifier(1);
-			event.setOpcode(MenuOpcode.CC_OP.getId());
-			event.setParam0(-1);
-			event.setParam1(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
+			event.setId(1);
+			event.setMenuAction(MenuAction.CC_OP);
+			event.setActionParam(-1);
+			event.setWidgetId(WidgetInfo.SPELL_MAGIC_IMBUE.getId());
 		}
 	}
 }

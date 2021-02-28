@@ -17,10 +17,11 @@ import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.MenuAction;
+import static net.runelite.api.MenuAction.SPELL_CAST_ON_NPC;
+import static net.runelite.api.MenuAction.SPELL_CAST_ON_PLAYER;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
 import net.runelite.api.NPC;
-import net.runelite.api.Varbits;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.MenuEntryAdded;
@@ -36,7 +37,6 @@ import net.runelite.client.game.FriendChatManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.client.util.HotkeyListener;
 import net.runelite.client.util.PvPUtil;
 import org.pf4j.Extension;
@@ -44,8 +44,7 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "Left Click Cast",
-	description = "Casting made even easier.",
-	type = PluginType.UTILITY
+	description = "Casting made even easier."
 )
 @Slf4j
 @SuppressWarnings("unused")
@@ -192,11 +191,11 @@ public class LeftClickCast extends Plugin
 			return;
 		}
 
-		if (event.getOpcode() == MenuOpcode.PLAYER_SECOND_OPTION.getId() && isMage)
+		if (event.getOpcode() == MenuAction.PLAYER_SECOND_OPTION.getId() && isMage)
 		{
 			final String name = Text.standardize(event.getTarget(), true);
 
-			if (!config.disableFriendlyRegionChecks() && (client.getVar(Varbits.LMS_IN_GAME) == 0 && (client.isFriended(name, false) ||
+			if (!config.disableFriendlyRegionChecks() && (client.getVarbitValue(5314) == 0 && (client.isFriended(name, false) ||
 				friendsManager.isMember(name))))
 			{
 				return;
@@ -220,7 +219,7 @@ public class LeftClickCast extends Plugin
 			e.setForceLeftClick(true);
 			insert(e);
 		}
-		else if (event.getOpcode() == MenuOpcode.NPC_SECOND_OPTION.getId() && isMage)
+		else if (event.getOpcode() == MenuAction.NPC_SECOND_OPTION.getId() && isMage)
 		{
 			try
 			{
@@ -251,17 +250,17 @@ public class LeftClickCast extends Plugin
 	@Subscribe
 	public void onMenuOptionClicked(MenuOptionClicked event)
 	{
-		if (event.getOption().contains("(P)"))
+		if (event.getMenuOption().contains("(P)"))
 		{
-			event.setOpcode(15);
-			event.setParam0(0);
-			event.setParam1(0);
+			event.setMenuAction(SPELL_CAST_ON_PLAYER);
+			event.setActionParam(0);
+			event.setWidgetId(0);
 		}
-		else if (event.getOption().contains("(N)"))
+		else if (event.getMenuOption().contains("(N)"))
 		{
-			event.setOpcode(8);
-			event.setParam0(0);
-			event.setParam1(0);
+			event.setMenuAction(SPELL_CAST_ON_NPC);
+			event.setActionParam(0);
+			event.setWidgetId(0);
 		}
 	}
 
@@ -279,7 +278,7 @@ public class LeftClickCast extends Plugin
 
 		for (Item item : ic.getItems())
 		{
-			final String name = client.getItemDefinition(item.getId()).getName().toLowerCase();
+			final String name = client.getItemComposition(item.getId()).getName().toLowerCase();
 			if (name.contains("staff") || name.contains("wand") || name.contains("sceptre") || name.contains("trident"))
 			{
 				isMage = true;

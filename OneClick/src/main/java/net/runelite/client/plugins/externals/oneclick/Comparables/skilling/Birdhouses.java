@@ -3,8 +3,9 @@ package net.runelite.client.plugins.externals.oneclick.comparables.skilling;
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import net.runelite.api.ItemID;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
 public class Birdhouses extends ClickCompare
@@ -23,7 +24,7 @@ public class Birdhouses extends ClickCompare
 	@Override
 	public boolean isEntryValid(MenuEntry event)
 	{
-		return event.getOpcode() == MenuOpcode.GAME_OBJECT_SECOND_OPTION.getId() &&
+		return event.getOpcode() == MenuAction.GAME_OBJECT_SECOND_OPTION.getId() &&
 			BIRD_HOUSES_NAMES.contains(event.getTarget());
 	}
 
@@ -38,20 +39,20 @@ public class Birdhouses extends ClickCompare
 		MenuEntry e = event.clone();
 		e.setOption("Use");
 		e.setTarget("<col=ff9040>Hops seed<col=ffffff> -> " + getTargetMap().get(event.getIdentifier()));
-		e.setOpcode(MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId());
+		e.setOpcode(MenuAction.ITEM_USE_ON_GAME_OBJECT.getId());
 		e.setForceLeftClick(true);
 		insert(e);
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getOpcode() == MenuOpcode.ITEM_USE_ON_GAME_OBJECT.getId() &&
-			event.getTarget().contains("<col=ff9040>Hops seed<col=ffffff> -> ");
+		return event.getMenuAction() == MenuAction.ITEM_USE_ON_GAME_OBJECT &&
+			event.getMenuTarget().contains("<col=ff9040>Hops seed<col=ffffff> -> ");
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
 		updateSelectedItem(HOPS_SEED);
 	}

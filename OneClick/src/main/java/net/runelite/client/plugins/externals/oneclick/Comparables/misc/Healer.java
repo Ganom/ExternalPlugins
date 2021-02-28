@@ -4,8 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ItemID;
+import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
-import net.runelite.api.MenuOpcode;
+import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
 @Slf4j
@@ -53,19 +54,19 @@ public class Healer extends ClickCompare
 	}
 
 	@Override
-	public boolean isClickValid(MenuEntry event)
+	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getTarget().equalsIgnoreCase("<col=ff9040>Food<col=ffffff> -> <col=ffff00>Penance Healer");
+		return event.getMenuTarget().equalsIgnoreCase("<col=ff9040>Food<col=ffffff> -> <col=ffff00>Penance Healer");
 	}
 
 	@Override
-	public void modifyClick(MenuEntry event)
+	public void modifyClick(MenuOptionClicked event)
 	{
-		if (event.getTarget().equalsIgnoreCase("<col=ff9040>Food<col=ffffff> -> <col=ffff00>Penance Healer"))
+		if (event.getMenuTarget().equalsIgnoreCase("<col=ff9040>Food<col=ffffff> -> <col=ffff00>Penance Healer"))
 		{
 			if (updateSelectedItem(ITEMS.getOrDefault(roleText, -1)))
 			{
-				event.setOpcode(MenuOpcode.ITEM_USE_ON_NPC.getId());
+				event.setMenuAction(MenuAction.ITEM_USE_ON_NPC);
 			}
 		}
 	}

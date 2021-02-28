@@ -8,30 +8,26 @@ package net.runelite.client.plugins.externals.leftclickcast;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
-import net.runelite.client.config.ConfigTitleSection;
+import net.runelite.client.config.ConfigSection;
 import net.runelite.client.config.Keybind;
-import net.runelite.client.config.Title;
 
 @ConfigGroup(value = "leftClickPK")
 public interface LeftClickConfig extends Config
 {
-	@ConfigTitleSection(
+	@ConfigSection(
 		position = 0,
 		keyName = "preset",
 		name = "Preset",
 		description = ""
 	)
-	default Title preset()
-	{
-		return new Title();
-	}
+	String preset = "Preset";
 
 	@ConfigItem(
 		position = 1,
 		keyName = "disableFriendlyRegionChecks",
 		name = "Disable Friend/Clan/Lvl Checks",
 		description = "This will make it so you can cast on friends/clan members.",
-		titleSection = "preset"
+		section = "preset"
 	)
 	default boolean disableFriendlyRegionChecks()
 	{
@@ -43,7 +39,7 @@ public interface LeftClickConfig extends Config
 		keyName = "disableStaffChecks",
 		name = "Disable Staff/Wand Check",
 		description = "This will make it so your attack will always change to cast.",
-		titleSection = "preset"
+		section = "preset"
 	)
 	default boolean disableStaffChecks()
 	{
@@ -55,7 +51,7 @@ public interface LeftClickConfig extends Config
 		keyName = "whitelist",
 		name = "Whitelisted NPCs",
 		description = "Seperate with comma.",
-		titleSection = "preset",
+		section = "preset",
 		hidden = true,
 		unhide = "disableStaffChecks"
 	)
@@ -64,23 +60,20 @@ public interface LeftClickConfig extends Config
 		return "";
 	}
 
-	@ConfigTitleSection(
+	@ConfigSection(
 		position = 4,
 		keyName = "hotkeys",
 		name = "Hotkeys",
 		description = ""
 	)
-	default Title hotkeys()
-	{
-		return new Title();
-	}
+	String hotkeys = "Hotkeys";
 
 	@ConfigItem(
 		keyName = "spellOneSwap",
 		name = "Swap to Spell #1",
 		description = "",
 		position = 1,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind spellOneSwap()
 	{
@@ -92,7 +85,7 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #2",
 		description = "",
 		position = 2,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind spellTwoSwap()
 	{
@@ -104,7 +97,7 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #3",
 		description = "",
 		position = 3,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind spellThreeSwap()
 	{
@@ -116,7 +109,7 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #4",
 		description = "",
 		position = 4,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind spellFourSwap()
 	{
@@ -128,7 +121,7 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #5",
 		description = "",
 		position = 5,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind spellFiveSwap()
 	{
@@ -140,30 +133,27 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #6",
 		description = "",
 		position = 6,
-		titleSection = "hotkeys"
+		section = "hotkeys"
 	)
 	default Keybind spellSixSwap()
 	{
 		return Keybind.NOT_SET;
 	}
 
-	@ConfigTitleSection(
+	@ConfigSection(
 		position = 8,
 		keyName = "spells",
 		name = "Spells",
 		description = ""
 	)
-	default Title spells()
-	{
-		return new Title();
-	}
+	String spells = "Spells";
 
 	@ConfigItem(
 		keyName = "spellOne",
 		name = "Spell #1",
 		description = "",
 		position = 1,
-		titleSection = "spells"
+		section = "spells"
 	)
 	default Spells spellOne()
 	{
@@ -175,7 +165,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #2",
 		description = "",
 		position = 2,
-		titleSection = "spells"
+		section = "spells"
 	)
 	default Spells spellTwo()
 	{
@@ -187,7 +177,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #3",
 		description = "",
 		position = 3,
-		titleSection = "spells"
+		section = "spells"
 	)
 	default Spells spellThree()
 	{
@@ -199,7 +189,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #4",
 		description = "",
 		position = 4,
-		titleSection = "spells"
+		section = "spells"
 	)
 	default Spells spellFour()
 	{
@@ -211,7 +201,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #5",
 		description = "",
 		position = 5,
-		titleSection = "spells"
+		section = "spells"
 	)
 	default Spells spellFive()
 	{
@@ -223,7 +213,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #6",
 		description = "",
 		position = 6,
-		titleSection = "spells"
+		section = "spells"
 	)
 	default Spells spellSix()
 	{

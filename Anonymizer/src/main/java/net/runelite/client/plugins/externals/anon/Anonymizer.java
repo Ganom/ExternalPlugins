@@ -21,7 +21,6 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.plugins.PluginType;
 import net.runelite.rs.api.RSClient;
 import net.runelite.rs.api.RSWidget;
 import org.pf4j.Extension;
@@ -30,8 +29,7 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "Anonymizer",
-	description = "Hides your rsn and others.",
-	type = PluginType.MISCELLANEOUS
+	description = "Hides your rsn and others."
 )
 public class Anonymizer extends Plugin
 {
