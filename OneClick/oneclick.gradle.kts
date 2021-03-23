@@ -24,9 +24,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "6.0.2"
+version = "6.0.3"
 
-project.extra["PluginName"] = "OneClick"
+project.extra["PluginName"] = "OneClick-custom"
 project.extra["PluginDescription"] = "OP One Click methods."
 
 tasks {
