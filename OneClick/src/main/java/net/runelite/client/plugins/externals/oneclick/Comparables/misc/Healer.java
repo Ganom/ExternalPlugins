@@ -51,6 +51,19 @@ public class Healer extends ClickCompare
 		e.setTarget("<col=ff9040>Food<col=ffffff> -> <col=ffff00>Penance Healer");
 		e.setForceLeftClick(true);
 		insert(e);
+		
+		// deprioritize walk here
+		assert client != null;
+		MenuEntry[] entries = client.getMenuEntries();
+		for (MenuEntry entry : entries)
+		{
+			if (entry.getMenuAction() == MenuAction.WALK)
+			{
+				entry.setOpcode(entry.getOpcode() + MenuAction.MENU_ACTION_DEPRIORITIZE_OFFSET);
+				break;
+			}
+		}
+		client.setMenuEntries(entries);
 	}
 
 	@Override
