@@ -58,7 +58,7 @@ public class Custom extends ClickCompare
 	@Override
 	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getMenuAction() == MenuAction.ITEM_USE_ON_WIDGET_ITEM &&
+		return event.getMenuAction() == MenuAction.ITEM_USE &&
 			customClickMap.containsKey(event.getId());
 	}
 
