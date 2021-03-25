@@ -154,19 +154,14 @@ public class OneClickPlugin extends Plugin
 
 		if (config.deprioritizeWalk())
 		{
-			switch (config.getType())
+			if (config.getType() == Types.SEED_SET)
 			{
-				case SEED_SET:
-				case BA_HEALER:
-					if (event.getOpcode() == MenuAction.WALK.getId())
-					{
-						MenuEntry menuEntry = client.getLeftClickMenuEntry();
-						menuEntry.setOpcode(MenuAction.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
-						client.setLeftClickMenuEntry(menuEntry);
-					}
-					break;
-				default:
-					break;
+				if (event.getOpcode() == MenuAction.WALK.getId())
+				{
+					MenuEntry menuEntry = client.getLeftClickMenuEntry();
+					menuEntry.setOpcode(MenuAction.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
+					client.setLeftClickMenuEntry(menuEntry);
+				}
 			}
 		}
 

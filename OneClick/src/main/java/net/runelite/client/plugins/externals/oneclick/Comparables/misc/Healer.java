@@ -48,6 +48,7 @@ public class Healer extends ClickCompare
 
 		MenuEntry e = event.clone();
 		e.setOption("Use");
+		e.setOpcode(MenuAction.NPC_FIRST_OPTION.getId());
 		e.setTarget("<col=ff9040>Food<col=ffffff> -> <col=ffff00>Penance Healer");
 		e.setForceLeftClick(true);
 		insert(e);
