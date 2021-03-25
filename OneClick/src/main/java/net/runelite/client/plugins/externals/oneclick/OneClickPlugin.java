@@ -55,7 +55,6 @@ public class OneClickPlugin extends Plugin
 	@Inject
 	private OneClickConfig config;
 
-	private final Custom custom = new Custom();
 	private final Map<Integer, String> targetMap = new HashMap<>();
 
 	private ClickCompare comparable = new Blank();
@@ -74,8 +73,6 @@ public class OneClickPlugin extends Plugin
 	@Override
 	protected void startUp()
 	{
-		custom.setClient(client);
-		custom.setPlugin(this);
 		updateConfig();
 	}
 
@@ -235,23 +232,29 @@ public class OneClickPlugin extends Plugin
 	private void updateConfig()
 	{
 		enableImbue = config.isUsingImbue();
-		custom.updateMap(config.swaps());
 		Types type = config.getType();
-		if (type == Types.SPELL)
+		switch (type)
 		{
-			comparable = config.getSpells().getComparable();
-			comparable.setClient(client);
-			comparable.setPlugin(this);
-			if (comparable instanceof Spell)
-			{
-				((Spell) comparable).setSpellSelection(config.getSpells());
-			}
-		}
-		else
-		{
-			comparable = type.getComparable();
-			comparable.setClient(client);
-			comparable.setPlugin(this);
+			case SPELL:
+				comparable = config.getSpells().getComparable();
+				comparable.setClient(client);
+				comparable.setPlugin(this);
+				if (comparable instanceof Spell)
+				{
+					((Spell) comparable).setSpellSelection(config.getSpells());
+				}
+				break;
+			case CUSTOM:
+				comparable = type.getComparable();
+				comparable.setClient(client);
+				comparable.setPlugin(this);
+				((Custom) comparable).updateMap(config.swaps());
+				break;
+			default:
+				comparable = type.getComparable();
+				comparable.setClient(client);
+				comparable.setPlugin(this);
+				break;
 		}
 	}
 }

@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
+@Slf4j
 public class Custom extends ClickCompare
 {
 	private static final Splitter NEWLINE_SPLITTER = Splitter
@@ -58,7 +60,7 @@ public class Custom extends ClickCompare
 	@Override
 	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getMenuAction() == MenuAction.ITEM_USE_ON_WIDGET_ITEM &&
+		return event.getMenuAction() == MenuAction.ITEM_USE &&
 			customClickMap.containsKey(event.getId());
 	}
 
@@ -111,6 +113,7 @@ public class Custom extends ClickCompare
 			}
 			catch (Exception e)
 			{
+				log.error("Error: ", e);
 				return;
 			}
 		}
