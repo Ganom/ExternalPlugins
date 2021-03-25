@@ -15,6 +15,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.MenuAction;
+import static net.runelite.api.MenuAction.MENU_ACTION_DEPRIORITIZE_OFFSET;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
@@ -153,26 +155,22 @@ public class OneClickPlugin extends Plugin
 			targetMap.put(event.getIdentifier(), event.getTarget());
 		}
 
-		//todo unsure if this is actually needed now that we insert entries.
-		/*switch (type)
+		if (config.deprioritizeWalk())
 		{
-			case SEED_SET:
-			case BA_HEALER:
-				if (event.getOpcode() == MenuOpcode.WALK.getId())
-				{
-					MenuEntry menuEntry = client.getLeftClickMenuEntry();
-					menuEntry.setOpcode(MenuOpcode.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
-					client.setLeftClickMenuEntry(menuEntry);
-				}
-				break;
-			default:
-				break;
-		}*/
-
-		if (config.customInvSwap() && custom.isEntryValid(event))
-		{
-			custom.modifyEntry(event);
-			return;
+			switch (config.getType())
+			{
+				case SEED_SET:
+				case BA_HEALER:
+					if (event.getOpcode() == MenuAction.WALK.getId())
+					{
+						MenuEntry menuEntry = client.getLeftClickMenuEntry();
+						menuEntry.setOpcode(MenuAction.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
+						client.setLeftClickMenuEntry(menuEntry);
+					}
+					break;
+				default:
+					break;
+			}
 		}
 
 		if (comparable == null)
@@ -197,12 +195,6 @@ public class OneClickPlugin extends Plugin
 
 		if (event.getMenuTarget() == null)
 		{
-			return;
-		}
-
-		if (config.customInvSwap() && custom.isClickValid(event))
-		{
-			custom.modifyClick(event);
 			return;
 		}
 
