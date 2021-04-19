@@ -214,7 +214,7 @@ public class BasicBossSwapper extends Plugin
 	@Subscribe
 	public void onProjectileMoved(ProjectileMoved event)
 	{
-		if (run)
+		if (!run)
 		{
 			return;
 		}
