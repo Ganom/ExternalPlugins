@@ -33,7 +33,7 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import net.runelite.client.game.FriendChatManager;
+import net.runelite.client.game.ChatIconManager;
 import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -63,7 +63,7 @@ public class LeftClickCast extends Plugin
 	private KeyManager keyManager;
 
 	@Inject
-	private FriendChatManager friendsManager;
+	private ChatIconManager friendsManager;
 
 	private final Set<Integer> whitelist = new HashSet<>();
 
@@ -195,8 +195,7 @@ public class LeftClickCast extends Plugin
 		{
 			final String name = Text.standardize(event.getTarget(), true);
 
-			if (!config.disableFriendlyRegionChecks() && (client.getVarbitValue(5314) == 0 && (client.isFriended(name, false) ||
-				friendsManager.isMember(name))))
+			if (!config.disableFriendlyRegionChecks() && (client.getVarbitValue(5314) == 0 && (client.isFriended(name, false))))
 			{
 				return;
 			}
