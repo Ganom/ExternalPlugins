@@ -128,7 +128,7 @@ public interface AutoClickConfig extends Config
 	}
 
 	@Range(
-		min = 5,
+		min = 2,
 		max = 98
 	)
 	@ConfigItem(
