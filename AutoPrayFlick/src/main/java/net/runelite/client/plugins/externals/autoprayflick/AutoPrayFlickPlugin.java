@@ -63,6 +63,8 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "Auto Pray Flick"
+	description = "1 tick flick with hotkey, hover over prayer or quickpray",
+	tags = {"ganom"}
 )
 @Slf4j
 @SuppressWarnings("unused")
