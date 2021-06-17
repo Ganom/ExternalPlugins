@@ -41,6 +41,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "One Click",
 	description = "OP One Click methods."
+	tags = {"ganom"}
 )
 @Getter
 @Slf4j
