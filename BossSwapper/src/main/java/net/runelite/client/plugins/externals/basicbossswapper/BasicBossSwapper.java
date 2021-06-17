@@ -52,7 +52,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Basic Boss Swapper",
 	description = "Automatically swaps prayers for Olm, Nylo, and Verzik",
-	tags = {"prayer", "olm", "bot", "swap"}
+	tags = {"prayer", "olm", "bot", "swap", "ganom"}
 )
 @Slf4j
 @SuppressWarnings("unused")
