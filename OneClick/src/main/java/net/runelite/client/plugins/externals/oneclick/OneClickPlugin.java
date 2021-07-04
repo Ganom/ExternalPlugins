@@ -39,8 +39,8 @@ import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
-	name = "One Click",
-	description = "OP One Click methods."
+		name = "One Click",
+		description = "OP One Click methods."
 )
 @Getter
 @Slf4j
@@ -60,6 +60,9 @@ public class OneClickPlugin extends Plugin
 	private ClickCompare comparable = new Blank();
 	private boolean enableImbue;
 	private boolean imbue;
+
+	static final int BA_CALL_LISTEN = 7;
+	public static final int BA_HEALER_GROUP_ID = 488;
 
 	@Setter
 	private boolean tick;
@@ -122,7 +125,7 @@ public class OneClickPlugin extends Plugin
 
 		if (comparable instanceof Healer)
 		{
-			Widget widget = client.getWidget(488, 8);
+			Widget widget = client.getWidget(BA_HEALER_GROUP_ID, BA_CALL_LISTEN);
 
 			if (widget != null && widget.getText() != null)
 			{
@@ -207,7 +210,7 @@ public class OneClickPlugin extends Plugin
 		}
 
 		MenuEntry old = new MenuEntry(
-			event.getMenuOption(), event.getMenuTarget(), event.getId(), event.getMenuAction().getId(), event.getActionParam(), event.getWidgetId(), false
+				event.getMenuOption(), event.getMenuTarget(), event.getId(), event.getMenuAction().getId(), event.getActionParam(), event.getWidgetId(), false
 		);
 		MenuEntry tmp = old.clone();
 		boolean updated = false;
