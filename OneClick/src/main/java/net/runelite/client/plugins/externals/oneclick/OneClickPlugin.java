@@ -210,7 +210,7 @@ public class OneClickPlugin extends Plugin
 		}
 
 		MenuEntry old = new MenuEntry(
-				event.getMenuOption(), event.getMenuTarget(), event.getId(), event.getMenuAction().getId(), event.getActionParam(), event.getWidgetId(), false
+		event.getMenuOption(), event.getMenuTarget(), event.getId(), event.getMenuAction().getId(), event.getActionParam(), event.getWidgetId(), false
 		);
 		MenuEntry tmp = old.clone();
 		boolean updated = false;
