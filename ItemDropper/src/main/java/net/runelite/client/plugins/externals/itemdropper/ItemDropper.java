@@ -45,7 +45,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Item Dropper",
 	description = "Drops selected items for you.",
-	tags = {"item", "drop", "dropper", "bot"}
+	tags = {"item", "drop", "dropper", "bot", "ganom"}
 )
 @Slf4j
 @SuppressWarnings("unused")
