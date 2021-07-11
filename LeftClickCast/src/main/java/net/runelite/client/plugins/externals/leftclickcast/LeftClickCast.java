@@ -45,6 +45,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Left Click Cast",
 	description = "Casting made even easier."
+	tags = {"ganom"}
 )
 @Slf4j
 @SuppressWarnings("unused")
