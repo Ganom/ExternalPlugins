@@ -18,7 +18,7 @@ public class Darts extends ClickCompare
 	private static final Set<Integer> DART_TIPS = ImmutableSet.of(
 		ItemID.BRONZE_DART_TIP, ItemID.IRON_DART_TIP, ItemID.STEEL_DART_TIP,
 		ItemID.MITHRIL_DART_TIP, ItemID.ADAMANT_DART_TIP, ItemID.RUNE_DART_TIP,
-		ItemID.DRAGON_DART_TIP
+		ItemID.AMETHYST_DART_TIP, ItemID.DRAGON_DART_TIP
 	);
 
 	@Override
