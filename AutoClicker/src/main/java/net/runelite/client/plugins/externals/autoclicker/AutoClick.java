@@ -33,6 +33,7 @@ import org.pf4j.Extension;
 @PluginDescriptor(
 	name = "Auto Clicker",
 	enabledByDefault = false
+	tags = {"ganom"}
 )
 @Slf4j
 public class AutoClick extends Plugin
