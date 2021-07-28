@@ -19,7 +19,8 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "Never Log",
-	description = "Enable this and you will never log out"
+	description = "Enable this and you will never log out",
+	tags = "ganom"
 )
 @SuppressWarnings("unused")
 public class NeverLog extends Plugin
