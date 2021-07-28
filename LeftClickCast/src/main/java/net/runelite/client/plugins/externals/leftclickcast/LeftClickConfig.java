@@ -27,7 +27,7 @@ public interface LeftClickConfig extends Config
 		keyName = "disableFriendlyRegionChecks",
 		name = "Disable Friend/Clan/Lvl Checks",
 		description = "This will make it so you can cast on friends/clan members.",
-		section = "preset"
+		section = preset
 	)
 	default boolean disableFriendlyRegionChecks()
 	{
@@ -39,7 +39,7 @@ public interface LeftClickConfig extends Config
 		keyName = "disableStaffChecks",
 		name = "Disable Staff/Wand Check",
 		description = "This will make it so your attack will always change to cast.",
-		section = "preset"
+		section = preset
 	)
 	default boolean disableStaffChecks()
 	{
@@ -51,7 +51,7 @@ public interface LeftClickConfig extends Config
 		keyName = "whitelist",
 		name = "Whitelisted NPCs",
 		description = "Seperate with comma.",
-		section = "preset",
+		section = preset,
 		hidden = true,
 		unhide = "disableStaffChecks"
 	)
@@ -73,7 +73,7 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #1",
 		description = "",
 		position = 1,
-		section = "hotkeys"
+		section = hotkeys
 	)
 	default Keybind spellOneSwap()
 	{
@@ -85,7 +85,7 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #2",
 		description = "",
 		position = 2,
-		section = "hotkeys"
+		section = hotkeys
 	)
 	default Keybind spellTwoSwap()
 	{
@@ -97,7 +97,7 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #3",
 		description = "",
 		position = 3,
-		section = "hotkeys"
+		section = hotkeys
 	)
 	default Keybind spellThreeSwap()
 	{
@@ -109,7 +109,7 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #4",
 		description = "",
 		position = 4,
-		section = "hotkeys"
+		section = hotkeys
 	)
 	default Keybind spellFourSwap()
 	{
@@ -121,7 +121,7 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #5",
 		description = "",
 		position = 5,
-		section = "hotkeys"
+		section = hotkeys
 	)
 	default Keybind spellFiveSwap()
 	{
@@ -133,7 +133,7 @@ public interface LeftClickConfig extends Config
 		name = "Swap to Spell #6",
 		description = "",
 		position = 6,
-		section = "hotkeys"
+		section = hotkeys
 	)
 	default Keybind spellSixSwap()
 	{
@@ -153,7 +153,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #1",
 		description = "",
 		position = 1,
-		section = "spells"
+		section = spells
 	)
 	default Spells spellOne()
 	{
@@ -165,7 +165,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #2",
 		description = "",
 		position = 2,
-		section = "spells"
+		section = spells
 	)
 	default Spells spellTwo()
 	{
@@ -177,7 +177,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #3",
 		description = "",
 		position = 3,
-		section = "spells"
+		section = spells
 	)
 	default Spells spellThree()
 	{
@@ -189,7 +189,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #4",
 		description = "",
 		position = 4,
-		section = "spells"
+		section = spells
 	)
 	default Spells spellFour()
 	{
@@ -201,7 +201,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #5",
 		description = "",
 		position = 5,
-		section = "spells"
+		section = spells
 	)
 	default Spells spellFive()
 	{
@@ -213,7 +213,7 @@ public interface LeftClickConfig extends Config
 		name = "Spell #6",
 		description = "",
 		position = 6,
-		section = "spells"
+		section = spells
 	)
 	default Spells spellSix()
 	{
