@@ -28,7 +28,7 @@ public interface AutoClickConfig extends Config
 		name = "Toggle",
 		description = "Toggles the clicker.",
 		position = 0,
-		section = "mainConfig"
+		section = mainConfig
 	)
 	default Keybind toggle()
 	{
@@ -40,7 +40,7 @@ public interface AutoClickConfig extends Config
 		name = "Absolute Delay Min",
 		description = "",
 		position = 3,
-		section = "mainConfig"
+		section = mainConfig
 	)
 	default int min()
 	{
@@ -52,7 +52,7 @@ public interface AutoClickConfig extends Config
 		name = "Absolute Delay Max",
 		description = "",
 		position = 4,
-		section = "mainConfig"
+		section = mainConfig
 	)
 	default int max()
 	{
@@ -64,7 +64,7 @@ public interface AutoClickConfig extends Config
 		name = "Delay Target",
 		description = "",
 		position = 5,
-		section = "mainConfig"
+		section = mainConfig
 	)
 	default int target()
 	{
@@ -76,7 +76,7 @@ public interface AutoClickConfig extends Config
 		name = "Delay Deviation",
 		description = "",
 		position = 6,
-		section = "mainConfig"
+		section = mainConfig
 	)
 	default int deviation()
 	{
@@ -88,7 +88,7 @@ public interface AutoClickConfig extends Config
 		name = "Weighted Distribution",
 		description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
 		position = 7,
-		section = "mainConfig"
+		section = mainConfig
 	)
 	default boolean weightedDistribution()
 	{
@@ -108,7 +108,7 @@ public interface AutoClickConfig extends Config
 		name = "Auto Disable at low HP",
 		description = "Automatically disables the clicker when you get to low hp.",
 		position = 0,
-		section = "helperConfig"
+		section = helperConfig
 	)
 	default boolean autoDisableHp()
 	{
@@ -120,7 +120,7 @@ public interface AutoClickConfig extends Config
 		name = "Disable when Inv is full",
 		description = "Automatically disables the clicker when your inventory is full..",
 		position = 1,
-		section = "helperConfig"
+		section = helperConfig
 	)
 	default boolean autoDisableInv()
 	{
@@ -128,7 +128,7 @@ public interface AutoClickConfig extends Config
 	}
 
 	@Range(
-		min = 5,
+		min = 3,
 		max = 98
 	)
 	@ConfigItem(
@@ -138,7 +138,7 @@ public interface AutoClickConfig extends Config
 		position = 2,
 		hidden = true,
 		unhide = "autoDisable",
-		section = "helperConfig"
+		section = helperConfig
 	)
 	default int hpThreshold()
 	{
@@ -152,7 +152,7 @@ public interface AutoClickConfig extends Config
 		position = 3,
 		hidden = true,
 		unhide = "autoDisable",
-		section = "helperConfig"
+		section = helperConfig
 	)
 	default boolean flash()
 	{
