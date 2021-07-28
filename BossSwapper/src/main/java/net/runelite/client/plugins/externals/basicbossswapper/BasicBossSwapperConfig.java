@@ -15,19 +15,19 @@ import net.runelite.client.config.Keybind;
 public interface BasicBossSwapperConfig extends Config
 {
 	@ConfigSection(
-		position = 0,
-		keyName = "botConfig",
-		name = "Bot Config",
-		description = ""
+			position = 0,
+			keyName = "botConfig",
+			name = "Bot Config",
+			description = ""
 	)
 	String mainConfig = "Bot Config";
 
 	@ConfigItem(
-		keyName = "toggle",
-		name = "Toggle",
-		description = "",
-		position = 1,
-		section = "mainConfig"
+			keyName = "toggle",
+			name = "Toggle",
+			description = "",
+			position = 1,
+			section = mainConfig
 	)
 	default Keybind toggle()
 	{
@@ -35,11 +35,11 @@ public interface BasicBossSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 2,
-		keyName = "randLow",
-		name = "Minimum Delay",
-		description = "",
-		section = "mainConfig"
+			position = 2,
+			keyName = "randLow",
+			name = "Minimum Delay",
+			description = "",
+			section = mainConfig
 	)
 	default int randLow()
 	{
@@ -47,11 +47,11 @@ public interface BasicBossSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 3,
-		keyName = "randLower",
-		name = "Maximum Delay",
-		description = "",
-		section = "mainConfig"
+			position = 3,
+			keyName = "randLower",
+			name = "Maximum Delay",
+			description = "",
+			section = mainConfig
 	)
 	default int randHigh()
 	{
@@ -59,19 +59,19 @@ public interface BasicBossSwapperConfig extends Config
 	}
 
 	@ConfigSection(
-		position = 1,
-		keyName = "olmConfig",
-		name = "Olm Config",
-		description = ""
+			position = 1,
+			keyName = "olmConfig",
+			name = "Olm Config",
+			description = ""
 	)
 	String olmConfig = "Olm Config";
 
 	@ConfigItem(
-		position = 0,
-		keyName = "swapAutos",
-		name = "Swap on Auto Attacks",
-		description = "This will swap prayers for olms auto attacks as-well.",
-		section = "olmConfig"
+			position = 0,
+			keyName = "swapAutos",
+			name = "Swap on Auto Attacks",
+			description = "This will swap prayers for olms auto attacks as-well.",
+			section = olmConfig
 	)
 	default boolean swapAutos()
 	{
@@ -79,19 +79,19 @@ public interface BasicBossSwapperConfig extends Config
 	}
 
 	@ConfigSection(
-		position = 2,
-		keyName = "nyloConfig",
-		name = "Nylo Config",
-		description = ""
+			position = 2,
+			keyName = "nyloConfig",
+			name = "Nylo Config",
+			description = ""
 	)
 	String nyloConfig = "Nylo Config";
 
 	@ConfigItem(
-		position = 1,
-		keyName = "mage",
-		name = "Mage Gearswap",
-		description = "Mage Gearswap Item Ids",
-		section = "nyloConfig"
+			position = 1,
+			keyName = "mage",
+			name = "Mage Gearswap",
+			description = "Mage Gearswap Item Ids",
+			section = nyloConfig
 	)
 	default String mage()
 	{
@@ -99,11 +99,11 @@ public interface BasicBossSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 2,
-		keyName = "range",
-		name = "Range Gearswap",
-		description = "Range Gearswap Item Ids",
-		section = "nyloConfig"
+			position = 2,
+			keyName = "range",
+			name = "Range Gearswap",
+			description = "Range Gearswap Item Ids",
+			section = nyloConfig
 	)
 	default String range()
 	{
@@ -111,15 +111,14 @@ public interface BasicBossSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 3,
-		keyName = "melee",
-		name = "Melee Gearswap",
-		description = "Melee Gearswap Item Ids",
-		section = "nyloConfig"
+			position = 3,
+			keyName = "melee",
+			name = "Melee Gearswap",
+			description = "Melee Gearswap Item Ids",
+			section = nyloConfig
 	)
 	default String melee()
 	{
 		return "11665,12006,6570,19553,12954";
 	}
 }
-

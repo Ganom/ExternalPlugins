@@ -62,7 +62,10 @@ import org.pf4j.Extension;
 
 @Extension
 @PluginDescriptor(
-	name = "Auto Pray Flick"
+	name = "Auto Pray Flick",
+	description = "One tick pray flick.",
+	tags = "ganom"
+
 )
 @Slf4j
 @SuppressWarnings("unused")

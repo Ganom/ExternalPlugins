@@ -16,19 +16,19 @@ import net.runelite.client.config.Range;
 public interface AutoClickConfig extends Config
 {
 	@ConfigSection(
-		position = 0,
-		keyName = "mainConfig",
-		name = "Main Config",
-		description = ""
+			position = 0,
+			keyName = "mainConfig",
+			name = "Main Config",
+			description = ""
 	)
 	String mainConfig = "Main Config";
 
 	@ConfigItem(
-		keyName = "toggle",
-		name = "Toggle",
-		description = "Toggles the clicker.",
-		position = 0,
-		section = "mainConfig"
+			keyName = "toggle",
+			name = "Toggle",
+			description = "Toggles the clicker.",
+			position = 0,
+			section = mainConfig
 	)
 	default Keybind toggle()
 	{
@@ -36,11 +36,11 @@ public interface AutoClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "miniDelay",
-		name = "Absolute Delay Min",
-		description = "",
-		position = 3,
-		section = "mainConfig"
+			keyName = "miniDelay",
+			name = "Absolute Delay Min",
+			description = "",
+			position = 3,
+			section = mainConfig
 	)
 	default int min()
 	{
@@ -48,11 +48,11 @@ public interface AutoClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "maxiDelay",
-		name = "Absolute Delay Max",
-		description = "",
-		position = 4,
-		section = "mainConfig"
+			keyName = "maxiDelay",
+			name = "Absolute Delay Max",
+			description = "",
+			position = 4,
+			section = mainConfig
 	)
 	default int max()
 	{
@@ -60,11 +60,11 @@ public interface AutoClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "target",
-		name = "Delay Target",
-		description = "",
-		position = 5,
-		section = "mainConfig"
+			keyName = "target",
+			name = "Delay Target",
+			description = "",
+			position = 5,
+			section = mainConfig
 	)
 	default int target()
 	{
@@ -72,11 +72,11 @@ public interface AutoClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "deviation",
-		name = "Delay Deviation",
-		description = "",
-		position = 6,
-		section = "mainConfig"
+			keyName = "deviation",
+			name = "Delay Deviation",
+			description = "",
+			position = 6,
+			section = mainConfig
 	)
 	default int deviation()
 	{
@@ -84,11 +84,11 @@ public interface AutoClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "weightedDistribution",
-		name = "Weighted Distribution",
-		description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
-		position = 7,
-		section = "mainConfig"
+			keyName = "weightedDistribution",
+			name = "Weighted Distribution",
+			description = "Shifts the random distribution towards the lower end at the target, otherwise it will be an even distribution",
+			position = 7,
+			section = mainConfig
 	)
 	default boolean weightedDistribution()
 	{
@@ -96,19 +96,19 @@ public interface AutoClickConfig extends Config
 	}
 
 	@ConfigSection(
-		position = 1,
-		keyName = "helperConfig",
-		name = "Helper Config",
-		description = ""
+			position = 1,
+			keyName = "helperConfig",
+			name = "Helper Config",
+			description = ""
 	)
 	String helperConfig = "Helper Config";
 
 	@ConfigItem(
-		keyName = "autoDisable",
-		name = "Auto Disable at low HP",
-		description = "Automatically disables the clicker when you get to low hp.",
-		position = 0,
-		section = "helperConfig"
+			keyName = "autoDisable",
+			name = "Auto Disable at low HP",
+			description = "Automatically disables the clicker when you get to low hp.",
+			position = 0,
+			section = helperConfig
 	)
 	default boolean autoDisableHp()
 	{
@@ -116,11 +116,11 @@ public interface AutoClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "autoDisableInv",
-		name = "Disable when Inv is full",
-		description = "Automatically disables the clicker when your inventory is full..",
-		position = 1,
-		section = "helperConfig"
+			keyName = "autoDisableInv",
+			name = "Disable when Inv is full",
+			description = "Automatically disables the clicker when your inventory is full..",
+			position = 1,
+			section = helperConfig
 	)
 	default boolean autoDisableInv()
 	{
@@ -128,17 +128,17 @@ public interface AutoClickConfig extends Config
 	}
 
 	@Range(
-		min = 5,
-		max = 98
+			min = 3,
+			max = 98
 	)
 	@ConfigItem(
-		keyName = "hpThreshold",
-		name = "Hp Threshold",
-		description = "The hp in which the plugin will auto disable.",
-		position = 2,
-		hidden = true,
-		unhide = "autoDisable",
-		section = "helperConfig"
+			keyName = "hpThreshold",
+			name = "Hp Threshold",
+			description = "The hp in which the plugin will auto disable.",
+			position = 2,
+			hidden = true,
+			unhide = "autoDisable",
+			section = helperConfig
 	)
 	default int hpThreshold()
 	{
@@ -146,13 +146,13 @@ public interface AutoClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "flash",
-		name = "Flash on Low HP",
-		description = "Your Screen flashes when you get to low hp.",
-		position = 3,
-		hidden = true,
-		unhide = "autoDisable",
-		section = "helperConfig"
+			keyName = "flash",
+			name = "Flash on Low HP",
+			description = "Your Screen flashes when you get to low hp.",
+			position = 3,
+			hidden = true,
+			unhide = "autoDisable",
+			section = helperConfig
 	)
 	default boolean flash()
 	{

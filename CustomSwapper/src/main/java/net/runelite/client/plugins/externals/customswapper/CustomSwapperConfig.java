@@ -15,19 +15,19 @@ import net.runelite.client.config.Keybind;
 public interface CustomSwapperConfig extends Config
 {
 	@ConfigSection(
-		keyName = "config",
-		name = "Config",
-		description = "",
-		position = 0
+			keyName = "config",
+			name = "Config",
+			description = "",
+			position = 0
 	)
 	String config = "Config";
 
 	@ConfigItem(
-		keyName = "swapBack",
-		name = "Swap back to inventory",
-		description = "Once finished with a swap, should it swap back to inventory?",
-		section = "config",
-		position = 1
+			keyName = "swapBack",
+			name = "Swap back to inventory",
+			description = "Once finished with a swap, should it swap back to inventory?",
+			section = config,
+			position = 1
 	)
 	default boolean swapBack()
 	{
@@ -35,11 +35,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "enablePrayCheck",
-		name = "Active Prayer Check",
-		description = "Enabling this will make it so you can't toggle prayers if they're on.",
-		section = "config",
-		position = 2
+			keyName = "enablePrayCheck",
+			name = "Active Prayer Check",
+			description = "Enabling this will make it so you can't toggle prayers if they're on.",
+			section = config,
+			position = 2
 	)
 	default boolean enablePrayCheck()
 	{
@@ -47,11 +47,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "randLow",
-		name = "Minimum MS Delay",
-		description = "Dont set this too high.",
-		section = "config",
-		position = 3
+			keyName = "randLow",
+			name = "Minimum MS Delay",
+			description = "Dont set this too high.",
+			section = config,
+			position = 3
 	)
 	default int randLow()
 	{
@@ -59,11 +59,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "randLower",
-		name = "Maximum MS Delay",
-		description = "Dont set this too high.",
-		section = "config",
-		position = 4
+			keyName = "randLower",
+			name = "Maximum MS Delay",
+			description = "Dont set this too high.",
+			section = config,
+			position = 4
 	)
 	default int randHigh()
 	{
@@ -71,19 +71,19 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigSection(
-		position = 1,
-		keyName = "mainConfig",
-		name = "Main Config",
-		description = ""
+			position = 1,
+			keyName = "mainConfig",
+			name = "Main Config",
+			description = ""
 	)
 	String mainConfig = "Main Config";
 
 	@ConfigItem(
-		keyName = "customSwapOne",
-		name = "Swap Set: One",
-		description = "",
-		position = 1,
-		section = "mainConfig"
+			keyName = "customSwapOne",
+			name = "Swap Set: One",
+			description = "",
+			position = 1,
+			section = mainConfig
 	)
 	default String customSwapOne()
 	{
@@ -91,11 +91,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapTwo",
-		name = "Swap Set: Two",
-		description = "",
-		position = 2,
-		section = "mainConfig"
+			keyName = "customSwapTwo",
+			name = "Swap Set: Two",
+			description = "",
+			position = 2,
+			section = mainConfig
 	)
 	default String customSwapTwo()
 	{
@@ -103,11 +103,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapThree",
-		name = "Swap Set: Three",
-		description = "",
-		position = 3,
-		section = "mainConfig"
+			keyName = "customSwapThree",
+			name = "Swap Set: Three",
+			description = "",
+			position = 3,
+			section = mainConfig
 	)
 	default String customSwapThree()
 	{
@@ -115,11 +115,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapFour",
-		name = "Swap Set: Four",
-		description = "",
-		position = 4,
-		section = "mainConfig"
+			keyName = "customSwapFour",
+			name = "Swap Set: Four",
+			description = "",
+			position = 4,
+			section = mainConfig
 	)
 	default String customSwapFour()
 	{
@@ -127,11 +127,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapFive",
-		name = "Swap Set: Five",
-		description = "",
-		position = 5,
-		section = "mainConfig"
+			keyName = "customSwapFive",
+			name = "Swap Set: Five",
+			description = "",
+			position = 5,
+			section = mainConfig
 	)
 	default String customSwapFive()
 	{
@@ -139,11 +139,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapSix",
-		name = "Swap Set: Six",
-		description = "",
-		position = 6,
-		section = "mainConfig"
+			keyName = "customSwapSix",
+			name = "Swap Set: Six",
+			description = "",
+			position = 6,
+			section = mainConfig
 	)
 	default String customSwapSix()
 	{
@@ -151,11 +151,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapSeven",
-		name = "Swap Set: Seven",
-		description = "",
-		position = 7,
-		section = "mainConfig"
+			keyName = "customSwapSeven",
+			name = "Swap Set: Seven",
+			description = "",
+			position = 7,
+			section = mainConfig
 	)
 	default String customSwapSeven()
 	{
@@ -163,11 +163,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapEight",
-		name = "Swap Set: Eight",
-		description = "",
-		position = 8,
-		section = "mainConfig"
+			keyName = "customSwapEight",
+			name = "Swap Set: Eight",
+			description = "",
+			position = 8,
+			section = mainConfig
 	)
 	default String customSwapEight()
 	{
@@ -175,11 +175,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapNine",
-		name = "Swap Set: Nine",
-		description = "",
-		position = 9,
-		section = "mainConfig"
+			keyName = "customSwapNine",
+			name = "Swap Set: Nine",
+			description = "",
+			position = 9,
+			section = mainConfig
 	)
 	default String customSwapNine()
 	{
@@ -187,11 +187,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapTen",
-		name = "Swap Set: Ten",
-		description = "",
-		position = 10,
-		section = "mainConfig"
+			keyName = "customSwapTen",
+			name = "Swap Set: Ten",
+			description = "",
+			position = 10,
+			section = mainConfig
 	)
 	default String customSwapTen()
 	{
@@ -199,11 +199,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapEleven",
-		name = "Swap Set: Eleven",
-		description = "",
-		position = 11,
-		section = "mainConfig"
+			keyName = "customSwapEleven",
+			name = "Swap Set: Eleven",
+			description = "",
+			position = 11,
+			section = mainConfig
 	)
 	default String customSwapEleven()
 	{
@@ -211,11 +211,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapTwelve",
-		name = "Swap Set: Twelve",
-		description = "",
-		position = 12,
-		section = "mainConfig"
+			keyName = "customSwapTwelve",
+			name = "Swap Set: Twelve",
+			description = "",
+			position = 12,
+			section = mainConfig
 	)
 	default String customSwapTwelve()
 	{
@@ -223,11 +223,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapThirteen",
-		name = "Swap Set: Thirteen",
-		description = "",
-		position = 13,
-		section = "mainConfig"
+			keyName = "customSwapThirteen",
+			name = "Swap Set: Thirteen",
+			description = "",
+			position = 13,
+			section = mainConfig
 	)
 	default String customSwapThirteen()
 	{
@@ -235,11 +235,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapFourteen",
-		name = "Swap Set: Fourteen",
-		description = "",
-		position = 14,
-		section = "mainConfig"
+			keyName = "customSwapFourteen",
+			name = "Swap Set: Fourteen",
+			description = "",
+			position = 14,
+			section = mainConfig
 	)
 	default String customSwapFourteen()
 	{
@@ -247,11 +247,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapFifteen",
-		name = "Swap Set: Fifteen",
-		description = "",
-		position = 15,
-		section = "mainConfig"
+			keyName = "customSwapFifteen",
+			name = "Swap Set: Fifteen",
+			description = "",
+			position = 15,
+			section = mainConfig
 	)
 	default String customSwapFifteen()
 	{
@@ -259,11 +259,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapSixteen",
-		name = "Swap Set: Sixteen",
-		description = "",
-		position = 16,
-		section = "mainConfig"
+			keyName = "customSwapSixteen",
+			name = "Swap Set: Sixteen",
+			description = "",
+			position = 16,
+			section = mainConfig
 	)
 	default String customSwapSixteen()
 	{
@@ -271,11 +271,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapSeventeen",
-		name = "Swap Set: Seventeen",
-		description = "",
-		position = 17,
-		section = "mainConfig"
+			keyName = "customSwapSeventeen",
+			name = "Swap Set: Seventeen",
+			description = "",
+			position = 17,
+			section = mainConfig
 	)
 	default String customSwapSeventeen()
 	{
@@ -283,11 +283,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapEighteen",
-		name = "Swap Set: Eighteen",
-		description = "",
-		position = 18,
-		section = "mainConfig"
+			keyName = "customSwapEighteen",
+			name = "Swap Set: Eighteen",
+			description = "",
+			position = 18,
+			section = mainConfig
 	)
 	default String customSwapEighteen()
 	{
@@ -295,11 +295,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapNineteen",
-		name = "Swap Set: Nineteen",
-		description = "",
-		position = 19,
-		section = "mainConfig"
+			keyName = "customSwapNineteen",
+			name = "Swap Set: Nineteen",
+			description = "",
+			position = 19,
+			section = mainConfig
 	)
 	default String customSwapNineteen()
 	{
@@ -307,11 +307,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSwapTwenty",
-		name = "Swap Set: Twenty",
-		description = "",
-		position = 20,
-		section = "mainConfig"
+			keyName = "customSwapTwenty",
+			name = "Swap Set: Twenty",
+			description = "",
+			position = 20,
+			section = mainConfig
 	)
 	default String customSwapTwenty()
 	{
@@ -319,19 +319,19 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigSection(
-		position = 21,
-		keyName = "hotkeys",
-		name = "Hotkeys",
-		description = ""
+			position = 21,
+			keyName = "hotkeys",
+			name = "Hotkeys",
+			description = ""
 	)
 	String hotkeys = "Hotkeys";
 
 	@ConfigItem(
-		keyName = "customOne",
-		name = "Execute One",
-		description = "",
-		position = 22,
-		section = "hotkeys"
+			keyName = "customOne",
+			name = "Execute One",
+			description = "",
+			position = 22,
+			section = hotkeys
 	)
 	default Keybind customOne()
 	{
@@ -339,11 +339,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customTwo",
-		name = "Execute Two",
-		description = "",
-		position = 23,
-		section = "hotkeys"
+			keyName = "customTwo",
+			name = "Execute Two",
+			description = "",
+			position = 23,
+			section = hotkeys
 	)
 	default Keybind customTwo()
 	{
@@ -351,11 +351,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customThree",
-		name = "Execute Three",
-		description = "",
-		position = 24,
-		section = "hotkeys"
+			keyName = "customThree",
+			name = "Execute Three",
+			description = "",
+			position = 24,
+			section = hotkeys
 	)
 	default Keybind customThree()
 	{
@@ -363,11 +363,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customFour",
-		name = "Execute Four",
-		description = "",
-		position = 25,
-		section = "hotkeys"
+			keyName = "customFour",
+			name = "Execute Four",
+			description = "",
+			position = 25,
+			section = hotkeys
 	)
 	default Keybind customFour()
 	{
@@ -375,11 +375,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customFive",
-		name = "Execute Five",
-		description = "",
-		position = 26,
-		section = "hotkeys"
+			keyName = "customFive",
+			name = "Execute Five",
+			description = "",
+			position = 26,
+			section = hotkeys
 	)
 	default Keybind customFive()
 	{
@@ -387,11 +387,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSix",
-		name = "Execute Six",
-		description = "",
-		position = 27,
-		section = "hotkeys"
+			keyName = "customSix",
+			name = "Execute Six",
+			description = "",
+			position = 27,
+			section = hotkeys
 	)
 	default Keybind customSix()
 	{
@@ -399,11 +399,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSeven",
-		name = "Execute Seven",
-		description = "",
-		position = 28,
-		section = "hotkeys"
+			keyName = "customSeven",
+			name = "Execute Seven",
+			description = "",
+			position = 28,
+			section = hotkeys
 	)
 	default Keybind customSeven()
 	{
@@ -411,11 +411,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customEight",
-		name = "Execute Eight",
-		description = "",
-		position = 29,
-		section = "hotkeys"
+			keyName = "customEight",
+			name = "Execute Eight",
+			description = "",
+			position = 29,
+			section = hotkeys
 	)
 	default Keybind customEight()
 	{
@@ -423,11 +423,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customNine",
-		name = "Execute Nine",
-		description = "",
-		position = 30,
-		section = "hotkeys"
+			keyName = "customNine",
+			name = "Execute Nine",
+			description = "",
+			position = 30,
+			section = hotkeys
 	)
 	default Keybind customNine()
 	{
@@ -435,11 +435,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customTen",
-		name = "Execute Ten",
-		description = "",
-		position = 31,
-		section = "hotkeys"
+			keyName = "customTen",
+			name = "Execute Ten",
+			description = "",
+			position = 31,
+			section = hotkeys
 	)
 	default Keybind customTen()
 	{
@@ -447,11 +447,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customEleven",
-		name = "Execute Eleven",
-		description = "",
-		position = 32,
-		section = "hotkeys"
+			keyName = "customEleven",
+			name = "Execute Eleven",
+			description = "",
+			position = 32,
+			section = hotkeys
 	)
 	default Keybind customEleven()
 	{
@@ -459,11 +459,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customTwelve",
-		name = "Execute Twelve",
-		description = "",
-		position = 33,
-		section = "hotkeys"
+			keyName = "customTwelve",
+			name = "Execute Twelve",
+			description = "",
+			position = 33,
+			section = hotkeys
 	)
 	default Keybind customTwelve()
 	{
@@ -471,11 +471,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customThirteen",
-		name = "Execute Thirteen",
-		description = "",
-		position = 34,
-		section = "hotkeys"
+			keyName = "customThirteen",
+			name = "Execute Thirteen",
+			description = "",
+			position = 34,
+			section = hotkeys
 	)
 	default Keybind customThirteen()
 	{
@@ -483,11 +483,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customFourteen",
-		name = "Execute Fourteen",
-		description = "",
-		position = 35,
-		section = "hotkeys"
+			keyName = "customFourteen",
+			name = "Execute Fourteen",
+			description = "",
+			position = 35,
+			section = hotkeys
 	)
 	default Keybind customFourteen()
 	{
@@ -495,11 +495,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customFifteen",
-		name = "Execute Fifteen",
-		description = "",
-		position = 36,
-		section = "hotkeys"
+			keyName = "customFifteen",
+			name = "Execute Fifteen",
+			description = "",
+			position = 36,
+			section = hotkeys
 	)
 	default Keybind customFifteen()
 	{
@@ -507,11 +507,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSixteen",
-		name = "Execute Sixteen",
-		description = "",
-		position = 37,
-		section = "hotkeys"
+			keyName = "customSixteen",
+			name = "Execute Sixteen",
+			description = "",
+			position = 37,
+			section = hotkeys
 	)
 	default Keybind customSixteen()
 	{
@@ -519,11 +519,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customSeventeen",
-		name = "Execute Seventeen",
-		description = "",
-		position = 38,
-		section = "hotkeys"
+			keyName = "customSeventeen",
+			name = "Execute Seventeen",
+			description = "",
+			position = 38,
+			section = hotkeys
 	)
 	default Keybind customSeventeen()
 	{
@@ -531,11 +531,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customEighteen",
-		name = "Execute Eighteen",
-		description = "",
-		position = 39,
-		section = "hotkeys"
+			keyName = "customEighteen",
+			name = "Execute Eighteen",
+			description = "",
+			position = 39,
+			section = hotkeys
 	)
 	default Keybind customEighteen()
 	{
@@ -543,11 +543,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customNineteen",
-		name = "Execute Nineteen",
-		description = "",
-		position = 40,
-		section = "hotkeys"
+			keyName = "customNineteen",
+			name = "Execute Nineteen",
+			description = "",
+			position = 40,
+			section = hotkeys
 	)
 	default Keybind customNineteen()
 	{
@@ -555,11 +555,11 @@ public interface CustomSwapperConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "customTwenty",
-		name = "Execute Twenty",
-		description = "",
-		position = 41,
-		section = "hotkeys"
+			keyName = "customTwenty",
+			name = "Execute Twenty",
+			description = "",
+			position = 41,
+			section = hotkeys
 	)
 	default Keybind customTwenty()
 	{

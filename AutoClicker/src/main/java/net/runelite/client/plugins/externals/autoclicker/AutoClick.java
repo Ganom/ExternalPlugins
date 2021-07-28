@@ -32,6 +32,7 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "Auto Clicker",
+	tags = "ganom",
 	enabledByDefault = false
 )
 @Slf4j

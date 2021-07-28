@@ -29,7 +29,9 @@ import org.pf4j.Extension;
 @Extension
 @PluginDescriptor(
 	name = "Anonymizer",
-	description = "Hides your rsn and others."
+	description = "Hides your rsn and others.",
+	tags = "ganom"
+
 )
 public class Anonymizer extends Plugin
 {

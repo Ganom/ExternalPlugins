@@ -15,19 +15,19 @@ import net.runelite.client.config.Keybind;
 public interface LeftClickConfig extends Config
 {
 	@ConfigSection(
-		position = 0,
-		keyName = "preset",
-		name = "Preset",
-		description = ""
+			position = 0,
+			keyName = "preset",
+			name = "Preset",
+			description = ""
 	)
 	String preset = "Preset";
 
 	@ConfigItem(
-		position = 1,
-		keyName = "disableFriendlyRegionChecks",
-		name = "Disable Friend/Clan/Lvl Checks",
-		description = "This will make it so you can cast on friends/clan members.",
-		section = "preset"
+			position = 1,
+			keyName = "disableFriendlyRegionChecks",
+			name = "Disable Friend/Clan/Lvl Checks",
+			description = "This will make it so you can cast on friends/clan members.",
+			section = preset
 	)
 	default boolean disableFriendlyRegionChecks()
 	{
@@ -35,11 +35,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 2,
-		keyName = "disableStaffChecks",
-		name = "Disable Staff/Wand Check",
-		description = "This will make it so your attack will always change to cast.",
-		section = "preset"
+			position = 2,
+			keyName = "disableStaffChecks",
+			name = "Disable Staff/Wand Check",
+			description = "This will make it so your attack will always change to cast.",
+			section = preset
 	)
 	default boolean disableStaffChecks()
 	{
@@ -47,13 +47,13 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		position = 3,
-		keyName = "whitelist",
-		name = "Whitelisted NPCs",
-		description = "Seperate with comma.",
-		section = "preset",
-		hidden = true,
-		unhide = "disableStaffChecks"
+			position = 3,
+			keyName = "whitelist",
+			name = "Whitelisted NPCs",
+			description = "Seperate with comma.",
+			section = preset,
+			hidden = true,
+			unhide = "disableStaffChecks"
 	)
 	default String whitelist()
 	{
@@ -61,19 +61,19 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigSection(
-		position = 4,
-		keyName = "hotkeys",
-		name = "Hotkeys",
-		description = ""
+			position = 4,
+			keyName = "hotkeys",
+			name = "Hotkeys",
+			description = ""
 	)
 	String hotkeys = "Hotkeys";
 
 	@ConfigItem(
-		keyName = "spellOneSwap",
-		name = "Swap to Spell #1",
-		description = "",
-		position = 1,
-		section = "hotkeys"
+			keyName = "spellOneSwap",
+			name = "Swap to Spell #1",
+			description = "",
+			position = 1,
+			section = hotkeys
 	)
 	default Keybind spellOneSwap()
 	{
@@ -81,11 +81,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "spellTwoSwap",
-		name = "Swap to Spell #2",
-		description = "",
-		position = 2,
-		section = "hotkeys"
+			keyName = "spellTwoSwap",
+			name = "Swap to Spell #2",
+			description = "",
+			position = 2,
+			section = hotkeys
 	)
 	default Keybind spellTwoSwap()
 	{
@@ -93,11 +93,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "spellThreeSwap",
-		name = "Swap to Spell #3",
-		description = "",
-		position = 3,
-		section = "hotkeys"
+			keyName = "spellThreeSwap",
+			name = "Swap to Spell #3",
+			description = "",
+			position = 3,
+			section = hotkeys
 	)
 	default Keybind spellThreeSwap()
 	{
@@ -105,11 +105,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "spellFourSwap",
-		name = "Swap to Spell #4",
-		description = "",
-		position = 4,
-		section = "hotkeys"
+			keyName = "spellFourSwap",
+			name = "Swap to Spell #4",
+			description = "",
+			position = 4,
+			section = hotkeys
 	)
 	default Keybind spellFourSwap()
 	{
@@ -117,11 +117,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "spell5Swap",
-		name = "Swap to Spell #5",
-		description = "",
-		position = 5,
-		section = "hotkeys"
+			keyName = "spell5Swap",
+			name = "Swap to Spell #5",
+			description = "",
+			position = 5,
+			section = hotkeys
 	)
 	default Keybind spellFiveSwap()
 	{
@@ -129,11 +129,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "spellSixSwap",
-		name = "Swap to Spell #6",
-		description = "",
-		position = 6,
-		section = "hotkeys"
+			keyName = "spellSixSwap",
+			name = "Swap to Spell #6",
+			description = "",
+			position = 6,
+			section = hotkeys
 	)
 	default Keybind spellSixSwap()
 	{
@@ -141,19 +141,19 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigSection(
-		position = 8,
-		keyName = "spells",
-		name = "Spells",
-		description = ""
+			position = 8,
+			keyName = "spells",
+			name = "Spells",
+			description = ""
 	)
 	String spells = "Spells";
 
 	@ConfigItem(
-		keyName = "spellOne",
-		name = "Spell #1",
-		description = "",
-		position = 1,
-		section = "spells"
+			keyName = "spellOne",
+			name = "Spell #1",
+			description = "",
+			position = 1,
+			section = spells
 	)
 	default Spells spellOne()
 	{
@@ -161,11 +161,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "spellTwo",
-		name = "Spell #2",
-		description = "",
-		position = 2,
-		section = "spells"
+			keyName = "spellTwo",
+			name = "Spell #2",
+			description = "",
+			position = 2,
+			section = spells
 	)
 	default Spells spellTwo()
 	{
@@ -173,11 +173,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "spellThree",
-		name = "Spell #3",
-		description = "",
-		position = 3,
-		section = "spells"
+			keyName = "spellThree",
+			name = "Spell #3",
+			description = "",
+			position = 3,
+			section = spells
 	)
 	default Spells spellThree()
 	{
@@ -185,11 +185,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "spellFour",
-		name = "Spell #4",
-		description = "",
-		position = 4,
-		section = "spells"
+			keyName = "spellFour",
+			name = "Spell #4",
+			description = "",
+			position = 4,
+			section = spells
 	)
 	default Spells spellFour()
 	{
@@ -197,11 +197,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "spellFive",
-		name = "Spell #5",
-		description = "",
-		position = 5,
-		section = "spells"
+			keyName = "spellFive",
+			name = "Spell #5",
+			description = "",
+			position = 5,
+			section = spells
 	)
 	default Spells spellFive()
 	{
@@ -209,11 +209,11 @@ public interface LeftClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "spellSix",
-		name = "Spell #6",
-		description = "",
-		position = 6,
-		section = "spells"
+			keyName = "spellSix",
+			name = "Spell #6",
+			description = "",
+			position = 6,
+			section = spells
 	)
 	default Spells spellSix()
 	{
