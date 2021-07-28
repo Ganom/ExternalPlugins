@@ -27,7 +27,7 @@ public interface BasicBossSwapperConfig extends Config
 		name = "Toggle",
 		description = "",
 		position = 1,
-		section = "mainConfig"
+		section = mainConfig
 	)
 	default Keybind toggle()
 	{
@@ -39,7 +39,7 @@ public interface BasicBossSwapperConfig extends Config
 		keyName = "randLow",
 		name = "Minimum Delay",
 		description = "",
-		section = "mainConfig"
+		section = mainConfig
 	)
 	default int randLow()
 	{
@@ -51,7 +51,7 @@ public interface BasicBossSwapperConfig extends Config
 		keyName = "randLower",
 		name = "Maximum Delay",
 		description = "",
-		section = "mainConfig"
+		section = mainConfig
 	)
 	default int randHigh()
 	{
@@ -71,7 +71,7 @@ public interface BasicBossSwapperConfig extends Config
 		keyName = "swapAutos",
 		name = "Swap on Auto Attacks",
 		description = "This will swap prayers for olms auto attacks as-well.",
-		section = "olmConfig"
+		section = olmConfig
 	)
 	default boolean swapAutos()
 	{
@@ -91,7 +91,7 @@ public interface BasicBossSwapperConfig extends Config
 		keyName = "mage",
 		name = "Mage Gearswap",
 		description = "Mage Gearswap Item Ids",
-		section = "nyloConfig"
+		section = nyloConfig
 	)
 	default String mage()
 	{
@@ -103,7 +103,7 @@ public interface BasicBossSwapperConfig extends Config
 		keyName = "range",
 		name = "Range Gearswap",
 		description = "Range Gearswap Item Ids",
-		section = "nyloConfig"
+		section = nyloConfig
 	)
 	default String range()
 	{
@@ -115,7 +115,7 @@ public interface BasicBossSwapperConfig extends Config
 		keyName = "melee",
 		name = "Melee Gearswap",
 		description = "Melee Gearswap Item Ids",
-		section = "nyloConfig"
+		section = nyloConfig
 	)
 	default String melee()
 	{
