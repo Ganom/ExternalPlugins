@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "6.1.1"
+version = "6.1.2"
 
 project.extra["PluginName"] = "AutoClicker"
 project.extra["PluginDescription"] = "What more is there to say?"
