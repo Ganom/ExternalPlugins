@@ -189,31 +189,31 @@ public class Spell extends ClickCompare
 			switch (spellSelection)
 			{
 				case HIGH_ALCH:
-					setTargetItem.setTarget("<col=00ff00>High Alchemy Item <col=ffffff> -> " + firstEntry.getTarget());
+					setTargetItem.setTarget("<col=00ff00>High Level Alchemy</col> -> " + firstEntry.getTarget());
 					break;
 				case SUPERHEAT:
-					setTargetItem.setTarget("<col=00ff00>Superheat Item <col=ffffff> -> " + firstEntry.getTarget());
+					setTargetItem.setTarget("<col=00ff00>Superheat Item</col> -> " + firstEntry.getTarget());
 					break;
 				case ENCHANT_SAPPHIRE:
-					setTargetItem.setTarget("<col=00ff00>Lvl-1 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					setTargetItem.setTarget("<col=00ff00>Lvl-1 Enchant</col> -> " + firstEntry.getTarget());
 					break;
 				case ENCHANT_EMERALD:
-					setTargetItem.setTarget("<col=00ff00>Lvl-2 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					setTargetItem.setTarget("<col=00ff00>Lvl-2 Enchant</col> -> " + firstEntry.getTarget());
 					break;
 				case ENCHANT_RUBY:
-					setTargetItem.setTarget("<col=00ff00>Lvl-3 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					setTargetItem.setTarget("<col=00ff00>Lvl-3 Enchant</col> -> " + firstEntry.getTarget());
 					break;
 				case ENCHANT_DIAMOND:
-					setTargetItem.setTarget("<col=00ff00>Lvl-4 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					setTargetItem.setTarget("<col=00ff00>Lvl-4 Enchant</col> -> " + firstEntry.getTarget());
 					break;
 				case ENCHANT_DRAGONSTONE:
-					setTargetItem.setTarget("<col=00ff00>Lvl-5 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					setTargetItem.setTarget("<col=00ff00>Lvl-5 Enchant</col> -> " + firstEntry.getTarget());
 					break;
 				case ENCHANT_ONYX:
-					setTargetItem.setTarget("<col=00ff00>Lvl-6 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					setTargetItem.setTarget("<col=00ff00>Lvl-6 Enchant</col> -> " + firstEntry.getTarget());
 					break;
 				case ENCHANT_ZENYTE:
-					setTargetItem.setTarget("<col=00ff00>Lvl-7 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					setTargetItem.setTarget("<col=00ff00>Lvl-7 Enchant</col> -> " + firstEntry.getTarget());
 					break;
 			}
 
