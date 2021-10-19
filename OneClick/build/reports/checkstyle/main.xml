@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.25">
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\ClickItem.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\OneClickConfig.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\OneClickPlugin.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Spells.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\Types.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\ClickCompare.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\misc\Blank.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\misc\Compost.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\misc\Custom.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\misc\Healer.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\misc\Herbtar.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\misc\Seeds.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\skilling\Birdhouses.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\skilling\Bones.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\skilling\DarkEssence.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\skilling\Darts.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\skilling\Firemaking.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\skilling\Karambwans.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\skilling\Runes.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\skilling\Seaweed.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\skilling\Spell.java">
+</file>
+<file name="C:\Users\TehRh\Documents\ExternalPlugins\OneClick\src\main\java\net\runelite\client\plugins\externals\oneclick\comparables\skilling\Tiara.java">
+</file>
+</checkstyle>

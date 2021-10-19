@@ -26,6 +26,7 @@ import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Firem
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Karambwans;
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Runes;
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Tiara;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Seaweed;
 
 @AllArgsConstructor
 @Getter
@@ -42,6 +43,7 @@ public enum Types
 	SMOKE_RUNES("Smoke Runes", new Runes("Air rune", AIR_RUNE)),
 	BONES("Bones", new Bones()),
 	KARAMBWANS("Karambwans", new Karambwans()),
+	SEAWEED("Seaweed", new Seaweed()),
 	DARK_ESSENCE("Dark Essence", new DarkEssence()),
 	SEED_SET("Tithe Farm", new Seeds()),
 	TIARA("Tiara", new Tiara()),

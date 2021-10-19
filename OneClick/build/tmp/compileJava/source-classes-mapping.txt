@@ -1,0 +1,46 @@
+net/runelite/client/plugins/externals/oneclick/OneClickConfig.java
+ net.runelite.client.plugins.externals.oneclick.OneClickConfig
+net/runelite/client/plugins/externals/oneclick/comparables/skilling/Runes.java
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.Runes
+net/runelite/client/plugins/externals/oneclick/comparables/skilling/Birdhouses.java
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.Birdhouses
+net/runelite/client/plugins/externals/oneclick/comparables/misc/Seeds.java
+ net.runelite.client.plugins.externals.oneclick.comparables.misc.Seeds
+net/runelite/client/plugins/externals/oneclick/comparables/skilling/Darts.java
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.Darts
+net/runelite/client/plugins/externals/oneclick/OneClickPlugin.java
+ net.runelite.client.plugins.externals.oneclick.OneClickPlugin
+ net.runelite.client.plugins.externals.oneclick.OneClickPlugin$1
+net/runelite/client/plugins/externals/oneclick/ClickItem.java
+ net.runelite.client.plugins.externals.oneclick.ClickItem
+net/runelite/client/plugins/externals/oneclick/comparables/skilling/Tiara.java
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.Tiara
+net/runelite/client/plugins/externals/oneclick/comparables/misc/Blank.java
+ net.runelite.client.plugins.externals.oneclick.comparables.misc.Blank
+net/runelite/client/plugins/externals/oneclick/comparables/misc/Custom.java
+ net.runelite.client.plugins.externals.oneclick.comparables.misc.Custom
+net/runelite/client/plugins/externals/oneclick/Spells.java
+ net.runelite.client.plugins.externals.oneclick.Spells
+net/runelite/client/plugins/externals/oneclick/comparables/misc/Healer.java
+ net.runelite.client.plugins.externals.oneclick.comparables.misc.Healer
+net/runelite/client/plugins/externals/oneclick/Types.java
+ net.runelite.client.plugins.externals.oneclick.Types
+net/runelite/client/plugins/externals/oneclick/comparables/skilling/Firemaking.java
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.Firemaking
+net/runelite/client/plugins/externals/oneclick/comparables/skilling/DarkEssence.java
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.DarkEssence
+net/runelite/client/plugins/externals/oneclick/comparables/misc/Compost.java
+ net.runelite.client.plugins.externals.oneclick.comparables.misc.Compost
+net/runelite/client/plugins/externals/oneclick/comparables/skilling/Seaweed.java
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.Seaweed
+net/runelite/client/plugins/externals/oneclick/comparables/skilling/Karambwans.java
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.Karambwans
+net/runelite/client/plugins/externals/oneclick/comparables/ClickCompare.java
+ net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare
+net/runelite/client/plugins/externals/oneclick/comparables/misc/Herbtar.java
+ net.runelite.client.plugins.externals.oneclick.comparables.misc.Herbtar
+net/runelite/client/plugins/externals/oneclick/comparables/skilling/Spell.java
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.Spell
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.Spell$1
+net/runelite/client/plugins/externals/oneclick/comparables/skilling/Bones.java
+ net.runelite.client.plugins.externals.oneclick.comparables.skilling.Bones
