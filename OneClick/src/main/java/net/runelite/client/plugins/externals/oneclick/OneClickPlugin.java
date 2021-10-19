@@ -257,20 +257,35 @@ public class OneClickPlugin extends Plugin
 			this.comparables.add(comparable);
 		}
 		if(config.swapCustom()){
-			ClickCompare comparable = Types.SPELL.getComparable();
+			ClickCompare comparable = Types.CUSTOM.getComparable();
 			comparable.setClient(client);
 			comparable.setPlugin(this);
 			((Custom) comparable).updateMap(config.swaps());
 			this.comparables.add(comparable);
 		}
 
-		for(Types type: Types.values()) {
-			if (type == Types.NONE || type == Types.SPELL || type == Types.CUSTOM) continue;
-			ClickCompare comparable = type.getComparable();
-			comparable.setClient(client);
-			comparable.setPlugin(this);
-			this.comparables.add(comparable);
-		}
+		if(config.swapTithe()) addType(Types.SEED_SET);
+		if(config.swapHealer()) addType(Types.BA_HEALER);
+		if(config.swapBirdhouses()) addType(Types.BIRDHOUSES);
+		if(config.swapBones()) addType(Types.BONES);
+		if(config.swapCompost()) addType(Types.COMPOST);
+		if(config.swapDarts()) addType(Types.DARTS);
+		if(config.swapEssence()) addType(Types.DARK_ESSENCE);
+		if(config.swapFiremaking()) addType(Types.FIREMAKING);
+		if(config.swapKarambwans()) addType(Types.KARAMBWANS);
+		if(config.swapLavas()) addType(Types.KARAMBWANS);
+		if(config.swapSeaweed()) addType(Types.SEAWEED);
+		if(config.swapSmokes()) addType(Types.SMOKE_RUNES);
+		if(config.swapSteams()) addType(Types.STEAM_RUNES);
+		if(config.swapTar()) addType(Types.HERB_TAR);
+		if(config.swapTiara()) addType(Types.TIARA);
+	}
+
+	private void addType(Types type){
+		ClickCompare comparable = type.getComparable();
+		comparable.setClient(client);
+		comparable.setPlugin(this);
+		this.comparables.add(comparable);
 	}
 
 	private ClickCompare isClickValid(MenuOptionClicked event){
