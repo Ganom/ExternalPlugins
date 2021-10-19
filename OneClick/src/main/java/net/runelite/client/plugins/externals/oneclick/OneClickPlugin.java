@@ -7,6 +7,8 @@
 package net.runelite.client.plugins.externals.oneclick;
 
 import com.google.inject.Provides;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
@@ -31,7 +33,6 @@ import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
-import net.runelite.client.plugins.externals.oneclick.comparables.misc.Blank;
 import net.runelite.client.plugins.externals.oneclick.comparables.misc.Custom;
 import net.runelite.client.plugins.externals.oneclick.comparables.misc.Healer;
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Spell;
@@ -58,12 +59,13 @@ public class OneClickPlugin extends Plugin
 
 	private final Map<Integer, String> targetMap = new HashMap<>();
 
-	private ClickCompare comparable = new Blank();
 	private boolean enableImbue;
 	private boolean imbue;
 
 	static final int BA_CALL_LISTEN = 7;
 	public static final int BA_HEALER_GROUP_ID = 488;
+
+	ArrayList<ClickCompare> comparables = new ArrayList<>();
 
 	@Setter
 	private boolean tick;
@@ -124,17 +126,24 @@ public class OneClickPlugin extends Plugin
 	{
 		tick = false;
 
-		if (comparable instanceof Healer)
+		ClickCompare healer = null;
+
+		for (ClickCompare comp : this.comparables)
+		{
+			if (comp instanceof Healer) healer = comp;
+		}
+
+		if (healer != null)
 		{
 			Widget widget = client.getWidget(BA_HEALER_GROUP_ID, BA_CALL_LISTEN);
 
 			if (widget != null && widget.getText() != null)
 			{
-				((Healer) comparable).setRoleText(widget.getText().trim());
+				((Healer) healer).setRoleText(widget.getText().trim());
 			}
 			else
 			{
-				((Healer) comparable).setRoleText("");
+				((Healer) healer).setRoleText("");
 			}
 		}
 	}
@@ -142,9 +151,15 @@ public class OneClickPlugin extends Plugin
 	@Subscribe
 	public void onMenuOpened(MenuOpened event)
 	{
-		if (comparable instanceof Spell)
+		ClickCompare spell = null;
+
+		for(ClickCompare comp : this.comparables){
+			if(comp instanceof Spell) spell = comp;
+		}
+
+		if (spell != null)
 		{
-			((Spell) comparable).onMenuOpened(event);
+			((Spell) spell).onMenuOpened(event);
 		}
 	}
 
@@ -158,28 +173,18 @@ public class OneClickPlugin extends Plugin
 
 		if (config.deprioritizeWalk())
 		{
-			switch (config.getType())
-			{
-				case SEED_SET:
-				case BA_HEALER:
-					if (event.getOpcode() == MenuAction.WALK.getId())
-					{
-						MenuEntry menuEntry = client.getLeftClickMenuEntry();
-						menuEntry.setOpcode(MenuAction.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
-						client.setLeftClickMenuEntry(menuEntry);
-					}
-					break;
-				default:
-					break;
+			if(config.swapHealer() || config.swapTithe()){
+				if (event.getOpcode() == MenuAction.WALK.getId())
+				{
+					MenuEntry menuEntry = client.getLeftClickMenuEntry();
+					menuEntry.setOpcode(MenuAction.WALK.getId() + MENU_ACTION_DEPRIORITIZE_OFFSET);
+					client.setLeftClickMenuEntry(menuEntry);
+				}
 			}
 		}
+		ClickCompare comparable = isEntryValid(event);
 
-		if (comparable == null)
-		{
-			throw new AssertionError("This should not be possible.");
-		}
-
-		if (comparable.isEntryValid(event))
+		if (comparable != null)
 		{
 			comparable.modifyEntry(event);
 		}
@@ -199,12 +204,13 @@ public class OneClickPlugin extends Plugin
 			return;
 		}
 
-		if (comparable == null)
+		if (comparables.isEmpty())
 		{
-			throw new AssertionError("This should not be possible.");
+			return;
 		}
+		ClickCompare comparable = isClickValid(event);
 
-		if (comparable.isClickValid(event))
+		if (comparable != null)
 		{
 			comparable.modifyClick(event);
 			return;
@@ -214,51 +220,78 @@ public class OneClickPlugin extends Plugin
 			event.getMenuOption(), event.getMenuTarget(), event.getId(), event.getMenuAction().getId(), event.getActionParam(), event.getWidgetId(), false
 		);
 		MenuEntry tmp = old.clone();
-		boolean updated = false;
+
+		comparable = isEntryValid(tmp);
 
 		if (comparable.isEntryValid(tmp))
 		{
 			comparable.backupEntryModify(tmp);
 			event.setMenuEntry(tmp);
-			updated = true;
+		}else{
+			event.setMenuEntry(old);
+			return;
 		}
 
-		if (comparable.isClickValid(event) && updated)
+		if (comparable.isClickValid(event))
 		{
 			comparable.modifyClick(event);
-		}
-		else if (!comparable.isClickValid(event) && updated)
-		{
+		}else{
 			event.setMenuEntry(old);
 		}
 	}
 
 	private void updateConfig()
 	{
+		this.comparables = new ArrayList<>();
+
 		enableImbue = config.isUsingImbue();
-		Types type = config.getType();
-		switch (type)
-		{
-			case SPELL:
-				comparable = config.getSpells().getComparable();
-				comparable.setClient(client);
-				comparable.setPlugin(this);
-				if (comparable instanceof Spell)
-				{
-					((Spell) comparable).setSpellSelection(config.getSpells());
-				}
-				break;
-			case CUSTOM:
-				comparable = type.getComparable();
-				comparable.setClient(client);
-				comparable.setPlugin(this);
-				((Custom) comparable).updateMap(config.swaps());
-				break;
-			default:
-				comparable = type.getComparable();
-				comparable.setClient(client);
-				comparable.setPlugin(this);
-				break;
+
+		if(config.swapSpell()){
+			ClickCompare comparable = config.getSpells().getComparable();
+			comparable.setClient(client);
+			comparable.setPlugin(this);
+			if (comparable instanceof Spell)
+			{
+				((Spell) comparable).setSpellSelection(config.getSpells());
+			}
+			this.comparables.add(comparable);
 		}
+		if(config.swapCustom()){
+			ClickCompare comparable = Types.SPELL.getComparable();
+			comparable.setClient(client);
+			comparable.setPlugin(this);
+			((Custom) comparable).updateMap(config.swaps());
+			this.comparables.add(comparable);
+		}
+
+		for(Types type: Types.values()) {
+			if (type == Types.NONE || type == Types.SPELL || type == Types.CUSTOM) continue;
+			ClickCompare comparable = type.getComparable();
+			comparable.setClient(client);
+			comparable.setPlugin(this);
+			this.comparables.add(comparable);
+		}
+	}
+
+	private ClickCompare isClickValid(MenuOptionClicked event){
+		for(ClickCompare comparable : this.comparables){
+			if(comparable.isClickValid(event)) return comparable;
+		}
+		return null;
+	}
+
+
+	private ClickCompare isEntryValid(MenuEntry entry){
+		for(ClickCompare comparable : this.comparables){
+			if(comparable.isEntryValid(entry)) return comparable;
+		}
+		return null;
+	}
+
+	private ClickCompare getValidComparable(MenuOptionClicked event){
+		for(ClickCompare comparable : this.comparables){
+			if(comparable.isClickValid(event)) return comparable;
+		}
+		return null;
 	}
 }

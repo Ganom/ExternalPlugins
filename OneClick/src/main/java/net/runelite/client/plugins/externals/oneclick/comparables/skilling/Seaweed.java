@@ -26,7 +26,7 @@ public class Seaweed extends ClickCompare
 
 		MenuEntry e = event.clone();
 		e.setOption("Use");
-		e.setTarget("<col=ff9040>Hops seed<col=ffffff> -> " + getTargetMap().get(event.getIdentifier()));
+		e.setTarget("<col=ff9040>Giant seaweed<col=ffffff> -> " + getTargetMap().get(event.getIdentifier()));
 		e.setOpcode(MenuAction.ITEM_USE_ON_GAME_OBJECT.getId());
 		e.setForceLeftClick(true);
 		insert(e);
@@ -36,7 +36,7 @@ public class Seaweed extends ClickCompare
 	public boolean isClickValid(MenuOptionClicked event)
 	{
 		return event.getMenuAction() == MenuAction.ITEM_USE_ON_GAME_OBJECT &&
-				event.getMenuTarget().contains("<col=ff9040>Hops seed<col=ffffff> -> ");
+				event.getMenuTarget().contains("<col=ff9040>Giant seaweed<col=ffffff> -> ");
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class Seaweed extends ClickCompare
 		}
 
 		e.setOption("Use");
-		e.setTarget("<col=ff9040>Hops seed<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
+		e.setTarget("<col=ff9040>Giant seaweed<col=ffffff> -> " + getTargetMap().get(e.getIdentifier()));
 		e.setOpcode(MenuAction.ITEM_USE_ON_GAME_OBJECT.getId());
 		e.setForceLeftClick(true);
 	}
