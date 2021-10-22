@@ -16,7 +16,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapCompost",
 			name = "Swap Compost",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Uses saltpeter on compost for Hosidius reputation.",
 			position = 1
 	)
 	default boolean swapCompost()
@@ -27,7 +27,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapDarts",
 			name = "Swap Darts",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Uses feathers on dart tips.",
 			position = 2
 	)
 	default boolean swapDarts()
@@ -38,7 +38,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapFiremaking",
 			name = "Swap Firemaking",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Uses tinderbox on all types of logs.",
 			position = 3
 	)
 	default boolean swapFiremaking()
@@ -49,7 +49,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapBirdhouses",
 			name = "Swap Birdhouses",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Uses all types of hops seeds on built birdhouse.",
 			position = 4
 	)
 	default boolean swapBirdhouses()
@@ -60,7 +60,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapTar",
 			name = "Swap Tar",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Uses herb on swamp tar.",
 			position = 5
 	)
 	default boolean swapTar()
@@ -71,7 +71,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapLavas",
 			name = "Swap Lavas",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Left click to craft lava runes.",
 			position = 6
 	)
 	default boolean swapLavas()
@@ -82,7 +82,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapSteams",
 			name = "Swap Steams",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Left click to craft steam runes.",
 			position = 7
 	)
 	default boolean swapSteams()
@@ -93,7 +93,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapSmokes",
 			name = "Swap Smokes",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Left click to craft smoke runes.",
 			position = 8
 	)
 	default boolean swapSmokes()
@@ -104,7 +104,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapBones",
 			name = "Swap Bones",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Left click use bones on altar.",
 			position = 9
 	)
 	default boolean swapBones()
@@ -115,7 +115,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapKarambwans",
 			name = "Swap Karambwans",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Left click use karambwan on fire/range.",
 			position = 10
 	)
 	default boolean swapKarambwans()
@@ -126,7 +126,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapSeaweed",
 			name = "Swap Seaweed",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Left click use seaweed on fire.",
 			position = 11
 	)
 	default boolean swapSeaweed()
@@ -137,7 +137,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapEssence",
 			name = "Swap Dark Essence",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Left click chisel dark essence.",
 			position = 12
 	)
 	default boolean swapEssence()
@@ -148,7 +148,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapTithe",
 			name = "Swap Tithe Farm",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Left click use seeds on field.",
 			position = 13
 	)
 	default boolean swapTithe()
@@ -159,7 +159,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapTiara",
 			name = "Swap Tiara",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Left click use Tiara on Altar.",
 			position = 14
 	)
 	default boolean swapTiara()
@@ -170,7 +170,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapSpell",
 			name = "Swap Spell",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Set a spell to do something specific",
 			position = 22
 	)
 	default boolean swapSpell()
@@ -181,7 +181,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapHealer",
 			name = "Swap Healer",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Left click healer food in Barbarian Assault.",
 			position = 16
 	)
 	default boolean swapHealer()
@@ -192,7 +192,7 @@ public interface OneClickConfig extends Config
 	@ConfigItem(
 			keyName = "swapCustom",
 			name = "Swap Custom",
-			description = "If you are using lava runes, and want to use magic imbue, enable this.",
+			description = "Custom Use item on item.",
 			position = 17
 	)
 	default boolean swapCustom()
