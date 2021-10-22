@@ -16,7 +16,7 @@ apply<VersionPlugin>()
 subprojects {
     group = "com.openosrs.externals"
 
-    project.extra["PluginProvider"] = "Ganom"
+    project.extra["PluginProvider"] = "Atynine"
     project.extra["ProjectUrl"] = "https://discordapp.com/invite/gsoft"
     project.extra["PluginLicense"] = "GNU General Public License v3.0"
 
@@ -55,10 +55,10 @@ subprojects {
     apply<JavaLibraryPlugin>()
     apply(plugin = "checkstyle")
 
-    val oprsVersion = "4.9.9"
+    val oprsVersion = "4.12.1"
 
     dependencies {
-        annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.16")
+        annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.20")
         annotationProcessor(group = "org.pf4j", name = "pf4j", version = "3.5.0")
 
         compileOnly(group = "com.openosrs", name = "http-api", version = oprsVersion)
@@ -115,6 +115,11 @@ subprojects {
 
         withType<Checkstyle> {
             group = "verification"
+        }
+
+        register<Copy>("copyDeps") {
+            into("./build/deps/")
+            from(configurations["runtimeClasspath"])
         }
     }
 }

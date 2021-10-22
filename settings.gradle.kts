@@ -1,6 +1,5 @@
 rootProject.name = "public"
 
-include(":Anonymizer")
 include(":AutoClicker")
 include(":AutoPrayFlick")
 include(":BossSwapper")
