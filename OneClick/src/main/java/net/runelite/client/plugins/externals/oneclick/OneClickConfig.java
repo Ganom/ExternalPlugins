@@ -212,12 +212,12 @@ public interface OneClickConfig extends Config
 	}
 
 	@ConfigItem(
-		keyName = "deprioritizeWalk",
-		name = "Deprioritize Walk",
-		description = "Deprioritizes walking on BA healer & seeds.",
-		position = 999
+			keyName = "swapMTA_Alchemy",
+			name = "MTA Alchemy Room",
+			description = "One click high-alch best item for MTA Alchemy room.",
+			position = 19
 	)
-	default boolean deprioritizeWalk()
+	default boolean swapMTA_Alchemy()
 	{
 		return false;
 	}
@@ -226,7 +226,7 @@ public interface OneClickConfig extends Config
 			keyName = "spell",
 			name = "Spell Select",
 			description = "Choose a spell to One click",
-			position = 23
+			position = 997
 	)
 	default Spells getSpells()
 	{
@@ -238,10 +238,21 @@ public interface OneClickConfig extends Config
 		name = "Custom Inventory Swaps",
 		description = "Format is as follows: OneClickThis:WithThis" +
 			"<br>For example, 6032:13421. This will use saltpetre on compost.",
-		position = 24
+		position = 998
 	)
 	default String swaps()
 	{
 		return "0:0";
+	}
+
+	@ConfigItem(
+			keyName = "deprioritizeWalk",
+			name = "Deprioritize Walk",
+			description = "Deprioritizes walking on BA healer & seeds.",
+			position = 999
+	)
+	default boolean deprioritizeWalk()
+	{
+		return false;
 	}
 }

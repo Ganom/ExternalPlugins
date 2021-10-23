@@ -24,6 +24,7 @@ import net.runelite.client.plugins.externals.oneclick.comparables.skilling.DarkE
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Darts;
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Firemaking;
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Karambwans;
+import net.runelite.client.plugins.externals.oneclick.comparables.skilling.MTA.MTA_Alchemy;
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Runes;
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Tiara;
 import net.runelite.client.plugins.externals.oneclick.comparables.skilling.Seaweed;
@@ -49,6 +50,7 @@ public enum Types
 	TIARA("Tiara", new Tiara()),
 	SPELL("Spell Casting", new Blank()),
 	BA_HEALER("BA Healer", new Healer()),
+	MTA_ALCHEMY("MTA Alchemy", new MTA_Alchemy()),
 	NONE("None", new Blank());
 
 	private final String name;

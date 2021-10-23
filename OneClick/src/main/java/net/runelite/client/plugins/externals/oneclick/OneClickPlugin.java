@@ -288,6 +288,7 @@ public class OneClickPlugin extends Plugin
 		if (config.swapSteams()) addType(Types.STEAM_RUNES);
 		if (config.swapTar()) addType(Types.HERB_TAR);
 		if (config.swapTiara()) addType(Types.TIARA);
+		if (config.swapMTA_Alchemy()) addType(Types.MTA_ALCHEMY);
 	}
 
 	private void addType(Types type)
