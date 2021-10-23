@@ -45,8 +45,8 @@ public class MTA_Alchemy extends ClickCompare
 	public boolean isEntryValid(MenuEntry event)
 	{
 		return event.getOpcode() == MenuAction.WIDGET_TYPE_2.getId() &&
-				event.getOption().contains("Cast") &&
-				event.getTarget().contains(spell);
+				event.getOption().equals("Cast") &&
+				event.getTarget().equals("<col=00ff00>" + spell + "</col>");
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class MTA_Alchemy extends ClickCompare
 	private AlchemyItem getBest()
 	{
 		Player player = client.getLocalPlayer();
-		if(player == null || player.getWorldLocation().getRegionID() != MTA_ALCH_REGION || player.getWorldLocation().getPlane() != 2)
+		if (player == null || player.getWorldLocation().getRegionID() != MTA_ALCH_REGION || player.getWorldLocation().getPlane() != 2)
 		{
 			return null;
 		}
@@ -137,7 +137,16 @@ public class MTA_Alchemy extends ClickCompare
 
 			String item = textWidget.getText();
 			Widget pointsWidget = client.getWidget(WidgetID.MTA_ALCHEMY_GROUP_ID, INFO_POINT_START + i);
-			int points = Integer.parseInt(pointsWidget.getText());
+			int points;
+
+			try
+			{
+				points = Integer.parseInt(pointsWidget.getText());
+			}
+			catch (NumberFormatException e)
+			{
+				return AlchemyItem.LEATHER_BOOTS;
+			}
 
 			if (points == BEST_POINTS)
 			{
