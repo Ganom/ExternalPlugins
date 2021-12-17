@@ -8,6 +8,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
+import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
@@ -21,7 +22,7 @@ public class Custom extends ClickCompare
 	private final Map<Integer, List<Integer>> customClickMap = new HashMap<>();
 
 	@Override
-	public boolean isEntryValid(MenuEntry event)
+	public boolean isEntryValid(MenuEntryAdded event)
 	{
 		if (client == null)
 		{
@@ -42,7 +43,7 @@ public class Custom extends ClickCompare
 	}
 
 	@Override
-	public void modifyEntry(MenuEntry event)
+	public void modifyEntry(MenuEntryAdded event)
 	{
 		if (client == null || event.isForceLeftClick())
 		{
@@ -50,27 +51,27 @@ public class Custom extends ClickCompare
 		}
 		int id = event.getIdentifier();
 		int item = findItem(customClickMap.get(id)).getLeft();
-		final String name = client.getItemComposition(item).getName();
-		MenuEntry e = event.clone();
-		e.setTarget("<col=ff9040>" + name + "<col=ffffff> -> " + getTargetMap().get(id));
-		e.setForceLeftClick(true);
-		insert(e);
+		String name = client.getItemComposition(item).getName();
+		client.createMenuEntry(-1)
+			.setOption(event.getOption())
+			.setTarget("<col=ff9040>" + name + "<col=ffffff> -> " + getTargetMap().get(id))
+			.setType(MenuAction.ITEM_USE_ON_WIDGET_ITEM)
+			.setIdentifier(event.getIdentifier())
+			.setParam0(event.getActionParam0())
+			.setParam1(event.getActionParam1())
+			.setForceLeftClick(true);
 	}
 
 	@Override
 	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getMenuAction() == MenuAction.ITEM_USE &&
-			customClickMap.containsKey(event.getId());
+		return customClickMap.containsKey(event.getId()) && updateSelectedItem(customClickMap.get(event.getId()));
 	}
 
 	@Override
 	public void modifyClick(MenuOptionClicked event)
 	{
-		if (updateSelectedItem(customClickMap.get(event.getId())))
-		{
-			event.setMenuAction(MenuAction.ITEM_USE_ON_WIDGET_ITEM);
-		}
+
 	}
 
 	@Override

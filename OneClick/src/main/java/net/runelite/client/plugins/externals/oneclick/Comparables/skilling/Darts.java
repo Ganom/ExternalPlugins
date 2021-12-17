@@ -5,6 +5,7 @@ import java.util.Set;
 import net.runelite.api.ItemID;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
+import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.comparables.ClickCompare;
 
@@ -22,40 +23,40 @@ public class Darts extends ClickCompare
 	);
 
 	@Override
-	public boolean isEntryValid(MenuEntry event)
+	public boolean isEntryValid(MenuEntryAdded event)
 	{
-		return event.getOpcode() == MenuAction.ITEM_USE.getId() && !event.isForceLeftClick() &&
+		return event.getType() == MenuAction.ITEM_USE.getId() && !event.isForceLeftClick() &&
 			(DART_TIPS.contains(event.getIdentifier()) || BOLTS.contains(event.getIdentifier()));
 	}
 
 	@Override
-	public void modifyEntry(MenuEntry event)
+	public void modifyEntry(MenuEntryAdded event)
 	{
-		if (findItem(ItemID.FEATHER).getLeft() == -1)
+		if (client == null || findItem(ItemID.FEATHER).getLeft() == -1)
 		{
 			return;
 		}
 
-		MenuEntry e = event.clone();
-		e.setTarget("<col=ff9040>Feather<col=ffffff> -> " + getTargetMap().get(event.getIdentifier()));
-		e.setForceLeftClick(true);
-		insert(e);
+		client.createMenuEntry(-1)
+			.setOption(event.getOption())
+			.setTarget("<col=ff9040>Feather<col=ffffff> -> " + getTargetMap().get(event.getIdentifier()))
+			.setType(MenuAction.ITEM_USE_ON_WIDGET_ITEM)
+			.setIdentifier(event.getIdentifier())
+			.setParam0(event.getActionParam0())
+			.setParam1(event.getActionParam1())
+			.setForceLeftClick(true);
 	}
 
 	@Override
 	public boolean isClickValid(MenuOptionClicked event)
 	{
-		return event.getMenuAction() == MenuAction.ITEM_USE &&
-			event.getMenuTarget().contains("<col=ff9040>Feather<col=ffffff> -> ");
+		return event.getMenuTarget().contains("<col=ff9040>Feather<col=ffffff> -> ") && updateSelectedItem(ItemID.FEATHER);
 	}
 
 	@Override
 	public void modifyClick(MenuOptionClicked event)
 	{
-		if (updateSelectedItem(ItemID.FEATHER))
-		{
-			event.setMenuAction(MenuAction.ITEM_USE_ON_WIDGET_ITEM);
-		}
+
 	}
 
 	@Override

@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "6.1.2"
+version = "7.0"
 
 project.extra["PluginName"] = "LeftClickCast"
 project.extra["PluginDescription"] = "Casting made even easier."

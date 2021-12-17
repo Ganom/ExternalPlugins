@@ -7,6 +7,7 @@ import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.Skill;
 import net.runelite.api.SpriteID;
+import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOpened;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
@@ -168,7 +169,7 @@ public class Spell extends ClickCompare
 				return;
 			}
 
-			final MenuEntry[] menuList = new MenuEntry[event.getMenuEntries().length + 1];
+/*			final MenuEntry[] menuList = new MenuEntry[event.getMenuEntries().length + 1];
 
 			for (int i = event.getMenuEntries().length - 1; i >= 0; i--)
 			{
@@ -180,55 +181,56 @@ public class Spell extends ClickCompare
 				{
 					menuList[i + 1] = event.getMenuEntries()[i];
 				}
-			}
+			}*/
 
-			final MenuEntry setTargetItem = new MenuEntry();
 			final boolean set = clickItem != null && clickItem.getId() == firstEntry.getIdentifier();
-			setTargetItem.setOption(set ? "Unset" : "Set");
+			String target = "";
+			String option = set ? "Unset" : "Set";
 
 			switch (spellSelection)
 			{
 				case HIGH_ALCH:
-					setTargetItem.setTarget("<col=00ff00>High Alchemy Item <col=ffffff> -> " + firstEntry.getTarget());
+					target = "<col=00ff00>High Alchemy Item <col=ffffff> -> " + firstEntry.getTarget();
 					break;
 				case SUPERHEAT:
-					setTargetItem.setTarget("<col=00ff00>Superheat Item <col=ffffff> -> " + firstEntry.getTarget());
+					target = "<col=00ff00>Superheat Item <col=ffffff> -> " + firstEntry.getTarget();
 					break;
 				case ENCHANT_SAPPHIRE:
-					setTargetItem.setTarget("<col=00ff00>Lvl-1 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					target = "<col=00ff00>Lvl-1 Enchant <col=ffffff> -> " + firstEntry.getTarget();
 					break;
 				case ENCHANT_EMERALD:
-					setTargetItem.setTarget("<col=00ff00>Lvl-2 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					target = "<col=00ff00>Lvl-2 Enchant <col=ffffff> -> " + firstEntry.getTarget();
 					break;
 				case ENCHANT_RUBY:
-					setTargetItem.setTarget("<col=00ff00>Lvl-3 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					target = "<col=00ff00>Lvl-3 Enchant <col=ffffff> -> " + firstEntry.getTarget();
 					break;
 				case ENCHANT_DIAMOND:
-					setTargetItem.setTarget("<col=00ff00>Lvl-4 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					target = "<col=00ff00>Lvl-4 Enchant <col=ffffff> -> " + firstEntry.getTarget();
 					break;
 				case ENCHANT_DRAGONSTONE:
-					setTargetItem.setTarget("<col=00ff00>Lvl-5 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					target = "<col=00ff00>Lvl-5 Enchant <col=ffffff> -> " + firstEntry.getTarget();
 					break;
 				case ENCHANT_ONYX:
-					setTargetItem.setTarget("<col=00ff00>Lvl-6 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					target = "<col=00ff00>Lvl-6 Enchant <col=ffffff> -> " + firstEntry.getTarget();
 					break;
 				case ENCHANT_ZENYTE:
-					setTargetItem.setTarget("<col=00ff00>Lvl-7 Enchant <col=ffffff> -> " + firstEntry.getTarget());
+					target = "<col=00ff00>Lvl-7 Enchant <col=ffffff> -> " + firstEntry.getTarget();
 					break;
 			}
 
-			setTargetItem.setIdentifier(set ? -1 : firstEntry.getIdentifier());
-			setTargetItem.setOpcode(MenuAction.RUNELITE.getId());
-			setTargetItem.setParam1(widgetId);
-			setTargetItem.setForceLeftClick(false);
-			menuList[1] = setTargetItem;
-			event.setMenuEntries(menuList);
-			event.setModified();
+			client.createMenuEntry(1)
+				.setOption(option)
+				.setTarget(target)
+				.setType(MenuAction.RUNELITE)
+				.setIdentifier(set ? -1 : firstEntry.getIdentifier())
+				.setParam0(0)
+				.setParam1(widgetId)
+				.setForceLeftClick(false);
 		}
 	}
 
 	@Override
-	public boolean isEntryValid(MenuEntry event)
+	public boolean isEntryValid(MenuEntryAdded event)
 	{
 		return event.getOpcode() == MenuAction.WIDGET_TYPE_2.getId() &&
 			event.getOption().equals("Cast") &&
@@ -236,18 +238,21 @@ public class Spell extends ClickCompare
 	}
 
 	@Override
-	public void modifyEntry(MenuEntry event)
+	public void modifyEntry(MenuEntryAdded event)
 	{
-		if (plugin == null || clickItem == null)
+		if (client == null || plugin == null || clickItem == null)
 		{
 			return;
 		}
 
-		MenuEntry e = event.clone();
-		e.setOption("Cast");
-		e.setTarget("<col=00ff00>" + spell + "</col>" + "<col=ffffff> -> " + clickItem.getName());
-		e.setForceLeftClick(true);
-		insert(e);
+		client.createMenuEntry(-1)
+			.setOption("Cast")
+			.setTarget("<col=00ff00>" + spell + "</col>" + "<col=ffffff> -> " + clickItem.getName())
+			.setType(event.getMenuAction())
+			.setIdentifier(event.getIdentifier())
+			.setParam0(event.getActionParam0())
+			.setParam1(event.getActionParam1())
+			.setForceLeftClick(true);
 	}
 
 	@Override

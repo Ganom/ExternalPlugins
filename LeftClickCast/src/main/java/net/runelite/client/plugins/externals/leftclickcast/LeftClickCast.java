@@ -20,12 +20,10 @@ import net.runelite.api.ItemContainer;
 import net.runelite.api.MenuAction;
 import static net.runelite.api.MenuAction.SPELL_CAST_ON_NPC;
 import static net.runelite.api.MenuAction.SPELL_CAST_ON_PLAYER;
-import net.runelite.api.MenuEntry;
 import net.runelite.api.NPC;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.MenuEntryAdded;
-import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.util.Text;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
@@ -187,12 +185,17 @@ public class LeftClickCast extends Plugin
 	@Subscribe
 	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
+		if (client.isMenuOpen())
+		{
+			return;
+		}
+
 		if (event.isForceLeftClick())
 		{
 			return;
 		}
 
-		if (event.getOpcode() == MenuAction.PLAYER_SECOND_OPTION.getId() && isMage)
+		if (event.getType() == MenuAction.PLAYER_SECOND_OPTION.getId() && isMage)
 		{
 			final String name = Text.standardize(event.getTarget(), true);
 
@@ -214,12 +217,16 @@ public class LeftClickCast extends Plugin
 			}
 
 			setSelectSpell(currentSpell.getSpell());
-			MenuEntry e = event.clone();
-			e.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ");
-			e.setForceLeftClick(true);
-			insert(e);
+			client.createMenuEntry(-1)
+				.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ")
+				.setTarget(event.getTarget())
+				.setType(SPELL_CAST_ON_PLAYER)
+				.setIdentifier(event.getIdentifier())
+				.setParam0(0)
+				.setParam1(0)
+				.setForceLeftClick(true);
 		}
-		else if (event.getOpcode() == MenuAction.NPC_SECOND_OPTION.getId() && isMage)
+		else if (event.getType() == MenuAction.NPC_SECOND_OPTION.getId() && isMage)
 		{
 			try
 			{
@@ -236,31 +243,18 @@ public class LeftClickCast extends Plugin
 				}
 
 				setSelectSpell(currentSpell.getSpell());
-				MenuEntry e = event.clone();
-				e.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ");
-				e.setForceLeftClick(true);
-				insert(e);
+				client.createMenuEntry(-1)
+					.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ")
+					.setTarget(event.getTarget())
+					.setType(SPELL_CAST_ON_NPC)
+					.setIdentifier(event.getIdentifier())
+					.setParam0(0)
+					.setParam1(0)
+					.setForceLeftClick(true);
 			}
 			catch (IndexOutOfBoundsException ignored)
 			{
 			}
-		}
-	}
-
-	@Subscribe
-	public void onMenuOptionClicked(MenuOptionClicked event)
-	{
-		if (event.getMenuOption().contains("(P)"))
-		{
-			event.setMenuAction(SPELL_CAST_ON_PLAYER);
-			event.setActionParam(0);
-			event.setWidgetId(0);
-		}
-		else if (event.getMenuOption().contains("(N)"))
-		{
-			event.setMenuAction(SPELL_CAST_ON_NPC);
-			event.setActionParam(0);
-			event.setWidgetId(0);
 		}
 	}
 
@@ -313,23 +307,15 @@ public class LeftClickCast extends Plugin
 
 	private void setSelectSpell(WidgetInfo info)
 	{
-		final Widget widget = client.getWidget(info);
+		Widget widget = client.getWidget(info);
+		if (widget == null)
+		{
+			log.info("Unable to locate spell widget.");
+			return;
+		}
 		client.setSelectedSpellName("<col=00ff00>" + widget.getName() + "</col>");
 		client.setSelectedSpellWidget(widget.getId());
 		client.setSelectedSpellChildIndex(-1);
-	}
-
-	private void insert(MenuEntry e)
-	{
-		client.insertMenuItem(
-			e.getOption(),
-			e.getTarget(),
-			e.getOpcode(),
-			e.getIdentifier(),
-			e.getParam0(),
-			e.getParam1(),
-			true
-		);
 	}
 
 	/**

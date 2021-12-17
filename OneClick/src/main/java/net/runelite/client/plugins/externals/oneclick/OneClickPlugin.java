@@ -15,8 +15,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.MenuAction;
-import static net.runelite.api.MenuAction.MENU_ACTION_DEPRIORITIZE_OFFSET;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
@@ -24,6 +22,7 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOpened;
 import net.runelite.api.events.MenuOptionClicked;
+import net.runelite.api.events.WidgetPressed;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -64,6 +63,8 @@ public class OneClickPlugin extends Plugin
 
 	static final int BA_CALL_LISTEN = 7;
 	public static final int BA_HEALER_GROUP_ID = 488;
+	private int widgetTick = -1;
+	private MenuEntry widgetEntry = null;
 
 	@Setter
 	private boolean tick;
@@ -84,6 +85,21 @@ public class OneClickPlugin extends Plugin
 	protected void shutDown()
 	{
 
+	}
+
+	@Subscribe
+	public void onWidgetPressed(WidgetPressed event)
+	{
+		log.info("Widget Pressed: {}", client.getTickCount());
+		for (MenuEntry menuEntry : client.getMenuEntries())
+		{
+			if (menuEntry.isForceLeftClick())
+			{
+				widgetEntry = menuEntry;
+				widgetTick = client.getTickCount() + 2;
+				log.info("Overriding with: {}", widgetEntry.getTarget());
+			}
+		}
 	}
 
 	@Subscribe
@@ -122,6 +138,12 @@ public class OneClickPlugin extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
+		if (client.getTickCount() == widgetTick && widgetEntry != null)
+		{
+			log.info("Failsafe, deleting previous saved force click.");
+			widgetEntry = null;
+		}
+
 		tick = false;
 
 		if (comparable instanceof Healer)
@@ -156,7 +178,7 @@ public class OneClickPlugin extends Plugin
 			targetMap.put(event.getIdentifier(), event.getTarget());
 		}
 
-		if (config.deprioritizeWalk())
+/*		if (config.deprioritizeWalk())
 		{
 			switch (config.getType())
 			{
@@ -172,7 +194,7 @@ public class OneClickPlugin extends Plugin
 				default:
 					break;
 			}
-		}
+		}*/
 
 		if (comparable == null)
 		{
@@ -194,6 +216,8 @@ public class OneClickPlugin extends Plugin
 			return;
 		}
 
+		log.info("Clicked: {}", client.getTickCount());
+
 		if (event.getMenuTarget() == null)
 		{
 			return;
@@ -204,32 +228,21 @@ public class OneClickPlugin extends Plugin
 			throw new AssertionError("This should not be possible.");
 		}
 
+		if (widgetEntry != null)
+		{
+			event.setMenuOption(widgetEntry.getOption());
+			event.setMenuTarget(widgetEntry.getTarget());
+			event.setMenuAction(widgetEntry.getType());
+			event.setId(widgetEntry.getIdentifier());
+			event.setParam0(widgetEntry.getParam0());
+			event.setParam1(widgetEntry.getParam1());
+			widgetEntry = null;
+			log.info("Set: {}", client.getTickCount());
+		}
+
 		if (comparable.isClickValid(event))
 		{
 			comparable.modifyClick(event);
-			return;
-		}
-
-		MenuEntry old = new MenuEntry(
-			event.getMenuOption(), event.getMenuTarget(), event.getId(), event.getMenuAction().getId(), event.getActionParam(), event.getWidgetId(), false
-		);
-		MenuEntry tmp = old.clone();
-		boolean updated = false;
-
-		if (comparable.isEntryValid(tmp))
-		{
-			comparable.backupEntryModify(tmp);
-			event.setMenuEntry(tmp);
-			updated = true;
-		}
-
-		if (comparable.isClickValid(event) && updated)
-		{
-			comparable.modifyClick(event);
-		}
-		else if (!comparable.isClickValid(event) && updated)
-		{
-			event.setMenuEntry(old);
 		}
 	}
 
