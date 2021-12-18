@@ -228,7 +228,7 @@ public class OneClickPlugin extends Plugin
 			throw new AssertionError("This should not be possible.");
 		}
 
-		if (widgetEntry != null)
+		if (widgetEntry != null && widgetEntry.getType() == event.getMenuAction() && widgetEntry.getIdentifier() == event.getId())
 		{
 			event.setMenuOption(widgetEntry.getOption());
 			event.setMenuTarget(widgetEntry.getTarget());
