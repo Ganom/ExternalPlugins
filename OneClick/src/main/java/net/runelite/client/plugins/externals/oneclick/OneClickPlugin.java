@@ -90,14 +90,14 @@ public class OneClickPlugin extends Plugin
 	@Subscribe
 	public void onWidgetPressed(WidgetPressed event)
 	{
-		log.info("Widget Pressed: {}", client.getTickCount());
+		log.debug("Widget Pressed: {}", client.getTickCount());
 		for (MenuEntry menuEntry : client.getMenuEntries())
 		{
 			if (menuEntry.isForceLeftClick())
 			{
 				widgetEntry = menuEntry;
 				widgetTick = client.getTickCount() + 2;
-				log.info("Overriding with: {}", widgetEntry.getTarget());
+				log.debug("Overriding with: {}", widgetEntry.getTarget());
 			}
 		}
 	}
@@ -140,7 +140,7 @@ public class OneClickPlugin extends Plugin
 	{
 		if (client.getTickCount() == widgetTick && widgetEntry != null)
 		{
-			log.info("Failsafe, deleting previous saved force click.");
+			log.debug("Failsafe, deleting previous saved force click.");
 			widgetEntry = null;
 		}
 
@@ -216,7 +216,7 @@ public class OneClickPlugin extends Plugin
 			return;
 		}
 
-		log.info("Clicked: {}", client.getTickCount());
+		log.debug("Clicked: {}", client.getTickCount());
 
 		if (event.getMenuTarget() == null)
 		{
@@ -237,7 +237,7 @@ public class OneClickPlugin extends Plugin
 			event.setParam0(widgetEntry.getParam0());
 			event.setParam1(widgetEntry.getParam1());
 			widgetEntry = null;
-			log.info("Set: {}", client.getTickCount());
+			log.debug("Set: {}", client.getTickCount());
 		}
 
 		if (comparable.isClickValid(event))
