@@ -6,6 +6,8 @@
 package net.runelite.client.plugins.externals.leftclickcast;
 
 import com.google.inject.Provides;
+import com.openosrs.client.util.WeaponMap;
+import com.openosrs.client.util.WeaponStyle;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -272,8 +274,7 @@ public class LeftClickCast extends Plugin
 
 		for (Item item : ic.getItems())
 		{
-			final String name = client.getItemComposition(item.getId()).getName().toLowerCase();
-			if (name.contains("staff") || name.contains("wand") || name.contains("sceptre") || name.contains("trident"))
+			if (WeaponMap.StyleMap.get(item.getId()) == WeaponStyle.MAGIC)
 			{
 				isMage = true;
 				break;
