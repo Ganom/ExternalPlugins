@@ -14,6 +14,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
@@ -29,6 +30,7 @@ import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.util.Text;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -66,9 +68,13 @@ public class LeftClickCast extends Plugin
 	@Inject
 	private ChatIconManager friendsManager;
 
+	@Inject
+	private ClientThread clientThread;
+
 	private final Set<Integer> whitelist = new HashSet<>();
 
 	private boolean isMage;
+	private boolean disabled = false;
 	private Spells currentSpell = Spells.ICE_BARRAGE;
 
 	private final HotkeyListener spellOneSwap = new HotkeyListener(() -> config.spellOneSwap())
@@ -125,6 +131,23 @@ public class LeftClickCast extends Plugin
 		}
 	};
 
+	private final HotkeyListener disable = new HotkeyListener(() -> config.disable())
+	{
+		@Override
+		public void hotkeyPressed()
+		{
+			disabled = !disabled;
+			clientThread.invoke(() ->
+				client.addChatMessage(
+					ChatMessageType.BROADCAST,
+					"",
+					"LeftClickCast has been " + (disabled ? "disabled." : "enabled."),
+					""
+				)
+			);
+		}
+	};
+
 	@Provides
 	LeftClickConfig getConfig(ConfigManager configManager)
 	{
@@ -142,6 +165,7 @@ public class LeftClickCast extends Plugin
 			keyManager.registerKeyListener(spellFourSwap);
 			keyManager.registerKeyListener(spellFiveSwap);
 			keyManager.registerKeyListener(spellSixSwap);
+			keyManager.registerKeyListener(disable);
 		}
 		updateConfig();
 	}
@@ -155,6 +179,7 @@ public class LeftClickCast extends Plugin
 		keyManager.unregisterKeyListener(spellFourSwap);
 		keyManager.unregisterKeyListener(spellFiveSwap);
 		keyManager.unregisterKeyListener(spellSixSwap);
+		keyManager.unregisterKeyListener(disable);
 	}
 
 	@Subscribe
@@ -168,6 +193,7 @@ public class LeftClickCast extends Plugin
 			keyManager.unregisterKeyListener(spellFourSwap);
 			keyManager.unregisterKeyListener(spellFiveSwap);
 			keyManager.unregisterKeyListener(spellSixSwap);
+			keyManager.unregisterKeyListener(disable);
 			return;
 		}
 		keyManager.registerKeyListener(spellOneSwap);
@@ -176,6 +202,7 @@ public class LeftClickCast extends Plugin
 		keyManager.registerKeyListener(spellFourSwap);
 		keyManager.registerKeyListener(spellFiveSwap);
 		keyManager.registerKeyListener(spellSixSwap);
+		keyManager.registerKeyListener(disable);
 	}
 
 	@Subscribe
@@ -187,6 +214,11 @@ public class LeftClickCast extends Plugin
 	@Subscribe
 	public void onMenuEntryAdded(MenuEntryAdded event)
 	{
+		if (disabled)
+		{
+			return;
+		}
+
 		if (client.isMenuOpen())
 		{
 			return;

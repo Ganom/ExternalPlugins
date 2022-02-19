@@ -69,6 +69,18 @@ public interface LeftClickConfig extends Config
 	String hotkeys = "Hotkeys";
 
 	@ConfigItem(
+		keyName = "disable",
+		name = "Disable LeftClickCast",
+		description = "",
+		position = 0,
+		section = hotkeys
+	)
+	default Keybind disable()
+	{
+		return Keybind.NOT_SET;
+	}
+
+	@ConfigItem(
 			keyName = "spellOneSwap",
 			name = "Swap to Spell #1",
 			description = "",
