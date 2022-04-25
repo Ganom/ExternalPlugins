@@ -27,13 +27,15 @@ import net.runelite.client.plugins.externals.oneclick.clickables.Clickable;
 import net.runelite.client.plugins.externals.oneclick.clickables.misc.Healers;
 import net.runelite.client.plugins.externals.oneclick.pojos.CustomItem;
 import net.runelite.client.plugins.externals.oneclick.pojos.ItemData;
+import org.pf4j.Extension;
 
+@Slf4j
+@Extension
 @PluginDescriptor(
 	name = "One Click",
 	description = "OP One Click methods.",
 	tags = "ganom"
 )
-@Slf4j
 public class OneClick extends Plugin
 {
 	private static final int BA_CALL_LISTEN = 7;

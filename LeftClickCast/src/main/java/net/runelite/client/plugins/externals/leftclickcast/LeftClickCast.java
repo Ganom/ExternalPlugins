@@ -251,7 +251,7 @@ public class LeftClickCast extends Plugin
 			}
 
 			setSelectSpell(currentSpell.getSpell());
-			client.createMenuEntry(-1)
+			client.createMenuEntry(client.getMenuOptionCount())
 				.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ")
 				.setTarget(event.getTarget())
 				.setType(WIDGET_TARGET_ON_PLAYER)
@@ -277,7 +277,7 @@ public class LeftClickCast extends Plugin
 				}
 
 				setSelectSpell(currentSpell.getSpell());
-				client.createMenuEntry(-1)
+				client.createMenuEntry(client.getMenuOptionCount())
 					.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ")
 					.setTarget(event.getTarget())
 					.setType(WIDGET_TARGET_ON_NPC)
