@@ -23,7 +23,7 @@ public class Karams extends Clickable
 		client.createMenuEntry(client.getMenuOptionCount())
 			.setOption("Use")
 			.setTarget("<col=ff9040>Raw karambwan<col=ffffff> -> " + event.getTarget())
-			.setType(MenuAction.ITEM_USE_ON_GAME_OBJECT)
+			.setType(MenuAction.WIDGET_TARGET_ON_GAME_OBJECT)
 			.setIdentifier(event.getIdentifier())
 			.setParam0(event.getActionParam0())
 			.setParam1(event.getActionParam1())
