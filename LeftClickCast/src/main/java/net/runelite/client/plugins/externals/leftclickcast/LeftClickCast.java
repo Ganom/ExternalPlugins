@@ -21,8 +21,8 @@ import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.MenuAction;
-import static net.runelite.api.MenuAction.SPELL_CAST_ON_NPC;
-import static net.runelite.api.MenuAction.SPELL_CAST_ON_PLAYER;
+import static net.runelite.api.MenuAction.WIDGET_TARGET_ON_NPC;
+import static net.runelite.api.MenuAction.WIDGET_TARGET_ON_PLAYER;
 import net.runelite.api.NPC;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.ItemContainerChanged;
@@ -254,7 +254,7 @@ public class LeftClickCast extends Plugin
 			client.createMenuEntry(-1)
 				.setOption("(P) Left Click " + client.getSelectedSpellName() + " -> ")
 				.setTarget(event.getTarget())
-				.setType(SPELL_CAST_ON_PLAYER)
+				.setType(WIDGET_TARGET_ON_PLAYER)
 				.setIdentifier(event.getIdentifier())
 				.setParam0(0)
 				.setParam1(0)
@@ -280,7 +280,7 @@ public class LeftClickCast extends Plugin
 				client.createMenuEntry(-1)
 					.setOption("(N) Left Click " + client.getSelectedSpellName() + " -> ")
 					.setTarget(event.getTarget())
-					.setType(SPELL_CAST_ON_NPC)
+					.setType(WIDGET_TARGET_ON_NPC)
 					.setIdentifier(event.getIdentifier())
 					.setParam0(0)
 					.setParam1(0)

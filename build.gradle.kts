@@ -17,17 +17,24 @@ subprojects {
     group = "com.openosrs.externals"
 
     project.extra["PluginProvider"] = "Ganom"
-    project.extra["ProjectUrl"] = "https://discordapp.com/invite/gsoft"
+    project.extra["ProjectUrl"] = "https://ganomsoftware.com/"
     project.extra["PluginLicense"] = "GNU General Public License v3.0"
 
     repositories {
-        jcenter {
-            content {
-                excludeGroupByRegex("com\\.openosrs.*")
-                excludeGroupByRegex("com\\.runelite.*")
+        maven(url = "https://repo.runelite.net")
+        mavenLocal()
+        mavenCentral()
+        exclusiveContent {
+            forRepository {
+                maven {
+                    url = uri("https://raw.githubusercontent.com/open-osrs/hosting/master")
+                }
+            }
+            filter {
+                includeModule("net.runelite", "fernflower")
+                includeModule("com.openosrs.rxrelay3", "rxrelay")
             }
         }
-
         exclusiveContent {
             forRepository {
                 maven {
@@ -36,17 +43,6 @@ subprojects {
             }
             filter {
                 includeModule("net.runelite", "discord")
-                includeModule("net.runelite.jogl", "jogl-all")
-                includeModule("net.runelite.gluegen", "gluegen-rt")
-            }
-        }
-
-        exclusiveContent {
-            forRepository {
-                mavenLocal()
-            }
-            filter {
-                includeGroupByRegex("com\\.openosrs.*")
             }
         }
     }
@@ -55,7 +51,7 @@ subprojects {
     apply<JavaLibraryPlugin>()
     apply(plugin = "checkstyle")
 
-    val oprsVersion = "4.19.0"
+    val oprsVersion = "4.25.0"
 
     dependencies {
         annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.16")

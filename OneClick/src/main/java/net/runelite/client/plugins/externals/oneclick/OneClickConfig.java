@@ -1,11 +1,6 @@
-/*
- * Copyright (c) 2019-2020, ganom <https://github.com/Ganom>
- * Copyright (c) 2019, TomC <https://github.com/tomcylke>
- * All rights reserved.
- * Licensed under GPL3, see LICENSE for the full scope.
- */
 package net.runelite.client.plugins.externals.oneclick;
 
+import java.util.Set;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -14,57 +9,26 @@ import net.runelite.client.config.ConfigItem;
 public interface OneClickConfig extends Config
 {
 	@ConfigItem(
-		keyName = "Type",
-		name = "Type",
-		description = "Select which one click method you would like to use.",
-		position = 1
+		position = 1,
+		keyName = "oneClicks",
+		name = "One Clicks",
+		description = "yert"
 	)
-	default Types getType()
+	default Set<Method> getOneClickMethods()
 	{
-		return Types.NONE;
+		return Set.of(
+
+		);
 	}
 
 	@ConfigItem(
-		keyName = "spell",
-		name = "Spell Select",
-		description = "Choose a spell to One click",
-		position = 2
-	)
-	default Spells getSpells()
-	{
-		return Spells.NONE;
-	}
-
-	@ConfigItem(
-		keyName = "isUsingImbue",
-		name = "Use Magic Imbue",
-		description = "If you are using lava runes, and want to use magic imbue, enable this.",
-		position = 3
-	)
-	default boolean isUsingImbue()
-	{
-		return false;
-	}
-
-	@ConfigItem(
-		keyName = "deprioritizeWalk",
-		name = "Deprioritize Walk",
-		description = "Deprioritizes walking on BA healer & seeds.",
-		position = 4
-	)
-	default boolean deprioritizeWalk()
-	{
-		return false;
-	}
-
-	@ConfigItem(
+		position = 2,
 		keyName = "swaps",
-		name = "Custom Inventory Swaps",
-		description = "Format is as follows: OneClickThis:WithThis" +
-			"<br>For example, 6032:13421. This will use saltpetre on compost.",
-		position = 5
+		name = "Custom",
+		description = "Format is as follows: UseThis:WithThis" +
+			"<br>For example, 6032:13421. This will use saltpetre on compost."
 	)
-	default String swaps()
+	default String getCustomIds()
 	{
 		return "0:0";
 	}
