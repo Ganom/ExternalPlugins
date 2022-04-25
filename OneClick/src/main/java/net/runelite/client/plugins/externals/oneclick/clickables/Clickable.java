@@ -2,6 +2,7 @@ package net.runelite.client.plugins.externals.oneclick.clickables;
 
 import com.google.inject.Inject;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -53,7 +54,7 @@ public abstract class Clickable
 		return plugin.getInventory()
 			.stream()
 			.filter(i -> ids.contains(i.getId()))
-			.findFirst()
+			.max(Comparator.comparingInt(ItemData::getIndex))
 			.orElse(null);
 	}
 
