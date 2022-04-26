@@ -1,7 +1,6 @@
 package net.runelite.client.plugins.externals.oneclick;
 
 import com.google.common.base.Splitter;
-import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import java.util.ArrayList;
@@ -123,17 +122,12 @@ public class OneClick extends Plugin
 	@Subscribe
 	public void onItemContainerChanged(ItemContainerChanged event)
 	{
-		if (event.getContainerId() != InventoryID.INVENTORY.getId())
+		if (event.getContainerId() != InventoryID.INVENTORY.getId() || event.getItemContainer() == null)
 		{
 			return;
 		}
 
 		inventory.clear();
-
-		if (event.getItemContainer() == null)
-		{
-			return;
-		}
 
 		var containerItems = event.getItemContainer().getItems();
 
@@ -154,7 +148,7 @@ public class OneClick extends Plugin
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event)
 	{
-		if (!event.getGroup().equals("oneclicker"))
+		if (!event.getGroup().equals("oneclick"))
 		{
 			return;
 		}
@@ -197,34 +191,12 @@ public class OneClick extends Plugin
 	private void convertStringToCustomItemMap()
 	{
 		items.clear();
-		var map = Splitter.on("\n")
+		Splitter.on("\n")
 			.omitEmptyStrings()
 			.trimResults()
-			.withKeyValueSeparator(":")
-			.split(config.getCustomIds());
-		map.forEach((k, v) ->
-		{
-			Integer useThis = Ints.tryParse(k);
-			Integer onThis = Ints.tryParse(v);
-			if (useThis == null || onThis == null)
-			{
-				log.error("{}:{} is invalid.", k, v);
-				return;
-			}
-			var highestId = client.getItemCount();
-			if (highestId < useThis || highestId < onThis)
-			{
-				log.error("{}:{} is out of bounds.", k, v);
-				return;
-			}
-			items.add(
-				new CustomItem(
-					useThis,
-					client.getItemComposition(useThis).getName(),
-					onThis,
-					client.getItemComposition(onThis).getName()
-				)
-			);
-		});
+			.splitToStream(config.getCustomIds())
+			.map((string) -> CustomItem.from(client, string))
+			.filter(Objects::nonNull)
+			.forEach(items::add);
 	}
 }
