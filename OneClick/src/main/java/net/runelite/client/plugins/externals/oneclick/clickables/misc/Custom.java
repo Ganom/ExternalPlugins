@@ -44,6 +44,7 @@ public class Custom extends Clickable
 		currentItemTarget = plugin.getItems()
 			.stream()
 			.filter(item -> item.getUseThisName().equalsIgnoreCase(Text.removeTags(target)))
+			.filter(item -> findItem(item.getUseThisId()) != null && findItem(item.getOnThisId()) != null)
 			.findFirst()
 			.orElse(null);
 		return currentItemTarget != null;
