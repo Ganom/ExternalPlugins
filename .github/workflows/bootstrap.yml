@@ -55,4 +55,4 @@ jobs:
           message: Automatic Bootstrap
           committer_name: GitHub Actions
           committer_email: actions@github.com
-          add: "['./plugins.json', ./release/*.jar']"
+          add: '['./plugins.json', './release/*.jar']'
