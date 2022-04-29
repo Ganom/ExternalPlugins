@@ -13,6 +13,16 @@ plugins {
 apply<BootstrapPlugin>()
 apply<VersionPlugin>()
 
+tasks.named("bootstrapPlugins") {
+    finalizedBy("copyBootstrap")
+}
+
+tasks.register<Copy>("copyBootstrap"){
+    println("Copying bootstrap to main dir.")
+    from("./build/bootstrap/")
+    into("./")
+}
+
 subprojects {
     group = "com.openosrs.externals"
 
@@ -51,7 +61,7 @@ subprojects {
     apply<JavaLibraryPlugin>()
     apply(plugin = "checkstyle")
 
-    val oprsVersion = "4.25.0"
+    val oprsVersion = "4.25.1"
 
     dependencies {
         annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.16")
@@ -91,15 +101,6 @@ subprojects {
     tasks {
         withType<JavaCompile> {
             options.encoding = "UTF-8"
-        }
-
-        withType<Jar> {
-            doLast {
-                copy {
-                    from("./build/libs/")
-                    into("../release/")
-                }
-            }
         }
 
         withType<AbstractArchiveTask> {
