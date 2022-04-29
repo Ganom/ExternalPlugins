@@ -1,0 +1,58 @@
+name: Plugins - Bootstrap
+
+on: workflow_dispatch
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    name: Bootstrap
+
+    steps:
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: 11
+          cache: 'gradle'
+
+      - name: Checkout Plugins
+        uses: actions/checkout@v3
+
+      - name: Checkout Client
+        uses: actions/checkout@v3
+        with:
+          repository: open-osrs/runelite
+          ref: master
+          path: open-osrs
+
+      - name: Assembling client
+        run: ./gradlew assemble --console=plain
+        working-directory: open-osrs
+
+      - name: Building client
+        run: ./gradlew build -x test -x checkstyleMain --console=plain
+        working-directory: open-osrs
+
+      - name: Upload client artifacts to local maven
+        run: ./gradlew publishToMavenLocal --console=plain
+        working-directory: open-osrs
+
+      - name: Make gradlew executable (plugins)
+        run: chmod +x ./gradlew
+
+      - name: Assembling plugins
+        run: ./gradlew assemble --console=plain
+
+      - name: Building plugins
+        run: ./gradlew build
+
+      - name: Bootstrap plugins
+        run: ./gradlew bootstrapPlugins
+
+      - uses: EndBug/add-and-commit@v9
+        with:
+          message: Automatic Bootstrap
+          committer_name: GitHub Actions
+          committer_email: actions@github.com
+          add: '['./plugins.json', ./release/*.jar']'
+          push: true
