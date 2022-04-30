@@ -25,7 +25,9 @@ public class Firemaking extends Clickable
 		if (event.isForceLeftClick() ||
 			!event.getOption().contains("Use") ||
 			!event.getTarget().toLowerCase().contains("tinderbox") ||
-			event.getType() != MenuAction.WIDGET_TARGET.getId())
+			event.getType() != MenuAction.WIDGET_TARGET.getId() ||
+			findItem(ALL_LOGS) == null
+		)
 		{
 			return false;
 		}

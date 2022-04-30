@@ -6,6 +6,7 @@ import net.runelite.api.MenuAction;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.client.plugins.externals.oneclick.clickables.Clickable;
+import net.runelite.client.plugins.externals.oneclick.pojos.ItemData;
 
 public class Healers extends Clickable
 {
@@ -26,6 +27,13 @@ public class Healers extends Clickable
 		int id = ITEMS.getOrDefault(plugin.getRoleText(), -1);
 
 		if (id == -1)
+		{
+			return false;
+		}
+
+		ItemData item = findItem(id);
+
+		if (item == null)
 		{
 			return false;
 		}
