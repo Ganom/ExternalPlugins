@@ -21,6 +21,12 @@ tasks.register<Copy>("copyBootstrap"){
     println("Copying bootstrap to main dir.")
     from("./build/bootstrap/")
     into("./")
+    eachFile {
+        if (this.relativePath.getFile(destinationDir).exists() && this.sourceName != "plugins.json") {
+            this.exclude()
+            println("Excluding " + this.sourceName + " as its the same version.")
+        }
+    }
 }
 
 subprojects {
