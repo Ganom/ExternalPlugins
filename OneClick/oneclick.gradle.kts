@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "8.0.6"
+version = "8.0.7"
 
 project.extra["PluginName"] = "OneClick"
 project.extra["PluginDescription"] = "OP One Click methods."

@@ -11,7 +11,9 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.InventoryID;
+import net.runelite.api.NPC;
 import net.runelite.api.events.GameTick;
+import net.runelite.api.events.InteractingChanged;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
@@ -56,6 +58,8 @@ public class OneClick extends Plugin
 	private boolean tick;
 	@Getter
 	private String roleText = "";
+	@Getter
+	private NPC lastInteractedNpc = null;
 
 
 	@Provides
@@ -153,6 +157,16 @@ public class OneClick extends Plugin
 			return;
 		}
 		updateConfig();
+	}
+
+	@Subscribe
+	public void onInteractingChanged(InteractingChanged event)
+	{
+		if (event.getSource() != client.getLocalPlayer() || (!(event.getTarget() instanceof NPC)))
+		{
+			return;
+		}
+		lastInteractedNpc = (NPC) event.getTarget();
 	}
 
 	private void updateBarbarianAssaultRoleCallText()
