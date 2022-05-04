@@ -18,7 +18,7 @@ public enum TaskWeakness
 		ItemID.FUNGICIDE_SPRAY_7, ItemID.FUNGICIDE_SPRAY_8, ItemID.FUNGICIDE_SPRAY_9,
 		ItemID.FUNGICIDE_SPRAY_10
 	), Set.of("zygomite"), 7),
-	ROCKSLUGS(Set.of(), Set.of(), 4),
+	ROCKSLUGS(Set.of(ItemID.BAG_OF_SALT), Set.of("rockslug"), 4),
 	LIZARD(Set.of(ItemID.ICE_COOLER), Set.of("lizard"), 4),
 	;
 

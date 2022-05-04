@@ -19,19 +19,21 @@ public class Slayer extends Clickable
 	@Override
 	public boolean isValidEntry(MenuEntryAdded event)
 	{
-		if (plugin.getLastInteractedNpc() == null ||
-			plugin.getLastInteractedNpc().getIndex() != event.getIdentifier() ||
-			event.getType() != MenuAction.EXAMINE_NPC.getId())
+		if (event.getType() != MenuAction.EXAMINE_NPC.getId() || event.isForceLeftClick())
 		{
 			return false;
 		}
 
 		var weakness = TaskWeakness.getWeakness(event.getTarget());
 
-		if (weakness == null ||
-			findItem(weakness.getItemIds()) == null ||
-			calculateHealth(plugin.getLastInteractedNpc()) > weakness.getThreshold() ||
-			calculateHealth(plugin.getLastInteractedNpc()) == -1)
+		if (weakness == null || findItem(weakness.getItemIds()) == null)
+		{
+			return false;
+		}
+
+		var npc = findWeakNpc(event.getIdentifier(), weakness);
+
+		if (npc == null)
 		{
 			return false;
 		}
@@ -39,7 +41,7 @@ public class Slayer extends Clickable
 		client.createMenuEntry(client.getMenuOptionCount())
 			.setOption("Hit")
 			.setTarget("<col=ff9040>Weakness</col><col=ffffff> -> " + event.getTarget())
-			.setIdentifier(plugin.getLastInteractedNpc().getIndex())
+			.setIdentifier(npc.getIndex())
 			.setType(MenuAction.WIDGET_TARGET_ON_NPC)
 			.setParam0(0)
 			.setParam1(0)
@@ -63,7 +65,6 @@ public class Slayer extends Clickable
 		return updateSelectedItem(weakness.getItemIds());
 	}
 
-
 	/**
 	 * Shamelessly yoinked from Slayer plugin.
 	 */
@@ -84,5 +85,16 @@ public class Slayer extends Clickable
 		}
 
 		return (int) ((maxHealth * healthRatio / healthScale) + 0.5f);
+	}
+
+	private NPC findWeakNpc(int index, TaskWeakness weakness)
+	{
+		var npc = client.getCachedNPCs()[index];
+		var health = calculateHealth(npc);
+		if (health < 0 || health > weakness.getThreshold())
+		{
+			return null;
+		}
+		return npc;
 	}
 }
