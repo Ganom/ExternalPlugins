@@ -14,7 +14,6 @@ public class Runes extends Clickable
 	private static final Set<Integer> VALID_ESSENCE = Set.of(ItemID.DAEYALT_ESSENCE, ItemID.PURE_ESSENCE);
 	private static final String MAGIC_IMBUE = "<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself";
 	private static final String COMBO_RUNE = "<col=ff9040>Elemental Rune<col=ffffff> -> <col=ffff>Altar";
-	private static final String ESSENCE = "<col=ff9040>Essence<col=ffffff> -> <col=ffff>Altar";
 
 	@Override
 	public boolean isValidEntry(MenuEntryAdded event)
@@ -30,24 +29,7 @@ public class Runes extends Clickable
 		var item = findItemWithIds(VALID_COMBO_RUNES);
 		var essence = findItemWithIds(VALID_ESSENCE);
 
-		if (item == null)
-		{
-			if (essence == null)
-			{
-				return false;
-			}
-			client.createMenuEntry(client.getMenuOptionCount())
-				.setOption("Use")
-				.setTarget(ESSENCE)
-				.setType(MenuAction.WIDGET_TARGET_ON_GAME_OBJECT)
-				.setIdentifier(event.getIdentifier())
-				.setParam0(event.getActionParam0())
-				.setParam1(event.getActionParam1())
-				.setForceLeftClick(true);
-			return true;
-		}
-
-		if (essence == null)
+		if (item == null || essence == null)
 		{
 			return false;
 		}
@@ -84,8 +66,6 @@ public class Runes extends Clickable
 				return true;
 			case COMBO_RUNE:
 				return updateSelectedItem(VALID_COMBO_RUNES);
-			case ESSENCE:
-				return updateSelectedItem(VALID_ESSENCE);
 			default:
 				return false;
 		}
