@@ -70,26 +70,23 @@ subprojects {
     val oprsVersion = "4.25.2"
 
     dependencies {
-        annotationProcessor(group = "org.projectlombok", name = "lombok", version = "1.18.20")
-        annotationProcessor(group = "org.pf4j", name = "pf4j", version = "3.5.0")
+        annotationProcessor("org.pf4j:pf4j:3.6.0")
+        annotationProcessor("org.projectlombok:lombok:1.18.24")
 
-        compileOnly(group = "com.openosrs", name = "http-api", version = oprsVersion)
-        compileOnly(group = "com.openosrs", name = "runelite-api", version = oprsVersion)
-        compileOnly(group = "com.openosrs", name = "runelite-client", version = oprsVersion)
-        compileOnly(group = "com.openosrs.rs", name = "runescape-client", version = oprsVersion)
-        compileOnly(group = "com.openosrs.rs", name = "runescape-api", version = oprsVersion)
+        compileOnly("com.openosrs:http-api:$oprsVersion")
+        compileOnly("com.openosrs:runelite-api:$oprsVersion")
+        compileOnly("com.openosrs:runelite-client:$oprsVersion")
+        compileOnly("com.openosrs.rs:runescape-client:$oprsVersion")
+        compileOnly("com.openosrs.rs:runescape-api:$oprsVersion")
 
-        compileOnly(group = "org.apache.commons", name = "commons-text", version = "1.9")
-        compileOnly(group = "com.google.guava", name = "guava", version = "30.0-jre")
-        compileOnly(group = "com.google.inject", name = "guice", version = "4.2.3", classifier = "no_aop")
-        compileOnly(group = "com.google.code.gson", name = "gson", version = "2.8.6")
-        compileOnly(group = "net.sf.jopt-simple", name = "jopt-simple", version = "5.0.4")
-        compileOnly(group = "ch.qos.logback", name = "logback-classic", version = "1.2.3")
-        compileOnly(group = "org.projectlombok", name = "lombok", version = "1.18.20")
-        compileOnly(group = "com.squareup.okhttp3", name = "okhttp", version = "4.9.0")
-        compileOnly(group = "org.pf4j", name = "pf4j", version = "3.5.0")
-        compileOnly(group = "io.reactivex.rxjava3", name = "rxjava", version = "3.0.7")
-        compileOnly(group = "org.pushing-pixels", name = "radiance-substance", version = "2.5.1")
+        compileOnly("ch.qos.logback:logback-classic:1.2.3")
+        compileOnly("com.google.code.gson:gson:2.8.6")
+        compileOnly("com.google.guava:guava:30.0-jre")
+        compileOnly("com.google.inject:guice:4.2.3:no_aop")
+        compileOnly("org.apache.commons:commons-text:1.9")
+        compileOnly("org.pf4j:pf4j:3.6.0")
+        compileOnly("org.projectlombok:lombok:1.18.24")
+        compileOnly("org.pushing-pixels:radiance-substance:2.5.1")
     }
 
     checkstyle {
@@ -99,12 +96,11 @@ subprojects {
         isIgnoreFailures = false
     }
 
-    configure<JavaPluginConvention> {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
     tasks {
+        java {
+            sourceCompatibility = JavaVersion.VERSION_11
+            targetCompatibility = JavaVersion.VERSION_11
+        }
         withType<JavaCompile> {
             options.encoding = "UTF-8"
         }

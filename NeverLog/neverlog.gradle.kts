@@ -24,7 +24,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-version = "6.1.3"
+version = "6.2.0"
 
 project.extra["PluginName"] = "NeverLog"
 project.extra["PluginDescription"] = "This makes it so you'll never logout during the 6h period."

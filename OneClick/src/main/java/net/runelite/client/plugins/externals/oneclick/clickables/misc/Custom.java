@@ -3,8 +3,8 @@ package net.runelite.client.plugins.externals.oneclick.clickables.misc;
 import net.runelite.api.MenuAction;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
-import net.runelite.client.plugins.externals.oneclick.pojos.CustomItem;
 import net.runelite.client.plugins.externals.oneclick.clickables.Clickable;
+import net.runelite.client.plugins.externals.oneclick.pojos.CustomItem;
 import net.runelite.client.util.Text;
 
 public class Custom extends Clickable

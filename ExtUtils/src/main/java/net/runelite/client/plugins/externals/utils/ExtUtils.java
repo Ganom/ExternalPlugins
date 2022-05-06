@@ -32,7 +32,6 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import org.jetbrains.annotations.NotNull;
 import org.pf4j.Extension;
 
 @Extension
@@ -387,7 +386,7 @@ public class ExtUtils extends Plugin
 		mouseEvent(500, p);
 	}
 
-	public Point getClickPoint(@NotNull Rectangle rect)
+	public Point getClickPoint(Rectangle rect)
 	{
 		final int x = (int) (rect.getX() + getRandomIntBetweenRange((int) rect.getWidth() / 6 * -1, (int) rect.getWidth() / 6) + rect.getWidth() / 2);
 		final int y = (int) (rect.getY() + getRandomIntBetweenRange((int) rect.getHeight() / 6 * -1, (int) rect.getHeight() / 6) + rect.getHeight() / 2);
@@ -400,7 +399,7 @@ public class ExtUtils extends Plugin
 		return (int) ((Math.random() * ((max - min) + 1)) + min);
 	}
 
-	private void mouseEvent(int id, @NotNull Point point)
+	private void mouseEvent(int id, Point point)
 	{
 		MouseEvent e = new MouseEvent(
 			client.getCanvas(), id,
