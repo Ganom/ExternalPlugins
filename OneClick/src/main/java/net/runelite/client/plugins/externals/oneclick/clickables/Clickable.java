@@ -1,17 +1,19 @@
 package net.runelite.client.plugins.externals.oneclick.clickables;
 
 import com.google.inject.Inject;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.client.plugins.externals.oneclick.pojos.ItemData;
 import net.runelite.client.plugins.externals.oneclick.OneClick;
+import net.runelite.client.plugins.externals.oneclick.pojos.ItemData;
+
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 public abstract class Clickable
@@ -36,7 +38,7 @@ public abstract class Clickable
 		{
 			return false;
 		}
-		ItemData pair = findItem(ids);
+		ItemData pair = findItemWithIds(ids);
 		if (pair == null)
 		{
 			return false;
@@ -46,16 +48,31 @@ public abstract class Clickable
 
 	public ItemData findItem(int id)
 	{
-		return findItem(List.of(id));
+		return findItemWithIds(List.of(id));
 	}
 
-	public ItemData findItem(Collection<Integer> ids)
+	public ItemData findItem(String itemName)
+	{
+		return findItemByName(List.of(itemName));
+	}
+
+	public ItemData findItemWithIds(Collection<Integer> ids)
 	{
 		return plugin.getInventory()
-			.stream()
-			.filter(i -> ids.contains(i.getId()))
-			.max(Comparator.comparingInt(ItemData::getIndex))
-			.orElse(null);
+				.stream()
+				.filter(i -> ids.contains(i.getId()))
+				.max(Comparator.comparingInt(ItemData::getIndex))
+				.orElse(null);
+	}
+
+	public ItemData findItemByName(Collection<String> itemNames)
+	{
+		Collection<String> lowercaseItemNames = itemNames.stream().map(String::toLowerCase).collect(Collectors.toList());
+		return plugin.getInventory()
+				.stream()
+				.filter(i -> lowercaseItemNames.contains(i.getName()))
+				.max(Comparator.comparingInt(ItemData::getIndex))
+				.orElse(null);
 	}
 
 	public boolean setSelectedWidget(ItemData item)

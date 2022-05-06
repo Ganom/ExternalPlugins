@@ -26,7 +26,7 @@ public class Birdhouses extends Clickable
 	public boolean isValidEntry(MenuEntryAdded event)
 	{
 		if (event.getType() != MenuAction.GAME_OBJECT_SECOND_OPTION.getId() || event.isForceLeftClick() ||
-			!BIRD_HOUSES_NAMES.contains(event.getTarget()) || findItem(HOPS_SEED) == null)
+			!BIRD_HOUSES_NAMES.contains(event.getTarget()) || findItemWithIds(HOPS_SEED) == null)
 		{
 			return false;
 		}
