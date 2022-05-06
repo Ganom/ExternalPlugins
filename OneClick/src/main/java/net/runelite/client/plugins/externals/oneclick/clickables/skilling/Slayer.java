@@ -26,7 +26,7 @@ public class Slayer extends Clickable
 
 		var weakness = TaskWeakness.getWeakness(event.getTarget());
 
-		if (weakness == null || findItem(weakness.getItemIds()) == null)
+		if (weakness == null || findItemWithIds(weakness.getItemIds()) == null)
 		{
 			return false;
 		}

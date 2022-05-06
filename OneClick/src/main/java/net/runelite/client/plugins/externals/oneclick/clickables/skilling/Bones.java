@@ -25,7 +25,7 @@ public class Bones extends Clickable
 			event.isForceLeftClick() ||
 			!event.getOption().toLowerCase().contains("pray") ||
 			!event.getTarget().toLowerCase().contains("altar") ||
-			findItem(BONE_SET) == null)
+			findItemWithIds(BONE_SET) == null)
 		{
 			return false;
 		}

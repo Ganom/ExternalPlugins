@@ -25,7 +25,7 @@ public class TitheFarm extends Clickable
 		if (event.getType() != MenuAction.EXAMINE_OBJECT.getId() ||
 			event.isForceLeftClick() ||
 			!event.getTarget().toLowerCase().contains("tithe") ||
-			findItem(SEED_SET) == null)
+			findItemWithIds(SEED_SET) == null)
 		{
 			return false;
 		}
