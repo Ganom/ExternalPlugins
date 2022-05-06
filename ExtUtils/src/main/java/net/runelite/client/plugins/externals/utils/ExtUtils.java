@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,11 +27,9 @@ import net.runelite.api.WallObject;
 import net.runelite.api.queries.DecorativeObjectQuery;
 import net.runelite.api.queries.GameObjectQuery;
 import net.runelite.api.queries.GroundObjectQuery;
-import net.runelite.api.queries.InventoryWidgetItemQuery;
 import net.runelite.api.queries.WallObjectQuery;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import org.jetbrains.annotations.NotNull;
@@ -216,14 +215,20 @@ public class ExtUtils extends Plugin
 		return findNearestGroundObject(ids);
 	}
 
-	public List<WidgetItem> getItems(int... itemIDs)
+	public List<Widget> getItems(int... itemIDs)
 	{
 		assert client.isClientThread();
+		Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
 
-		return new InventoryWidgetItemQuery()
-			.idEquals(itemIDs)
-			.result(client)
-			.list;
+		if (inventoryWidget == null)
+		{
+			return new ArrayList<>();
+		}
+
+		return Arrays.stream(inventoryWidget.getDynamicChildren())
+			.filter(child -> Arrays.stream(itemIDs)
+				.anyMatch(i -> i == child.getItemId()))
+			.collect(Collectors.toList());
 	}
 
 	public List<Widget> getEquippedItems(int[] itemIds)

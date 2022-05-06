@@ -11,10 +11,10 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Rectangle;
 import java.awt.Robot;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
@@ -33,7 +33,6 @@ import net.runelite.api.events.ProjectileMoved;
 import net.runelite.api.util.Text;
 import net.runelite.api.vars.InterfaceTab;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -341,19 +340,15 @@ public class BasicBossSwapper extends Plugin
 			return;
 		}
 
-		List<WidgetItem> inv = utils.getItems(utils.stringToIntArray(itemList));
-
 		if (client.getVar(VarClientInt.INVENTORY_TAB) != InterfaceTab.INVENTORY.getId())
 		{
 			executor.submit(() -> robot.keyPress(utils.getTabHotkey(Tab.INVENTORY)));
 		}
 
-		List<Rectangle> rectangles = new ArrayList<>();
-
-		for (WidgetItem item : inv)
-		{
-			rectangles.add(item.getCanvasBounds());
-		}
+		List<Rectangle> rectangles = utils.getItems(utils.stringToIntArray(itemList))
+			.stream()
+			.map(Widget::getBounds)
+			.collect(Collectors.toList());
 
 		executor.submit(() ->
 		{

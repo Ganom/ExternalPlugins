@@ -5,6 +5,8 @@
  */
 package net.runelite.client.plugins.externals.neverlog;
 
+import java.awt.event.InputEvent;
+import static java.awt.event.InputEvent.BUTTON1_DOWN_MASK;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -80,7 +82,7 @@ public class NeverLog extends Plugin
 
 	private void pressKey()
 	{
-		KeyEvent keyPress = new KeyEvent(this.client.getCanvas(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_BACK_SPACE);
+		KeyEvent keyPress = new KeyEvent(this.client.getCanvas(), KeyEvent.KEY_PRESSED, System.currentTimeMillis(), BUTTON1_DOWN_MASK, KeyEvent.VK_BACK_SPACE);
 		this.client.getCanvas().dispatchEvent(keyPress);
 		KeyEvent keyRelease = new KeyEvent(this.client.getCanvas(), KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_BACK_SPACE);
 		this.client.getCanvas().dispatchEvent(keyRelease);

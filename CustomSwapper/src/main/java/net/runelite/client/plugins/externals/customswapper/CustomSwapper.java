@@ -34,7 +34,6 @@ import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.vars.InterfaceTab;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.api.widgets.WidgetItem;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -470,11 +469,11 @@ public class CustomSwapper extends Plugin
 			return null;
 		}
 
-		for (WidgetItem item : inventoryWidget.getWidgetItems())
+		for (Widget item : inventoryWidget.getDynamicChildren())
 		{
-			if (item.getId() == id)
+			if (item.getItemId() == id)
 			{
-				return item.getCanvasBounds();
+				return item.getBounds();
 			}
 		}
 
@@ -491,11 +490,11 @@ public class CustomSwapper extends Plugin
 			return bounds;
 		}
 
-		for (WidgetItem item : inventoryWidget.getWidgetItems())
+		for (Widget item : inventoryWidget.getDynamicChildren())
 		{
-			if (item.getId() == id)
+			if (item.getItemId() == id)
 			{
-				bounds.add(item.getCanvasBounds());
+				bounds.add(item.getBounds());
 			}
 		}
 

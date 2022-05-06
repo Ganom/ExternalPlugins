@@ -183,7 +183,11 @@ public class AutoClick extends Plugin
 		{
 			return false;
 		}
-		final Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
-		return inventoryWidget.getWidgetItems().size() == 28;
+		Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
+		if (inventoryWidget == null)
+		{
+			return false;
+		}
+		return inventoryWidget.getDynamicChildren().length == 27;
 	}
 }

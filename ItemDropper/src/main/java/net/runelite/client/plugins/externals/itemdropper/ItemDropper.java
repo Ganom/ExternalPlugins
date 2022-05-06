@@ -10,6 +10,7 @@ import java.awt.AWTException;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,6 +18,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
@@ -26,8 +28,9 @@ import net.runelite.api.Item;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
-import net.runelite.api.queries.InventoryWidgetItemQuery;
-import net.runelite.api.widgets.WidgetItem;
+import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -65,9 +68,11 @@ public class ItemDropper extends Plugin
 	@Inject
 	private ItemManager itemManager;
 	@Inject
+	private ClientThread clientThread;
+	@Inject
 	private ExtUtils utils;
 
-	private final List<WidgetItem> items = new ArrayList<>();
+	private final List<Widget> items = new ArrayList<>();
 	private final Set<Integer> ids = new HashSet<>();
 
 	private boolean iterating;
@@ -83,12 +88,7 @@ public class ItemDropper extends Plugin
 		@Override
 		public void hotkeyPressed()
 		{
-			List<WidgetItem> list = new InventoryWidgetItemQuery()
-				.idEquals(ids)
-				.result(client)
-				.list;
-
-			items.addAll(list);
+			clientThread.invoke(() -> buildItemList());
 		}
 	};
 
@@ -111,6 +111,21 @@ public class ItemDropper extends Plugin
 	{
 		keyManager.unregisterKeyListener(toggle);
 		robot = null;
+	}
+
+	private void buildItemList()
+	{
+		Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
+		items.clear();
+
+		if (inventoryWidget == null)
+		{
+			return;
+		}
+
+		Arrays.stream(inventoryWidget.getDynamicChildren())
+			.filter(item -> ids.contains(item.getItemId()))
+			.forEach(items::add);
 	}
 
 	@Subscribe
@@ -184,16 +199,13 @@ public class ItemDropper extends Plugin
 		}
 	}
 
-	private void dropItems(List<WidgetItem> dropList)
+	private void dropItems(List<Widget> dropList)
 	{
 		iterating = true;
 
-		List<Rectangle> rects = new ArrayList<>();
-
-		for (WidgetItem item : dropList)
-		{
-			rects.add(item.getCanvasBounds());
-		}
+		List<Rectangle> rects = dropList.stream()
+			.map(Widget::getBounds)
+			.collect(Collectors.toList());
 
 		executorService.submit(() ->
 		{
