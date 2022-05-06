@@ -5,7 +5,6 @@
  */
 package net.runelite.client.plugins.externals.neverlog;
 
-import java.awt.event.InputEvent;
 import static java.awt.event.InputEvent.BUTTON1_DOWN_MASK;
 import java.awt.event.KeyEvent;
 import java.util.Random;
