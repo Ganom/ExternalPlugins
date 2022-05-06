@@ -12,6 +12,7 @@ import net.runelite.client.plugins.externals.oneclick.clickables.skilling.Birdho
 import net.runelite.client.plugins.externals.oneclick.clickables.skilling.Bones;
 import net.runelite.client.plugins.externals.oneclick.clickables.skilling.Firemaking;
 import net.runelite.client.plugins.externals.oneclick.clickables.skilling.Karams;
+import net.runelite.client.plugins.externals.oneclick.clickables.skilling.Runes;
 import net.runelite.client.plugins.externals.oneclick.clickables.skilling.Slayer;
 import net.runelite.client.plugins.externals.oneclick.clickables.skilling.Tiaras;
 import net.runelite.client.plugins.externals.oneclick.clickables.skilling.TitheFarm;
@@ -26,6 +27,7 @@ public enum Method
 	CUSTOM(Custom.class),
 	KARAMBWANS(Karams.class),
 	LOG_BURNING(Firemaking.class),
+	RUNES(Runes.class),
 	SLAYER(Slayer.class),
 	TIARA(Tiaras.class),
 	TITHE_FARM(TitheFarm.class),

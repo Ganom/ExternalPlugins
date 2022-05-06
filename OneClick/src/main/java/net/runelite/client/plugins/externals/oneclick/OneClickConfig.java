@@ -32,4 +32,15 @@ public interface OneClickConfig extends Config
 	{
 		return "0:0";
 	}
+
+	@ConfigItem(
+		position = 3,
+		keyName = "isMagicImbueEnabled",
+		name = "Magic Imbue",
+		description = "Enable this to allow the plugin to magic imbue before clicking an altar."
+	)
+	default boolean isMagicImbueEnabled()
+	{
+		return true;
+	}
 }

@@ -12,6 +12,7 @@ import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.plugins.externals.oneclick.OneClick;
+import net.runelite.client.plugins.externals.oneclick.OneClickConfig;
 import net.runelite.client.plugins.externals.oneclick.pojos.ItemData;
 
 @Slf4j
@@ -21,6 +22,8 @@ public abstract class Clickable
 	protected Client client;
 	@Inject
 	protected OneClick plugin;
+	@Inject
+	protected OneClickConfig config;
 
 	public abstract boolean isValidEntry(MenuEntryAdded event);
 

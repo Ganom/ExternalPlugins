@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.InventoryID;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.MenuEntryAdded;
@@ -37,6 +38,8 @@ import org.pf4j.Extension;
 )
 public class OneClick extends Plugin
 {
+	private static final String MAGIC_IMBUE_EXPIRED_MESSAGE = "Your Magic Imbue charge has ended.";
+	private static final String MAGIC_IMBUE_MESSAGE = "You are charged to combine runes!";
 	private static final int BA_CALL_LISTEN = 7;
 	private static final int BA_HEALER_GROUP_ID = 488;
 
@@ -56,6 +59,8 @@ public class OneClick extends Plugin
 	private boolean tick;
 	@Getter
 	private String roleText = "";
+	@Getter
+	private boolean imbued;
 
 	@Provides
 	OneClickConfig getConfig(ConfigManager configManager)
@@ -73,6 +78,7 @@ public class OneClick extends Plugin
 	protected void shutDown()
 	{
 		clickable.clear();
+		imbued = false;
 	}
 
 	@Subscribe
@@ -84,6 +90,20 @@ public class OneClick extends Plugin
 		}
 
 		updateBarbarianAssaultRoleCallText();
+	}
+
+	@Subscribe
+	public void onChatMessage(ChatMessage event)
+	{
+		switch (event.getMessage())
+		{
+			case MAGIC_IMBUE_MESSAGE:
+				imbued = true;
+				break;
+			case MAGIC_IMBUE_EXPIRED_MESSAGE:
+				imbued = false;
+				break;
+		}
 	}
 
 	@Subscribe
