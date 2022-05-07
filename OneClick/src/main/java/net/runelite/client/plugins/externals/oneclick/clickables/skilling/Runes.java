@@ -11,7 +11,6 @@ import net.runelite.client.plugins.externals.oneclick.clickables.Clickable;
 public class Runes extends Clickable
 {
 	private static final Set<Integer> VALID_COMBO_RUNES = Set.of(ItemID.AIR_RUNE, ItemID.EARTH_RUNE, ItemID.WATER_RUNE, ItemID.FIRE_RUNE);
-	private static final Set<Integer> VALID_ESSENCE = Set.of(ItemID.DAEYALT_ESSENCE, ItemID.PURE_ESSENCE);
 	private static final String MAGIC_IMBUE = "<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself";
 	private static final String COMBO_RUNE = "<col=ff9040>Elemental Rune<col=ffffff> -> <col=ffff>Altar";
 
@@ -27,9 +26,8 @@ public class Runes extends Clickable
 		}
 
 		var item = findItemWithIds(VALID_COMBO_RUNES);
-		var essence = findItemWithIds(VALID_ESSENCE);
 
-		if (item == null || essence == null)
+		if (item == null)
 		{
 			return false;
 		}
