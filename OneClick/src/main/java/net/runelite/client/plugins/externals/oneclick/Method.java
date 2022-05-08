@@ -6,6 +6,7 @@ import lombok.Getter;
 import net.runelite.client.plugins.externals.oneclick.clickables.Clickable;
 import net.runelite.client.plugins.externals.oneclick.clickables.misc.Custom;
 import net.runelite.client.plugins.externals.oneclick.clickables.misc.Healers;
+import net.runelite.client.plugins.externals.oneclick.clickables.misc.Herbs;
 import net.runelite.client.plugins.externals.oneclick.clickables.misc.TroubleBrewing;
 import net.runelite.client.plugins.externals.oneclick.clickables.misc.Vorkath;
 import net.runelite.client.plugins.externals.oneclick.clickables.skilling.Birdhouses;
@@ -25,6 +26,7 @@ public enum Method
 	BIRDHOUSES(Birdhouses.class),
 	BONES(Bones.class),
 	CUSTOM(Custom.class),
+	HERBS(Herbs.class),
 	KARAMBWANS(Karams.class),
 	LOG_BURNING(Firemaking.class),
 	RUNES(Runes.class),
