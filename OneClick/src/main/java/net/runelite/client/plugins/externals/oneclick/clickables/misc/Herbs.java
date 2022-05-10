@@ -21,6 +21,7 @@ public class Herbs extends Clickable
 	);
 	private static final String COMPOST_STRING = "<col=ff9040>Compost Bucket</col><col=ffffff> -> <col=ffff>Herbs";
 	private static final String SEED_STRING = "<col=ff9040>Seed</col><col=ffffff> -> <col=ffff>Patch";
+	private static final Set<Integer> DISEASE_PROTECTED_REGIONS = Set.of(11325, 11321, 6967);
 
 	@Override
 	public boolean isValidEntry(MenuEntryAdded event)
@@ -64,6 +65,11 @@ public class Herbs extends Clickable
 		{
 			case COMPOSTABLE:
 			{
+				if (!config.isCompostingDiseaseProtectedPatches() &&
+					DISEASE_PROTECTED_REGIONS.contains(client.getLocalPlayer().getWorldLocation().getRegionID()))
+				{
+					return false;
+				}
 				var bucket = findItemWithIds(COMPOST_BUCKETS);
 				if (bucket == null)
 				{

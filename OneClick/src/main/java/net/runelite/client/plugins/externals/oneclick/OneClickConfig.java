@@ -43,4 +43,15 @@ public interface OneClickConfig extends Config
 	{
 		return true;
 	}
+
+	@ConfigItem(
+		position = 4,
+		keyName = "isCompostingDiseaseProtectedPatches",
+		name = "Compost on Protected",
+		description = "Disabling this will disable the compost one click on disease protected patches."
+	)
+	default boolean isCompostingDiseaseProtectedPatches()
+	{
+		return false;
+	}
 }
