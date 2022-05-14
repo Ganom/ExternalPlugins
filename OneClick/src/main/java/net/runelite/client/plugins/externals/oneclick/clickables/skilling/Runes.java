@@ -7,10 +7,10 @@ import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.plugins.externals.oneclick.clickables.Clickable;
+import net.runelite.client.plugins.externals.oneclick.pojos.ElementalAltar;
 
 public class Runes extends Clickable
 {
-	private static final Set<Integer> VALID_COMBO_RUNES = Set.of(ItemID.AIR_RUNE, ItemID.EARTH_RUNE, ItemID.WATER_RUNE, ItemID.FIRE_RUNE);
 	private static final String MAGIC_IMBUE = "<col=ff9040>Magic Imbue<col=ffffff> -> <col=ffff>Yourself";
 	private static final String COMBO_RUNE = "<col=ff9040>Elemental Rune<col=ffffff> -> <col=ffff>Altar";
 
@@ -25,14 +25,21 @@ public class Runes extends Clickable
 			return false;
 		}
 
-		var item = findItemWithIds(VALID_COMBO_RUNES);
+		var altar = ElementalAltar.fromRegion(client.getLocalPlayer().getWorldLocation().getRegionID());
+
+		if (altar == null)
+		{
+			return false;
+		}
+
+		var item = findItemWithIds(altar.getValidComboRunes());
 
 		if (item == null)
 		{
 			return false;
 		}
 
-		if (config.isMagicImbueEnabled() && !plugin.isImbued() && VALID_COMBO_RUNES.contains(item.getId()))
+		if (config.isMagicImbueEnabled() && !plugin.isImbued())
 		{
 			client.createMenuEntry(client.getMenuOptionCount())
 				.setOption("Use")
@@ -58,12 +65,26 @@ public class Runes extends Clickable
 	@Override
 	public boolean isValidClick(MenuOptionClicked event)
 	{
+		var altar = ElementalAltar.fromRegion(client.getLocalPlayer().getWorldLocation().getRegionID());
+
+		if (altar == null)
+		{
+			return false;
+		}
+
+		var item = findItemWithIds(altar.getValidComboRunes());
+
+		if (item == null)
+		{
+			return false;
+		}
+
 		switch (event.getMenuTarget())
 		{
 			case MAGIC_IMBUE:
 				return true;
 			case COMBO_RUNE:
-				return updateSelectedItem(VALID_COMBO_RUNES);
+				return setSelectedWidget(item);
 			default:
 				return false;
 		}
