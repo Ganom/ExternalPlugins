@@ -1,7 +1,5 @@
 package net.runelite.client.plugins.externals.oneclick.clickables.skilling;
 
-import java.util.Set;
-import net.runelite.api.ItemID;
 import net.runelite.api.MenuAction;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOptionClicked;
