@@ -67,7 +67,7 @@ subprojects {
     apply<JavaLibraryPlugin>()
     apply(plugin = "checkstyle")
 
-    val oprsVersion = "4.25.2"
+    val oprsVersion = "4.26.1"
 
     dependencies {
         annotationProcessor("org.pf4j:pf4j:3.6.0")
