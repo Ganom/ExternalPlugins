@@ -41,4 +41,10 @@ tasks {
             ))
         }
     }
+    register<Copy>("copyJar") {
+        val shadowJar = getByName("jar")
+        dependsOn(shadowJar)
+        from(shadowJar.outputs.files)
+        into(file(System.getProperty("user.home") + "/.openosrs/plugins/"))
+    }
 }

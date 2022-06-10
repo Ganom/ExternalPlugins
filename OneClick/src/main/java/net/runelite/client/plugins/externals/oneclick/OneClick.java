@@ -122,7 +122,7 @@ public class OneClick extends Plugin
 	@Subscribe
 	public void onMenuOpened(MenuOpened event)
 	{
-		if (!client.isKeyPressed(KeyCode.KC_SHIFT))
+		if (!config.getSkillingOneClicks().contains(Skilling.HIGH_ALCH) || !client.isKeyPressed(KeyCode.KC_SHIFT))
 		{
 			return;
 		}
@@ -151,7 +151,7 @@ public class OneClick extends Plugin
 		{
 			client.createMenuEntry(client.getMenuOptionCount())
 				.setOption("Remove")
-				.setTarget("<col=ff9040>Alch Target</col> -> <col=ff9040>" + item.getName() + "</col>")
+				.setTarget("<col=ff0000>Alch Target</col><col=ffffff> -> <col=ff9040>" + item.getName() + "</col>")
 				.setType(MenuAction.RUNELITE_HIGH_PRIORITY)
 				.onClick(e -> highAlchs.remove(item.getId()));
 			return;
@@ -159,7 +159,7 @@ public class OneClick extends Plugin
 
 		client.createMenuEntry(client.getMenuOptionCount())
 			.setOption("Select")
-			.setTarget("<col=ff9040>Alch Target</col> -> <col=ff9040>" + item.getName() + "</col>")
+			.setTarget("<col=00ff00>Alch Target</col><col=ffffff> -> <col=ff9040>" + item.getName() + "</col>")
 			.setType(MenuAction.RUNELITE_HIGH_PRIORITY)
 			.onClick(e -> highAlchs.add(item.getId()));
 	}

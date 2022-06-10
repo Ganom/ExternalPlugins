@@ -28,7 +28,7 @@ public class HighAlch extends Clickable
 		}
 		client.createMenuEntry(client.getMenuOptionCount())
 			.setOption("Cast")
-			.setTarget("<col=ff9040>High Alch<col=ffffff> -> <col=ffff00>" + item.getName())
+			.setTarget("<col=00ff00>High Level Alchemy</col><col=ffffff> -> <col=ff9040>" + item.getName() + "</col>")
 			.setType(MenuAction.WIDGET_TARGET_ON_WIDGET)
 			.setIdentifier(0)
 			.setParam0(item.getIndex())
