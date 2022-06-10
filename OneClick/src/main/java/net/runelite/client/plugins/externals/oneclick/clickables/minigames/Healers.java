@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.externals.oneclick.clickables.misc;
+package net.runelite.client.plugins.externals.oneclick.clickables.minigames;
 
 import com.google.common.collect.ImmutableMap;
 import net.runelite.api.ItemID;

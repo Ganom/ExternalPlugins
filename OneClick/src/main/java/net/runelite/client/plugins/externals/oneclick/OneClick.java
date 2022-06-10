@@ -4,17 +4,24 @@ import com.google.common.base.Splitter;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.InventoryID;
+import net.runelite.api.KeyCode;
+import net.runelite.api.MenuAction;
+import static net.runelite.api.MenuAction.CC_OP_LOW_PRIORITY;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.MenuEntryAdded;
+import net.runelite.api.events.MenuOpened;
 import net.runelite.api.events.MenuOptionClicked;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
@@ -24,7 +31,11 @@ import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.externals.oneclick.clickables.Clickable;
-import net.runelite.client.plugins.externals.oneclick.clickables.misc.Healers;
+import net.runelite.client.plugins.externals.oneclick.clickables.minigames.Healers;
+import net.runelite.client.plugins.externals.oneclick.config.Combat;
+import net.runelite.client.plugins.externals.oneclick.config.Custom;
+import net.runelite.client.plugins.externals.oneclick.config.Minigame;
+import net.runelite.client.plugins.externals.oneclick.config.Skilling;
 import net.runelite.client.plugins.externals.oneclick.pojos.CustomItem;
 import net.runelite.client.plugins.externals.oneclick.pojos.ItemData;
 import org.pf4j.Extension;
@@ -55,6 +66,8 @@ public class OneClick extends Plugin
 	@Getter
 	private final List<CustomItem> items = new ArrayList<>();
 	private final List<Clickable> clickable = new ArrayList<>();
+	@Getter
+	private final Set<Integer> highAlchs = new HashSet<>();
 	@Setter
 	private boolean tick;
 	@Getter
@@ -104,6 +117,51 @@ public class OneClick extends Plugin
 				imbued = false;
 				break;
 		}
+	}
+
+	@Subscribe
+	public void onMenuOpened(MenuOpened event)
+	{
+		if (!client.isKeyPressed(KeyCode.KC_SHIFT))
+		{
+			return;
+		}
+
+		boolean hasExamineItemEntry = Arrays.stream(event.getMenuEntries())
+			.filter(e -> !e.isForceLeftClick())
+			.filter(e -> e.getOption().equals("Examine"))
+			.anyMatch(e -> e.getType() == CC_OP_LOW_PRIORITY);
+
+		if (!hasExamineItemEntry)
+		{
+			return;
+		}
+
+		var item = inventory.stream()
+			.filter(itemData -> itemData.getIndex() == event.getFirstEntry().getParam0())
+			.findFirst()
+			.orElse(null);
+
+		if (item == null || item.getDefinition().getHaPrice() <= 0)
+		{
+			return;
+		}
+
+		if (highAlchs.contains(item.getId()))
+		{
+			client.createMenuEntry(client.getMenuOptionCount())
+				.setOption("Remove")
+				.setTarget("<col=ff9040>Alch Target</col> -> <col=ff9040>" + item.getName() + "</col>")
+				.setType(MenuAction.RUNELITE_HIGH_PRIORITY)
+				.onClick(e -> highAlchs.remove(item.getId()));
+			return;
+		}
+
+		client.createMenuEntry(client.getMenuOptionCount())
+			.setOption("Select")
+			.setTarget("<col=ff9040>Alch Target</col> -> <col=ff9040>" + item.getName() + "</col>")
+			.setType(MenuAction.RUNELITE_HIGH_PRIORITY)
+			.onClick(e -> highAlchs.add(item.getId()));
 	}
 
 	@Subscribe
@@ -180,11 +238,10 @@ public class OneClick extends Plugin
 		clientThread.invoke(() ->
 		{
 			convertStringToCustomItemMap();
-			config.getOneClickMethods()
-				.stream()
-				.filter(Objects::nonNull)
-				.map(m -> m.createInstance(injector))
-				.forEach(clickable::add);
+			clickable.addAll(Combat.createInstances(config.getCombatOneClicks(), injector));
+			clickable.addAll(Custom.createInstances(config.getCustomOneClicks(), injector));
+			clickable.addAll(Minigame.createInstances(config.getMinigameOneClicks(), injector));
+			clickable.addAll(Skilling.createInstances(config.getSkillingOneClicks(), injector));
 		});
 	}
 

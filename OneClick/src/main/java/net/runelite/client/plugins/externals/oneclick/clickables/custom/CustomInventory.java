@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.externals.oneclick.clickables.misc;
+package net.runelite.client.plugins.externals.oneclick.clickables.custom;
 
 import net.runelite.api.MenuAction;
 import net.runelite.api.events.MenuEntryAdded;
@@ -7,7 +7,7 @@ import net.runelite.client.plugins.externals.oneclick.clickables.Clickable;
 import net.runelite.client.plugins.externals.oneclick.pojos.CustomItem;
 import net.runelite.client.util.Text;
 
-public class Custom extends Clickable
+public class CustomInventory extends Clickable
 {
 	private CustomItem currentItemTarget = null;
 

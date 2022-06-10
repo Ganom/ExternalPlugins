@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.externals.oneclick.clickables.skilling;
+package net.runelite.client.plugins.externals.oneclick.clickables.combat;
 
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;

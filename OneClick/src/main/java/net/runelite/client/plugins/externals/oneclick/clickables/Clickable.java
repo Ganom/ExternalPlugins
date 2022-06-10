@@ -98,4 +98,14 @@ public abstract class Clickable
 		client.setSelectedSpellWidget(widget.getId());
 		client.setSelectedSpellChildIndex(-1);
 	}
+
+	protected int getVarbitFromObjectId(int id)
+	{
+		var objectDefinition = client.getObjectDefinition(id);
+		if (objectDefinition == null)
+		{
+			return -1;
+		}
+		return objectDefinition.getVarbitId();
+	}
 }

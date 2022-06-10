@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.externals.oneclick.clickables.misc;
+package net.runelite.client.plugins.externals.oneclick.clickables.minigames;
 
 import net.runelite.api.MenuAction;
 import net.runelite.api.events.MenuEntryAdded;

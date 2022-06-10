@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.externals.oneclick.clickables.skilling;
+package net.runelite.client.plugins.externals.oneclick.clickables.skilling.farming;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;

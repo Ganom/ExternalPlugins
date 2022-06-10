@@ -67,17 +67,17 @@ subprojects {
     apply<JavaLibraryPlugin>()
     apply(plugin = "checkstyle")
 
-    val oprsVersion = "4.26.1"
+    val oprsVersion = "latest.release"
 
     dependencies {
         annotationProcessor("org.pf4j:pf4j:3.6.0")
         annotationProcessor("org.projectlombok:lombok:1.18.24")
 
-        compileOnly("com.openosrs:http-api:$oprsVersion")
-        compileOnly("com.openosrs:runelite-api:$oprsVersion")
-        compileOnly("com.openosrs:runelite-client:$oprsVersion")
-        compileOnly("com.openosrs.rs:runescape-client:$oprsVersion")
-        compileOnly("com.openosrs.rs:runescape-api:$oprsVersion")
+        compileOnly(group = "com.openosrs", name = "http-api", version = oprsVersion)
+        compileOnly(group = "com.openosrs", name = "runelite-api", version = oprsVersion)
+        compileOnly(group = "com.openosrs", name = "runelite-client", version = oprsVersion)
+        compileOnly(group = "com.openosrs.rs", name = "runescape-client", version = oprsVersion)
+        compileOnly(group = "com.openosrs.rs", name = "runescape-api", version = oprsVersion)
 
         compileOnly("ch.qos.logback:logback-classic:1.2.3")
         compileOnly("com.google.code.gson:gson:2.8.6")
