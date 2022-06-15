@@ -34,7 +34,11 @@ public class HighAlch extends Clickable
 			.setParam0(item.getIndex())
 			.setParam1(9764864)
 			.setForceLeftClick(true)
-			.onClick(e -> setSelectSpell(WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY));
+			.onClick(e ->
+			{
+				refreshInventory();
+				setSelectSpell(WidgetInfo.SPELL_HIGH_LEVEL_ALCHEMY);
+			});
 		return true;
 	}
 

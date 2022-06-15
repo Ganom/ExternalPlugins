@@ -17,6 +17,7 @@ import net.runelite.api.InventoryID;
 import net.runelite.api.KeyCode;
 import net.runelite.api.MenuAction;
 import static net.runelite.api.MenuAction.CC_OP_LOW_PRIORITY;
+import net.runelite.api.Skill;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
@@ -28,6 +29,7 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.XpDropEvent;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.plugins.externals.oneclick.clickables.Clickable;
@@ -74,6 +76,8 @@ public class OneClick extends Plugin
 	private String roleText = "";
 	@Getter
 	private boolean imbued;
+	@Getter
+	private int highAlchTicks;
 
 	@Provides
 	OneClickConfig getConfig(ConfigManager configManager)
@@ -97,6 +101,10 @@ public class OneClick extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
+		if (highAlchTicks > 0)
+		{
+			highAlchTicks--;
+		}
 		if (tick)
 		{
 			tick = false;
@@ -117,6 +125,16 @@ public class OneClick extends Plugin
 				imbued = false;
 				break;
 		}
+	}
+
+	@Subscribe
+	public void onXpDrop(XpDropEvent event)
+	{
+		if (event.getExp() != 65 || event.getSkill() != Skill.MAGIC)
+		{
+			return;
+		}
+		highAlchTicks = 4;
 	}
 
 	@Subscribe
@@ -142,7 +160,7 @@ public class OneClick extends Plugin
 			.findFirst()
 			.orElse(null);
 
-		if (item == null || item.getDefinition().getHaPrice() <= 0)
+		if (item == null)
 		{
 			return;
 		}

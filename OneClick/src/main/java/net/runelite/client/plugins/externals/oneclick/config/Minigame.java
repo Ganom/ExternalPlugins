@@ -17,6 +17,7 @@ public enum Minigame
 {
 	BA_HEALERS(Healers.class),
 	TR_BREWING(TroubleBrewing.class),
+	MTA(net.runelite.client.plugins.externals.oneclick.clickables.minigames.MTA.class),
 	;
 	private final Class<? extends Clickable> clazz;
 

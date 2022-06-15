@@ -108,4 +108,17 @@ public abstract class Clickable
 		}
 		return objectDefinition.getVarbitId();
 	}
+
+	protected int getItemCount(int id)
+	{
+		return (int) plugin.getInventory()
+			.stream()
+			.filter(i -> id == i.getId())
+			.count();
+	}
+
+	protected void refreshInventory()
+	{
+		client.runScript(6009, WidgetInfo.INVENTORY.getId(), 28, 1, 0);
+	}
 }
